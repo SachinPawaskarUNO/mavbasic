@@ -37,8 +37,8 @@ Route::get('laravel-version', function()
 
 // Authentication Routes
 Auth::routes();
-Route::post('password/change', 'Auth\LoginController@changePassword');
-Route::get( 'password/change', 'Auth\LoginController@changePassword');
+Route::get( 'password/change', 'Auth\ChangePasswordController@showChangePasswordForm');
+Route::post('password/change', 'Auth\ChangePasswordController@changePassword');
 
 Route::get('/home', 'HomeController@index');
 Route::resource('users', 'UsersController');

@@ -5864,4 +5864,16 @@ div.pull-left button {
 i.fa-trash-o {
   color: red; }
 
+form.delete-menu {
+  cursor: pointer; }
+
+form.delete-menu button {
+  cursor: pointer; }
+
+div.app-welcome {
+  text-align: center; }
+
+div.app-welcome img {
+  width: 500px; }
+
 /*# sourceMappingURL=app.css.map */

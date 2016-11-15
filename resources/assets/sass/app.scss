@@ -50,9 +50,14 @@ div.pull-left button { padding-top: 2px; padding-bottom: 2px; padding-left: 5px;
   white-space: nowrap; cursor: auto;
 }
 
-// Delete  Menu Action item
+// Delete Menu Action item
 i.fa-trash-o { color: red; }
+form.delete-menu { cursor: pointer; }
+form.delete-menu button { cursor: pointer; }
 
+// Welcome Screen
+div.app-welcome { text-align: center; }
+div.app-welcome img { width: 500px; }
 
 //form {margin: 0px;}
 //ul.pagination { margin: 0px !important; }

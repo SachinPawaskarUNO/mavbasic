@@ -7,6 +7,9 @@ The MavBasic application uses the Laravel web application framework. Documentati
 ## Official Documentation
 
 Documentation for the MavBasic web application can be found on the [MavBasic website - coming soon].
+Below are some screenshots for the MavBasic application.
+
+![alt text](/docs/screenshots/main.png "MavBasic Start Screen")
 
 ## Contributing
 

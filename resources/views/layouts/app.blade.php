@@ -28,7 +28,7 @@
             'csrfToken' => csrf_token(),
         ]); ?>
     </script>
-    {{--@include("common.analyticstracking")--}}
+    @include("common.analyticstracking")
 </head>
 <body>
     <div id="app">

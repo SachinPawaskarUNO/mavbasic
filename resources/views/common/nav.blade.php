@@ -68,6 +68,8 @@
                                 <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
                             </li>
                             <li><a href="{{ url('/password/change') }}"><i class="fa fa-btn fa-fw fa-lock"></i>Change Password</a></li>
+                            <li class="divider"></li>
+                            <li><a href="https://SachinPawaskarUNO.github.io/mavbasic"><i class="fa fa-btn fa-fw fa-question-circle-o"></i>Online Help</a></li>
                         </ul>
 
                         {{--<ul class="dropdown-menu" role="menu">--}}

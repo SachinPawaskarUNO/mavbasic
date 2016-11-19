@@ -14,6 +14,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        \App\Http\Middleware\SessionTimeout::class, // for session timeout - Sachin
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
     ];
 

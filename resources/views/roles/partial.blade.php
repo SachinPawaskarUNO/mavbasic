@@ -30,7 +30,7 @@
 
 <div class="form-group">
     <label class="col-md-4 control-label">Permissions:</label>
-    <div class="col-md-6">{!! Form::select('permissionlist[]', $list_permission, null, ['class' => 'form-control roles cds-select', 'multiple', 'style' => 'width: 100%; margin-top: 10px;']) !!}</div>
+    <div class="col-md-6">{!! Form::select('permissionlist[]', $list_permission, null, ['class' => 'form-control roles mav-select', 'multiple', 'style' => 'width: 100%; margin-top: 10px;']) !!}</div>
 </div>
 
 @if ($CRUD_Action != 'View')

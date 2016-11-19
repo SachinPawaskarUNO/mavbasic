@@ -35,7 +35,7 @@
 
 <div class="form-group">
     <label class="col-md-4 control-label">Roles</label>
-    <div class="col-md-6">{!! Form::select('rolelist[]', $list_role, null, ['id' => 'roles', 'class' => 'form-control roles cds-select', 'multiple', 'style' => 'width: 50%; margin-top: 10px;']) !!}</div>
+    <div class="col-md-6">{!! Form::select('rolelist[]', $list_role, null, ['id' => 'roles', 'class' => 'form-control roles mav-select', 'multiple', 'style' => 'width: 50%; margin-top: 10px;']) !!}</div>
 </div>
 
 @if($CRUD_Action == 'Create')

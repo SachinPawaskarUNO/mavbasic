@@ -15,9 +15,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\SettingRequest;
-use App\Role;
 use App\Setting;
 use Auth;
 use Session;
@@ -34,7 +32,7 @@ class SettingsController extends Controller
         $this->user = Auth::user();
         $this->settings = Setting::all();
         $this->list_kind = array('string' => 'string', 'int' => 'int', 'bool' => 'bool');
-        $this->list_display_type = array('input' => 'input', 'dropdown' => 'dropdown', 'checkbox' => 'checkbox');
+        $this->list_display_type = array('text' => 'text', 'dropdown' => 'dropdown', 'checkbox' => 'checkbox');
         $this->heading = "Settings";
 
         $this->viewData = [ 'user' => $this->user, 'settings' => $this->settings, 'list_kind' => $this->list_kind,
@@ -68,13 +66,11 @@ class SettingsController extends Controller
         return view('settings.create', $this->viewData);
     }
 
-    public function store(SettingRequest $request)
+    public function store(Request $request)
     {
         Log::info('SettingsController.store - Start: ');
         $input = $request->all();
         $this->populateCreateFields($input);
-        $input['password'] = bcrypt($request['password']);
-        $input['active'] = $request['active'] == '' ? false : true;
 
         $object = Setting::create($input);
         Session::flash('flash_message', 'Setting successfully added!');
@@ -99,7 +95,6 @@ class SettingsController extends Controller
         Log::info('SettingsController.update - Start: '.$object->id);
 //        $this->authorize($object);
         $this->populateUpdateFields($request);
-        $request['active'] = $request['active'] == '' ? false : true;
 
         $object->update($request->all());
         Session::flash('flash_message', 'Setting successfully updated!');

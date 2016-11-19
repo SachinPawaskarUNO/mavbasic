@@ -31,6 +31,8 @@ class MaverickSeeder extends Seeder
         $this->command->info('------------------------------------------------------------------------!');
         // Seed the Tags table
         $this->call(TagsTableSeeder::class);
+        $this->call(SettingsTableSeeder::class);
+        $this->call(SettingUserTableSeeder::class);
         $this->command->info('Tags tables seeded!');
         $this->command->info('------------------------------------------------------------------------!');
         $this->command->info('                          End: Seeding Tags                             !');

@@ -7,13 +7,13 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="pull-right"> <!-- Action Button Section -->
-                        @include ('common._action', ['CRUD_Action' => 'Update', 'id' => $setting->id, 'resource' => 'settings'])
+                        @include ('settings._action', ['CRUD_Action' => 'Update', 'id' => $setting->id, 'resource' => 'settings'])
                     </div>
                     <div><h4>{{ $heading }}</h4></div>
                 </div>
 
                 <div class="panel-body">
-                    {!! Form::model($setting, ['method' => 'PATCH', 'action' => ['UsersController@update', $setting->id], 'class' => 'form-horizontal', 'onsubmit' => 'return validateOnSave();']) !!}
+                    {!! Form::model($setting, ['method' => 'PATCH', 'action' => ['SettingsController@update', $setting->id], 'class' => 'form-horizontal', 'onsubmit' => 'return validateOnSave();']) !!}
                     @include('common.errors')
                     @include('common.flash')
 
@@ -28,18 +28,21 @@
 
 @section('footer')
 <script>
-//    $(document).ready(function($) {
-//        $('select').select2();
-//    });
-//
+    $(document).ready(function($) {
+        $('select#display_type').prop("disabled", true);
+        $('select#kind').prop("disabled", true);
+        $('input#name').prop("readonly", true);
+        $('input#default_value').prop("readonly", true);
+    });
+
     // ToDo: update validations for this view
     function validateOnSave() {
         var rc = true;
-        if ($("select#sb_id").val() === "") {
-            alert("Please select a Type");
+        if ($("input#description").val() === "") {
+            alert("Please enter a description");
             rc = false;
-        } else if ($("input#x_number").val() === "") {
-            alert("Please input a X-number");
+        } else if ($("input#help").val() === "") {
+            alert("Please enter some help text");
             rc = false;
         }
         return rc;

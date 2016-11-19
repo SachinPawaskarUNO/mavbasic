@@ -92,6 +92,27 @@ class User extends Authenticatable
     }
 
     /**
+     * Return true if the User has an sysadmin Role, false otherwise
+     *
+     * @return bool
+     */
+    public function isSystemAdmin()
+    {
+        return $this->hasRole('sysadmin');
+    }
+
+    /**
+     * Return true if the User has an sysadmin Role, false otherwise
+     *
+     * @return bool
+     */
+    public function isSystem()
+    {
+        return $this->isSysAdmin();
+    }
+
+
+    /**
      * Return true if the User is Active, false otherwise
      *
      * @return mixed

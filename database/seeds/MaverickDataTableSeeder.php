@@ -3,6 +3,7 @@ use Illuminate\Database\Seeder;
 use App\Role;
 use App\Permission;
 use App\User;
+use App\Setting;
 
 class UsersTableSeeder extends Seeder {
 
@@ -81,11 +82,6 @@ class RoleUserTableSeeder extends Seeder {
 
 class PermissionRoleTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         // User Management Permissions
@@ -105,3 +101,33 @@ class PermissionRoleTableSeeder extends Seeder
     }
 }
 
+class SettingsTableSeeder extends Seeder {
+
+    public function run()
+    {
+        Setting::create([  'name' => 'Accession', 'description' => 'Accession Number', 'default_value' => '', 'kind' => 'string',
+            'display_type' => 'text', 'display_values' => '',
+            'help' => 'If set, the accession number will be auto-populated on New SE screen',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Setting::create([  'name' => 'WelcomeScreen', 'description' => 'Welcome Screen', 'default_value' => 'true', 'kind' => 'bool',
+            'display_type' => 'checkbox', 'display_values' => '',
+            'help' => 'Display the Welcome screen on user login',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+    }
+}
+
+class SettingUserTableSeeder extends Seeder {
+
+    public function run()
+    {
+        $user = User::where('name', '=', 'Administrator')->first()->id;
+        $setting = Setting::where('name', '=', 'LinesPerPage')->first()->id;
+        $setting_user = [ ['setting_id' => $setting, 'user_id' => $user, 'value' => '25', 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ] ];
+        DB::table('setting_user')->insert($setting_user);
+
+        $user = User::where('name', '=', 'George Royce')->first()->id;
+        $setting = Setting::where('name', '=', 'LinesPerPage')->first()->id;
+        $setting_user = [ ['setting_id' => $setting, 'user_id' => $user, 'value' => '25', 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ] ];
+        DB::table('setting_user')->insert($setting_user);
+    }
+}

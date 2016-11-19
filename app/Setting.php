@@ -33,7 +33,7 @@ class Setting extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'default_value', 'kind', 'display', 'help',
+    protected $fillable = ['name', 'description', 'help', 'default_value', 'kind', 'display_type', 'display_values',
         'created_by', 'updated_by',];
 
     /**

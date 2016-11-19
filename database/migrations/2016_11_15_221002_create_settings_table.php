@@ -17,11 +17,11 @@ class CreateSettingsTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('description');
+            $table->string('help');
+            $table->string('default_value');
             $table->enum('kind', ['string', 'int', 'bool']); // e.g. string, int, bool, json
             $table->enum('display_type', ['text', 'dropdown', 'checkbox']); // e.g. text, dropdown, checkbox
-            $table->string('display_values'); // e.g. json: '10: 10, 25: 25, 50: 50, 100: 100'
-            $table->string('default_value');
-            $table->string('help');
+            $table->string('display_values')->nullable(); // e.g. json: '10: 10, 25: 25, 50: 50, 100: 100'
             $table->string('created_by')->default('System');
             $table->string('updated_by')->default('System');
             $table->timestamps();

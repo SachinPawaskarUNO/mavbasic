@@ -23,7 +23,8 @@
                 <li><a href="{{ url('/home') }}">Home</a></li>
                 {{-- Menu for Users with Administration Role Only --}}
                 @ability('sysadmin,admin', 'manage-users,create-users,edit-users,view-users,delete-users,
-                          manage-roles,create-roles,edit-roles,view-roles,delete-roles')
+                          manage-roles,create-roles,edit-roles,view-roles,delete-roles,
+                          manage-settings,create-settings,edit-settings,view-settings,delete-settings')
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         <i class="fa fa-btn fa-fw fa-cogs"></i>Administration<span class="caret"></span></a>
@@ -41,6 +42,9 @@
                                 @endability
                             </ul>
                         </li>
+                        @endability
+                        @ability('sysadmin,admin', 'manage-settings,create-settings,edit-settings,view-settings,delete-settings')
+                        <li><a href="{{ url('/settings') }}"><i class="fa fa-btn fa-fw fa-cog"></i>Setting Management</a></li>
                         @endability
                         {{--<li class="divider"></li>--}}
                         {{--<li><a href="{{ url('/files') }}"><i class="fa fa-btn fa-fw fa-file"></i>Files</a></li>--}}
@@ -68,8 +72,9 @@
                                 <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
                             </li>
                             <li><a href="{{ url('/password/change') }}"><i class="fa fa-btn fa-fw fa-lock"></i>Change Password</a></li>
+                            <li><a href="{{ url('/users/'. Auth::user()->id . '/settings') }}"><i class="fa fa-btn fa-fw fa-cog"></i>Settings</a></li>
                             <li class="divider"></li>
-                            <li><a href="https://SachinPawaskarUNO.github.io/mavbasic"><i class="fa fa-btn fa-fw fa-question-circle-o"></i>Online Help</a></li>
+                            <li><a href="https://SachinPawaskarUNO.github.io/mavbasic" target="_blank"><i class="fa fa-btn fa-fw fa-question-circle-o"></i>Online Help</a></li>
                         </ul>
 
                         {{--<ul class="dropdown-menu" role="menu">--}}

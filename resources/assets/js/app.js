@@ -44,6 +44,9 @@ $(document).ready(function(){
         "columnDefs": [ {
             "targets"  : 'no-sort',
             "orderable": false
-        }]
+        }],
+        // "pageLength": {{ json_encode(Auth::user()->getSettingValue('LinesPerPage') }}
+        // "pageLength": JSON.parse("{{ json_encode(Auth::user()->getSettingValue('LinesPerPage')) }}")
     });
+    $('.mav-select').select2();
 });

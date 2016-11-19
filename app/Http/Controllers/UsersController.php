@@ -19,9 +19,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\User;
 use App\Role;
+use App\Setting;
 use Auth;
 use Session;
-use Input;
+use Illuminate\Support\Facades\Input;
 use DB;
 use Log;
 
@@ -130,6 +131,48 @@ class UsersController extends Controller
         Log::info('UsersController.destroy: End: ');
         return redirect('/users');
     }
+
+    public function showSettings(User $user)
+    {
+        $object = $user;
+        Log::info('UsersController.settings: '.$object->id);
+        $this->viewData['user'] = $object;
+        $this->viewData['the_user_settings'] = Setting::all();
+        $this->viewData['heading'] = "Edit User Settings: ".$object->name;
+
+        return view('users.settings', $this->viewData);
+    }
+
+    public function updateSettings(User $user, Request $request)
+    {
+        $object = $user;
+        Log::info('UsersController.updateSettings - Start: '.$object->id);
+        foreach (Input::get('usersettings', array()) as $usersetting)
+        {
+            $name = $usersetting['name'];
+            $value = $usersetting['value'] == '' ? $usersetting['default_value'] : $usersetting['value'];
+            if ($usersetting['kind'] == 'bool' && $usersetting['value'] == '') {
+                $value = '0';
+            }
+
+            try{
+                $user->setSetting($name, $value);
+                Log::info('User setting updated: '.$name. ' with value '.$value);
+            } catch(Exception $e){
+                Log::error('UsersController.updateSettings - Error: '.'Updating user setting'.$name);
+                return redirect('users.settings')->withErrors('Error: Updating user setting '.$name );
+            }
+        }
+        Session::flash('flash_message', 'User settings successfully updated!');
+        Log::info('UsersController.updateSettings - End: '.$object->id);
+
+        $this->viewData['user'] = $object;
+        $this->viewData['the_user_settings'] = Setting::all();
+        $this->viewData['heading'] = "Edit User Settings: ".$object->name;
+
+        return view('users.settings', $this->viewData);
+    }
+
 
     /**
      * Sync up the list of roles for the given user record.

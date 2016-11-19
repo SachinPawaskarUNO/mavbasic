@@ -43,6 +43,9 @@ Route::post('password/change', 'Auth\ChangePasswordController@changePassword');
 Route::get('/home', 'HomeController@index');
 Route::resource('users', 'UsersController');
 Route::resource('roles', 'RolesController');
+Route::resource('settings', 'SettingsController');
+Route::get( 'users/{user}/settings', 'UsersController@showSettings');
+Route::post('users/{user}/updateSettings', 'UsersController@updateSettings');
 
 //    Route::delete('/comments/{comment}', 'CommentsController@destroy');
 //    Route::resource('comments', 'CommentsController');

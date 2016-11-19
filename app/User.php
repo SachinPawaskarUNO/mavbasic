@@ -18,6 +18,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+
+use App\Http\Traits\SettingsTrait;
 use Log;
 
 
@@ -32,6 +34,7 @@ class User extends Authenticatable
     use Notifiable;
 //    use SoftDeletes;
     use EntrustUserTrait; // Entrust Package requires this trait
+    use SettingsTrait;
 
     /**
      * The attributes that should be mutated to dates.
@@ -96,5 +99,15 @@ class User extends Authenticatable
     public function isActive()
     {
         return $this->active;
+    }
+
+    /**
+     * Get all of the settings for this user.
+     */
+    public function settings()
+    {
+        return $this->belongsToMany('App\Setting', 'setting_user', 'user_id', 'setting_id')
+            ->withPivot('user_id', 'setting_id', 'value', 'created_by', 'updated_by')
+            ->withTimestamps();
     }
 }

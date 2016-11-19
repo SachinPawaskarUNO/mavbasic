@@ -24,5 +24,13 @@ class DatabaseSeeder extends Seeder
         $this->command->info('------------------------------------------------------------------------!');
         $this->command->info('                End: Seeding User, Roles and Permissions                !');
         $this->command->info('------------------------------------------------------------------------!');
+        $this->command->info('------------------------------------------------------------------------!');
+        $this->command->info('                           Start: Seeding Setting                       !');
+        $this->command->info('------------------------------------------------------------------------!');
+        $this->call(BaseSettingsTableSeeder::class);
+        $this->command->info('User, Role and Permission tables seeded!');
+        $this->command->info('------------------------------------------------------------------------!');
+        $this->command->info('                            End: Seeding Setting                        !');
+        $this->command->info('------------------------------------------------------------------------!');
     }
 }

@@ -3,6 +3,7 @@ use Illuminate\Database\Seeder;
 use App\Role;
 use App\Permission;
 use App\User;
+use App\Setting;
 
 class BaseUsersTableSeeder extends Seeder {
 
@@ -58,6 +59,17 @@ class BasePermissionsTableSeeder extends Seeder {
         Permission::create([ 'name' => 'delete-roles', 'display_name' => 'Delete Roles', 'description' => 'User is allowed to delete other roles',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
 
+        // Setting Management Permissions
+        Permission::create([ 'name' => 'manage-settings', 'display_name' => 'Manage Settings', 'description' => 'User is allowed to add, edit and delete settings',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'create-settings', 'display_name' => 'Create Settings', 'description' => 'User is allowed to add other settings',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'edit-settings', 'display_name' => 'Edit Settings', 'description' => 'User is allowed to edit other settings',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'view-settings', 'display_name' => 'View Settings', 'description' => 'User is allowed to view other settings',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'delete-settings', 'display_name' => 'Delete Settings', 'description' => 'User is allowed to delete other settings',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }
 
@@ -109,6 +121,18 @@ class BasePermissionRoleTableSeeder extends Seeder
         $adminRole = Role::where('name', '=', 'admin')->first();
         $adminRole->attachPermissions(array($manageUsers, $createUsers, $editUsers, $viewUsers, $deleteUsers));
         $adminRole->attachPermissions(array($manageRoles, $createRoles, $editRoles, $viewRoles, $deleteRoles));
+    }
+}
+
+class BaseSettingsTableSeeder extends Seeder {
+
+    public function run()
+    {
+        DB::table('settings')->delete();
+        Setting::create([  'name' => 'LinesPerPage', 'description' => 'Lines per Page', 'default_value' => '10', 'kind' => 'int',
+            'display_type' => 'dropdown', 'display_values' => '10: 10, 25: 25, 50: 50, 100: 100',
+            'help' => 'Controls the numbers of rows of data displayed for views with tables',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }
 

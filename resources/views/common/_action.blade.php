@@ -46,7 +46,7 @@
             @endif
             @ability('sysadmin,admin','manage-'.$resource.',delete-'.$resource)
             <li>
-                <form class= 'delete-menu' action="{{ url('/' . $resource . '/' . $id) }}" method="POST" onsubmit="return ConfirmDelete();">
+                <form class= 'delete-menu' action="{{ url('/' . $resource . '/' . $id) }}" method="POST" onsubmit="return deleteConfirm();">
                     {{ csrf_field() }}{{ method_field('DELETE') }}
                     <button type="submit" id="delete" class="actionlink"><i class="fa fa-fw fa-btn fa-trash-o"></i>Delete</button>
                 </form>

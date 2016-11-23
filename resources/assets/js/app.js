@@ -21,9 +21,9 @@
 
 // New stuff added by Sachin.
 /*
- * ConfirmDelete: Asks the user for confirmation when a record is being deleted
+ * confirmDelete: Asks the user for confirmation when a record is being deleted
  */
-function ConfirmDelete() {
+function confirmDelete() {
     var x = confirm("Are you sure you want to delete?");
 
     if (x) {
@@ -45,8 +45,21 @@ $(document).ready(function(){
             "targets"  : 'no-sort',
             "orderable": false
         }],
-        // "pageLength": {{ json_encode(Auth::user()->getSettingValue('LinesPerPage') }}
-        // "pageLength": JSON.parse("{{ json_encode(Auth::user()->getSettingValue('LinesPerPage')) }}")
     });
     $('.mav-select').select2();
 });
+
+function setPageLength(pagelength) {
+    var oTableApi = $('table.mav-datatable').dataTable().api();
+    oTableApi.page.len( pagelength ).draw();
+}
+
+function deleteConfirm() {
+    var x = confirm("Are you sure you want to delete?");
+
+    if (x) {
+        return true;
+    } else {
+        return false;
+    }
+}

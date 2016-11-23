@@ -130,7 +130,7 @@ class BaseSettingsTableSeeder extends Seeder {
     {
         DB::table('settings')->delete();
         Setting::create([  'name' => 'LinesPerPage', 'description' => 'Lines per Page', 'default_value' => '10', 'kind' => 'int',
-            'display_type' => 'dropdown', 'display_values' => '10: 10, 25: 25, 50: 50, 100: 100',
+            'display_type' => 'dropdown', 'display_values' => '{"10":10, "25":25, "50":50, "100":100}',
             'help' => 'Controls the numbers of rows of data displayed for views with tables',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }

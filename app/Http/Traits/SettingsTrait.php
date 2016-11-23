@@ -42,6 +42,17 @@ trait SettingsTrait {
         }
     }
 
+    // get setting default value
+    public function getSettingDisplayValues($name)
+    {
+        $setting = Setting::where(['name' => $name])->first();
+        if ($setting) {
+            return $setting->display_values;
+        } else { // Should never get here unless developer is asking for a setting not defined in the System
+            return null;
+        }
+    }
+
     // get setting
     public function getSetting($name)
     {

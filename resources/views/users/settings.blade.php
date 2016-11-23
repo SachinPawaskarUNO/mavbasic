@@ -37,8 +37,7 @@
                                             </div></td>
                                             @if ($current->display_type == 'dropdown')
                                                 <td><div class="form-group">
-                                                    <div class="col-lg-10">{{ Form::select('usersettings['.$current->id.'][value]', array([10 => 10, 25 => 25, 50 => 50, 100 => 100]), $user->getSettingValue($current->name), ['id' => 'value', 'placeholder' => 'Select Option', 'class' => 'mav-select']) }}</div>
-                                                    {{--<div class="col-lg-10">{{ Form::select('usersettings['.$current->id.'][value]', json_decode("{'10': 10, '25': 25, '50': 50, '10': 100}"), null, ['id' => 'value', 'placeholder' => 'Select Option', 'class' => 'mav-select']) }}</div>--}}
+                                                    <div class="col-lg-10">{{ Form::select('usersettings['.$current->id.'][value]', json_decode($user->getSettingDisplayValues($current->name)), $user->getSettingValue($current->name), ['id' => 'value', 'placeholder' => 'Select Option', 'class' => 'mav-select']) }}</div>
                                                 </div></td>
                                             @elseif ($current->display_type == 'checkbox')
                                             <td class="table-text">

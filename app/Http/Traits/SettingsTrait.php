@@ -42,13 +42,49 @@ trait SettingsTrait {
         }
     }
 
-    // get setting default value
+    // get setting display values
     public function getSettingDisplayValues($name)
     {
         $setting = Setting::where(['name' => $name])->first();
         if ($setting) {
             return $setting->display_values;
         } else { // Should never get here unless developer is asking for a setting not defined in the System
+            return null;
+        }
+    }
+
+    // get setting min value
+    public function getSettingValueMin($name)
+    {
+        $setting = Setting::where(['name' => $name])->first();
+        if ($setting) {
+            $opts = json_decode($this->getSettingDisplayValues($name), true);
+            return array_has($opts, 'min') ? $opts['min'] : null;
+        } else {
+            return null;
+        }
+    }
+
+    // get setting max value
+    public function getSettingValueMax($name)
+    {
+        $setting = Setting::where(['name' => $name])->first();
+        if ($setting) {
+            $opts = json_decode($this->getSettingDisplayValues($name), true);
+            return array_has($opts, 'max') ? $opts['max'] : null;
+        } else {
+            return null;
+        }
+    }
+
+    // get setting max value
+    public function getSettingValueStep($name)
+    {
+        $setting = Setting::where(['name' => $name])->first();
+        if ($setting) {
+            $opts = json_decode($this->getSettingDisplayValues($name), true);
+            return array_has($opts, 'step') ? $opts['step'] : null;
+        } else {
             return null;
         }
     }

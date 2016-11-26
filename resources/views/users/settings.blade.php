@@ -35,7 +35,7 @@
                                                     {{ Form::hidden('usersettings['.$current->id.'][display_type]', $current->display_type, ['id'=>'display_type']) }}
                                                 </div>
                                             </div></td>
-                                            @if ($current->display_type == 'dropdown')
+                                            @if ($current->display_type == 'select')
                                                 <td><div class="form-group">
                                                     <div class="col-lg-10">{{ Form::select('usersettings['.$current->id.'][value]', json_decode($user->getSettingDisplayValues($current->name)), $user->getSettingValue($current->name), ['id' => 'value', 'placeholder' => 'Select Option', 'class' => 'mav-select']) }}</div>
                                                 </div></td>
@@ -44,6 +44,12 @@
                                             <div class="checkbox" style="position: relative; left: 20px;">
                                                 {{ Form::hidden('usersettings['.$current->id.'][value]', false) }}{{ Form::checkbox('usersettings['.$current->id.'][value]', true,  $user->getSettingValue($current->name), ['class' => 'form-control-checkbox']) }}
                                             </div>
+                                            </td>
+                                            @elseif ($current->display_type == 'number')
+                                            <td class="table-text">
+                                                <div class="number">
+                                                    {{ Form::number('usersettings['.$current->id.'][value]', $user->getSettingValue($current->name), ['id' => 'value', 'min' => $user->getSettingValueMin($current->name), 'max' => $user->getSettingValueMax($current->name), 'step' => $user->getSettingValueStep($current->name)]) }}
+                                                </div>
                                             </td>
                                             @else
                                             {{--default is "input"--}}

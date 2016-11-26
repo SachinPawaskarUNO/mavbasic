@@ -113,6 +113,10 @@ class SettingsTableSeeder extends Seeder {
             'display_type' => 'checkbox', 'display_values' => '',
             'help' => 'Display the Welcome screen on user login',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Setting::create([  'name' => 'MRUList_Accessions', 'description' => 'MRU Accessions', 'default_value' => '5', 'kind' => 'int',
+            'display_type' => 'number', 'display_values' => '{"min":0, "max":20, "step":1}',
+            'help' => 'Number of Most Recently Used (MRU List) Accessions to keep track off',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }
 

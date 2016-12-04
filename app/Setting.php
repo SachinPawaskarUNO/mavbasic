@@ -42,7 +42,7 @@ class Setting extends Model
     public function users()
     {
         return $this->belongsToMany('App\User', 'setting_user', 'setting_id', 'user_id')
-            ->withPivot('user_id', 'setting_id', 'value', 'created_by', 'updated_by')
+            ->withPivot('user_id', 'setting_id', 'value', 'json_values', 'created_by', 'updated_by')
             ->withTimestamps();
     }
 }

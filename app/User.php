@@ -128,7 +128,7 @@ class User extends Authenticatable
     public function settings()
     {
         return $this->belongsToMany('App\Setting', 'setting_user', 'user_id', 'setting_id')
-            ->withPivot('user_id', 'setting_id', 'value', 'created_by', 'updated_by')
+            ->withPivot('user_id', 'setting_id', 'value', 'json_values', 'created_by', 'updated_by')
             ->withTimestamps();
     }
 }

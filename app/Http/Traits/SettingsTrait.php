@@ -89,6 +89,41 @@ trait SettingsTrait {
         }
     }
 
+    // get setting Json values
+    public function getSettingJsonValues($name)
+    {
+        $setting = $this->settings()->where(['user_id' => $this->id, 'name' => $name])->first();
+        if ($setting) {
+            return $setting->pivot->json_values;
+        } else {
+            return null;
+        }
+    }
+
+    // get setting Json values as an array
+    public function getSettingJsonValuesArray($name)
+    {
+        $json_values = $this->getSettingJsonValues($name);
+        if (!empty($json_values)) {
+            $values = unserialize($json_values);
+            return $values;
+        } else {
+            return null;
+        }
+    }
+
+    // get setting Json values as an array
+    public function getSettingJsonValuesCount($name)
+    {
+        $json_values = $this->getSettingJsonValues($name);
+        if (!empty($json_values)) {
+            $values = unserialize($json_values);
+            return count($values);
+        } else {
+            return 0;
+        }
+    }
+
     // get setting
     public function getSetting($name)
     {
@@ -130,6 +165,49 @@ trait SettingsTrait {
             Log::info('SettingsTrait.storeSettings: Save New: '.$setting->name. ' = ' .$value);
             $this->settings()->save($setting, ['value' => $value, 'created_by' => $this->name, 'updated_by' => $this->name ]);
         }
+    }
+
+    // create-update setting
+    public function addSettingJsonValue($name, $object)
+    {
+        $this->storeSettingJsonValue($name, $object);
+    }
+
+    private function storeSettingJsonValue($name, $object)
+    {
+        Log::info('SettingsTrait.storeSettingJsonValue: Start '.$this->name);
+
+        $record = $this->settings()->where(['user_id' => $this->id, 'name' => $name])->first();
+        if($record)
+        {
+            Log::info('SettingsTrait.storeSettingJsonValue: Update Existing Pivot: '.$record->name. ' = ' .$object->id);
+            $json_values = $this->buildSettingJson($record, $object);
+            $json_values = (count($json_values) > $record->pivot->value) ? array_slice($json_values, 0, $record->pivot->value) : $json_values;
+            $this->settings()->updateExistingPivot($record->id, ['json_values' => serialize($json_values), 'updated_by' => $this->name ]);
+        } else {
+            $setting = Setting::where(['name' => $name])->first();
+            $json_values = $this->buildSettingJson(null, $object);
+            Log::info('SettingsTrait.storeSettingJsonValue: Save New: '.$setting->name. ' = ' .$object->id);
+            $this->settings()->save($setting, ['value' => $setting->default_value, 'json_values' => serialize($json_values), 'created_by' => $this->name, 'updated_by' => $this->name ]);
+        }
+    }
+
+
+    private function buildSettingJson($record, $object)
+    {
+        $values = [];
+        if ($record) {
+            if (!empty($record->pivot->json_values)) {
+                $values = unserialize($record->pivot->json_values);
+                $key = array_search($object->id, array_column($values, 'id'));
+                if ($key !== false)
+                    unset($values[$key]);
+            }
+        }
+
+        $values = array_prepend($values, ['id' => $object->id, 'name' => $object->name]);
+        Log::info('SettingsTrait.buildSettingJson: json_values: ' . serialize($values));
+        return $values;
     }
 
     // ToDo: implement caching for settings at some point.

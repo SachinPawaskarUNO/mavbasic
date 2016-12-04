@@ -56,6 +56,7 @@ class UsersController extends Controller
         $this->viewData['user'] = $object;
         $this->viewData['heading'] = "View User: ".$object->name;
 
+        Auth::user()->addSettingJsonValue('MRUList_Users', $object);
         return view('users.show', $this->viewData);
     }
 

@@ -40,12 +40,14 @@
                                 @ability('admin', 'manage-roles,create-roles,edit-roles,view-roles,delete-roles')
                                 <li><a href="{{ url('/roles') }}"><i class="fa fa-btn fa-fw fa-users"></i>Roles</a></li>
                                 @endability
+                                @include ('common._mrulist', ['setting' => 'MRUList_Users', 'menu' => 'Recent Users', 'menuicon' => 'fa-user', 'resource' => 'users'])
                             </ul>
                         </li>
                         @endability
                         @ability('sysadmin,admin', 'manage-settings,create-settings,edit-settings,view-settings,delete-settings')
                         <li><a href="{{ url('/settings') }}"><i class="fa fa-btn fa-fw fa-cog"></i>Setting Management</a></li>
                         @endability
+
                         {{--<li class="divider"></li>--}}
                         {{--<li><a href="{{ url('/files') }}"><i class="fa fa-btn fa-fw fa-file"></i>Files</a></li>--}}
                     </ul>

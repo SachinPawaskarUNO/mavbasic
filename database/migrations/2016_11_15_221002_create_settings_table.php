@@ -34,7 +34,7 @@ class CreateSettingsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('setting_id')->unsigned();
             $table->string('value');
-            $table->string('json_values')->nullable();  // This will be specific for that setting.
+            $table->string('json_values', '2048')->nullable();  // This will be specific for that setting.
             $table->string('created_by')->default('System');
             $table->string('updated_by')->default('System');
             $table->timestamps();

@@ -20,21 +20,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 use App\Http\Traits\SettingsTrait;
+use App\Http\Traits\AuditsTrait;
 use Log;
 
 
 /**
  * Class User
  * @package App
- * @author     Sachin Pawaskar<spawaskar@unomaha.edu>
- * @since      File available since Release 1.0.0
+ * @author  Sachin Pawaskar<spawaskar@unomaha.edu>
+ * @since   File available since Release 1.0.0
  */
 class User extends Authenticatable
 {
     use Notifiable;
-//    use SoftDeletes;
-    use EntrustUserTrait; // Entrust Package requires this trait
+    use EntrustUserTrait;
+    use SoftDeletes { SoftDeletes::restore insteadof EntrustUserTrait; }
     use SettingsTrait;
+    use AuditsTrait;
 
     /**
      * The attributes that should be mutated to dates.
@@ -110,7 +112,6 @@ class User extends Authenticatable
     {
         return $this->isSysAdmin();
     }
-
 
     /**
      * Return true if the User is Active, false otherwise

@@ -14,7 +14,7 @@ class CreateAuditsTable extends Migration
     {
         Schema::create('audits', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->nullable()->index();
+            $table->integer('user_id')->unsigned()->index();
             $table->morphs('auditable');
             $table->string('activity');
             $table->text('before');

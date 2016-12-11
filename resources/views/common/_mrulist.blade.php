@@ -7,6 +7,4 @@
             @endforeach
         </ul>
     </li>
-@else
-    <li><a href="{{ url('/files') }}"><i class="fa fa-btn fa-fw fa-file"></i>No Recent</a></li>
 @endif

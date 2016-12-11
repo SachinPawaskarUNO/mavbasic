@@ -13,13 +13,13 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
-                                    <th>Activity</th><th>Activity Date</th><th>Activity User</th><th>After</th>
+                                    <th>Activity Date</th><th>Activity</th><th>Activity User</th><th>After</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($audits as $current)
                                         <tr>
-                                            <td class="table-text"><div><a href="{{ url('/audits/'.$current->id.'/') }}">{{ $current->activityname }}</a></div></td>
                                             <td class="table-text"><div>{{ $current->created_at }}</div></td>
+                                            <td class="table-text"><div><a href="{{ url('/audits/'.$current->id.'/') }}">{{ $current->activityname }}</a></div></td>
                                             <td class="table-text"><div>{{ $current->user->name }}</div></td>
                                             {{--<td class="table-text"><div>{{ $current->before }}</div></td>--}}
                                             <td class="table-text" style="word-wrap: break-word; max-width: 300px;"><div>{{ $current->after }}</div></td>
@@ -41,15 +41,12 @@
 @section('footer')
     <style>
         .table td { border: 0px !important; }
-        .tooltip-inner { white-space:pre-wrap; max-width: 400px; }
     </style>
 
     <script>
         $(document).ready(function() {
-            $('table.cds-datatable').on( 'draw.dt', function () {
-                $('tr').tooltip({html: true, placement: 'auto' });
-            } );
-            $('tr').tooltip({html: true, placement: 'auto' });
+            var oTableApi = $('table.mav-datatable').dataTable().api();
+            oTableApi.order([0, 'desc']).draw();
         } );
     </script>
 @endsection

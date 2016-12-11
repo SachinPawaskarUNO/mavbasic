@@ -37,7 +37,7 @@ class AuditsController extends Controller
     public function index()
     {
         Log::info('AuditsController.index: ');
-        $audits = Audit::all();
+        $audits = Audit::orderBy('created_at', 'desc')->get();
         $this->viewData['audits'] = $audits;
         $this->viewData['heading'] = "Audit Activities";
 

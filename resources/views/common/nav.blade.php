@@ -47,6 +47,10 @@
                         @ability('sysadmin,admin', 'manage-settings,create-settings,edit-settings,view-settings,delete-settings')
                         <li><a href="{{ url('/settings') }}"><i class="fa fa-btn fa-fw fa-cog"></i>Setting Management</a></li>
                         @endability
+                        @ability('sysadmin', '')
+                        <li class="divider"></li>
+                        <li><a href="{{ url('/audits') }}"><i class="fa fa-btn fa-fw fa-binoculars"></i>Audit Management</a></li>
+                        @endability
 
                         {{--<li class="divider"></li>--}}
                         {{--<li><a href="{{ url('/files') }}"><i class="fa fa-btn fa-fw fa-file"></i>Files</a></li>--}}

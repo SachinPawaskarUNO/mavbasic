@@ -7,7 +7,7 @@
         <li><a href="{{ url('/' . $resource) }}"><i class="fa fa-fw fa-btn fa-list-alt"></i>All</a></li>
         @if($audit->activity == 'deleted')
             @ability('sysadmin','manage-'.$resource.',restore-'.$resource)
-            <li><a href="{{ url('/' . $resource . '/' . $id . '/restore') }}"><i class="fa fa-fw fa-btn fa-undo"></i>Restore</a></li>
+            <li><a href="{{ url('/' . $resource . '/' . $id . '/restore') }}"><i class="fa fa-fw fa-btn fa-trash" style="color: green;"></i>Restore Trash</a></li>
             @endability
         @endif
     </ul>

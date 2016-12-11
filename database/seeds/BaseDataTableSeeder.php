@@ -70,6 +70,14 @@ class BasePermissionsTableSeeder extends Seeder {
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
         Permission::create([ 'name' => 'delete-settings', 'display_name' => 'Delete Settings', 'description' => 'User is allowed to delete other settings',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+
+        // Audit Management Permissions
+        Permission::create([ 'name' => 'manage-audits', 'display_name' => 'Manage Audits', 'description' => 'User is allowed to add, edit and delete audits',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'view-audits', 'display_name' => 'View Audits', 'description' => 'User is allowed to view other audits',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'restore-audits', 'display_name' => 'Restore Audits', 'description' => 'User is allowed to restore other audits',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }
 

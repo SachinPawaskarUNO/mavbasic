@@ -69,7 +69,7 @@ trait AuditsTrait
         Audit::create([
             'auditable_id' => $this->id,
             'auditable_type' => get_class($this),
-            'activity' => $this->getActivityName($this, $event),
+            'activity' => $event,
 //             'before' =>($this->fresh()->toJson()),
             'before' => json_encode(array_intersect_key($this->getOriginal(), $this->getDirty())),
             'after'  => json_encode($this->getDirty()),

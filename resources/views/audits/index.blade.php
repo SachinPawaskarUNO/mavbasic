@@ -13,19 +13,16 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
-                                    <th>Object ID</th><th>Object Type</th><th>Activity</th><th>User</th><th>Before</th><th>After</th>
-                                    <th>Created Date</th>
+                                    <th>Activity</th><th>Activity Date</th><th>Activity User</th><th>After</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($audits as $current)
                                         <tr>
-                                            <td class="table-text"><div><a href="{{ url('/audits/'.$current->id) }}">{{ $current->auditable_id }}</a></div></td>
-                                            <td class="table-text"><div>{{ $current->auditable_type }}</div></td>
-                                            <td class="table-text"><div>{{ $current->activity }}</div></td>
-                                            <td class="table-text"><div>{{ $current->user->name }}</div></td>
-                                            <td class="table-text"><div>{{ $current->before }}</div></td>
-                                            <td class="table-text" style="width: 100px;"><div>{{ $current->after }}</div></td>
+                                            <td class="table-text"><div><a href="{{ url('/audits/'.$current->id.'/') }}">{{ $current->activityname }}</a></div></td>
                                             <td class="table-text"><div>{{ $current->created_at }}</div></td>
+                                            <td class="table-text"><div>{{ $current->user->name }}</div></td>
+                                            {{--<td class="table-text"><div>{{ $current->before }}</div></td>--}}
+                                            <td class="table-text" style="word-wrap: break-word; max-width: 300px;"><div>{{ $current->after }}</div></td>
                                         </tr>
                                     @endforeach
                                     </tbody>

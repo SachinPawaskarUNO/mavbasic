@@ -50,6 +50,8 @@ Route::get( 'users/{user}/settings', 'UsersController@showSettings');
 Route::post('users/{user}/updateSettings', 'UsersController@updateSettings');
 
 Route::get( 'audits', ['as' => 'audits.index', 'uses' => 'AuditsController@index']);
+Route::get( 'audits/{audit}', ['as' => 'audits.show', 'uses' => 'AuditsController@show']);
+Route::get( 'audits/{audit}/restore', ['as' => 'audits.restore', 'uses' => 'AuditsController@restore']);
 
 //    Route::delete('/comments/{comment}', 'CommentsController@destroy');
 //    Route::resource('comments', 'CommentsController');

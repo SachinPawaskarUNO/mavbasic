@@ -15,6 +15,7 @@
 namespace App\Http\Controllers;
 
 use App\Audit;
+use Illuminate\Http\Request;
 use App\Http\Requests\AuditRequest;
 
 use Auth;
@@ -37,9 +38,41 @@ class AuditsController extends Controller
     {
         Log::info('AuditsController.index: ');
         $audits = Audit::all();
-        $this->viewData['heading'] = "Audit Activities";
         $this->viewData['audits'] = $audits;
+        $this->viewData['heading'] = "Audit Activities";
 
         return view('audits.index', $this->viewData);
     }
+
+    public function show(Audit $audit)
+    {
+        $object = $audit;
+        Log::info('AuditsController.show: '.$object->id);
+        $this->viewData['audit'] = $object;
+        $this->viewData['heading'] = "View Audit: ".$object->model. ' ['. $object->auditable_id. ']';
+
+        return view('audits.show', $this->viewData);
+    }
+
+    /**
+     * Restore the given audit record Model/Object.
+     *
+     * @param  Request  $request
+     * @param  Audit  $audit
+     * @return Response
+     */
+    public function restore(Request $request, Audit $audit)
+    {
+        $object = $audit;
+        Log::info('AuditsController.restore: Start: '.$object->id);
+        if ($this->authorize('restore', $object))
+        {
+            $namespacedModel = $object->auditable_type;
+            Log::info('Authorization successful: Restoring Model='. $namespacedModel .' ['.$object->auditable_id.']');
+            $namespacedModel::withTrashed()->where('id', $object->auditable_id)->restore();
+        }
+        Log::info('AuditsController.restore: End: ');
+        return redirect('/audits');
+    }
+
 }

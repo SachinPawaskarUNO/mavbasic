@@ -52,4 +52,25 @@ class Audit extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    /**
+     * Get the audit activity name, which is concatenation of activity and object model.
+     *
+     * @return string
+     */
+    public function getActivityNameAttribute()
+    {
+        return strtolower($this->activity .'-'. $this->getModelAttribute());
+    }
+
+    /**
+     * Get the audit activity model.
+     *
+     * @return string
+     */
+    public function getModelAttribute()
+    {
+        return substr(strrchr($this->auditable_type, "\\"), 1);
+    }
+
 }

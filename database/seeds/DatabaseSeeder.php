@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Http\Traits\AuditsTrait;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,6 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        AuditsTrait::stopAudit("Database Seeding");
         $this->command->info('------------------------------------------------------------------------!');
         $this->command->info('               Start: Seeding User, Roles and Permissions               !');
         $this->command->info('------------------------------------------------------------------------!');
@@ -32,5 +34,6 @@ class DatabaseSeeder extends Seeder
         $this->command->info('------------------------------------------------------------------------!');
         $this->command->info('                            End: Seeding Setting                        !');
         $this->command->info('------------------------------------------------------------------------!');
+        AuditsTrait::startAudit();
     }
 }

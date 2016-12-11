@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Http\Traits\AuditsTrait;
 use App\Tag;
 
 class MaverickSeeder extends Seeder
@@ -12,6 +13,7 @@ class MaverickSeeder extends Seeder
      */
     public function run()
     {
+        AuditsTrait::stopAudit("Maverick Seeder");
         $this->command->info('------------------------------------------------------------------------!');
         $this->command->info('         Start: Seeding Maverick User, Roles and Permissions            !');
         $this->command->info('------------------------------------------------------------------------!');
@@ -37,6 +39,7 @@ class MaverickSeeder extends Seeder
         $this->command->info('------------------------------------------------------------------------!');
         $this->command->info('                          End: Seeding Tags                             !');
         $this->command->info('------------------------------------------------------------------------!');
+        AuditsTrait::startAudit();
     }
 }
 

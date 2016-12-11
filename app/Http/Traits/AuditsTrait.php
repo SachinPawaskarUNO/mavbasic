@@ -22,6 +22,20 @@ use Log;
 trait AuditsTrait
 {
     /**
+     * Indicates that this Model should stop audit
+     *
+     * @var bool
+     */
+    protected static $stopAudit = false;
+
+    /**
+     * Indicates the process that is requesting that this Model stop audit
+     *
+     * @var string
+     */
+    protected static $stopAuditProcess = "";
+
+    /**
      * Register the necessary event listeners.
      *
      * @return void
@@ -43,13 +57,15 @@ trait AuditsTrait
      */
     public function auditActivity($event)
     {
-        Log::info('AuditsTrait.auditActivity: ');
-       // dd([$event]);
-        $user_id = null;
-        if (!empty(Auth::id())) {
-            $user_id = Auth::id();
+        if (self::$stopAudit)
+        {
+            Log::info('AuditsTrait.auditActivity: Audit Stopped [process='.self::$stopAuditProcess.'][object='.get_class($this).'][id='.$this->id.'][user='.Auth::id().']');
+            return;
         }
-        
+
+        Log::info('AuditsTrait.auditActivity: [object='.get_class($this).'][id='.$this->id.'][user='.Auth::id().']');
+       // dd([$event]);
+
         Audit::create([
             'auditable_id' => $this->id,
             'auditable_type' => get_class($this),
@@ -57,7 +73,7 @@ trait AuditsTrait
 //             'before' =>($this->fresh()->toJson()),
             'before' => json_encode(array_intersect_key($this->getOriginal(), $this->getDirty())),
             'after'  => json_encode($this->getDirty()),
-            'user_id' => $user_id
+            'user_id' => Auth::id(),
         ]);
     }
 
@@ -71,7 +87,7 @@ trait AuditsTrait
     protected function getActivityName($model, $action)
     {
         $name = strtolower((new ReflectionClass($model))->getShortName());
-        return "{$action}_{$name}";
+        return "{$action}-{$name}";
     }
 
     /**
@@ -87,4 +103,20 @@ trait AuditsTrait
 
         return [ 'created', 'deleted', 'updated' ];
     }
+
+    public static function stopAudit($process)
+    {
+        if (empty($process))
+            return;
+        else {
+            self::$stopAudit = true;
+            self::$stopAuditProcess = $process;
+        }
+    }
+
+    public static function startAudit()
+    {
+        self::$stopAudit = false;
+    }
+
 }

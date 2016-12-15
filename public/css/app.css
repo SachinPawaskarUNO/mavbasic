@@ -5768,7 +5768,14 @@ button.close {
     display: none !important; } }
 
 body {
-  font-family: 'Lato'; }
+  font-family: 'Lato';
+  line-height: 0; }
+
+div#app div.container {
+  line-height: 1.6; }
+
+span.select2-container {
+  line-height: 1.6; }
 
 .fa-btn {
   margin-right: 6px; }

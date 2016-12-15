@@ -10,7 +10,9 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
 // MavBasic Application specific
-body { font-family: 'Lato'; }
+body { font-family: 'Lato'; line-height: 0; }
+div#app div.container { line-height: 1.6; }
+span.select2-container { line-height: 1.6; }
 .fa-btn { margin-right: 6px; }
 
 //div.panel-heading { text-align: center; padding-top: 5px; padding-bottom: 5px;}

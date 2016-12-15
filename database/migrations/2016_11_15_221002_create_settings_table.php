@@ -19,7 +19,7 @@ class CreateSettingsTable extends Migration
             $table->string('description');
             $table->string('help');
             $table->string('default_value');
-            $table->enum('kind', ['string', 'int', 'bool']); // e.g. string, int, bool
+            $table->enum('kind', ['string', 'int', 'bool', 'object', 'model']); // e.g. string, int, bool, object/model
             $table->enum('display_type', ['text', 'select', 'checkbox', 'number']); // e.g. text, select, checkbox, number
             $table->string('display_values')->nullable(); // e.g. json: {'10': 10, '25': 25, '50': 50, '100': 100}
             $table->string('created_by')->default('System');

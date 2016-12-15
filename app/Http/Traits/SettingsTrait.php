@@ -47,7 +47,23 @@ trait SettingsTrait {
     {
         $setting = Setting::where(['name' => $name])->first();
         if ($setting) {
-            return $setting->display_values;
+            if ($setting->kind == 'object' || $setting->kind == 'model') {
+                // example {"model":"App\\User", "field":"name", "whereCol":"name", "whereOp":"!=", "whereValue":"System"}
+                // example {"model":"App\\User", "field":"name"}
+                $opts = json_decode($setting->display_values, true);
+                $namedModel = array_has($opts, 'model') ? $opts['model'] : null;
+                $field = array_has($opts, 'field') ? $opts['field'] : null;
+                $whereCol = array_has($opts, 'whereCol') ? $opts['whereCol'] : null;
+                if (!empty($whereCol)) {
+                    $whereOp = array_has($opts, 'whereOp') ? $opts['whereOp'] : null;
+                    $whereValue = array_has($opts, 'whereValue') ? $opts['whereValue'] : null;
+                    return $namedModel::where($whereCol, $whereOp, $whereValue)->pluck($field, 'id');
+                } else {
+                    return $namedModel::pluck($field, 'id');
+                }
+            } else {
+                return $setting->display_values;
+            }
         } else { // Should never get here unless developer is asking for a setting not defined in the System
             return null;
         }
@@ -58,7 +74,7 @@ trait SettingsTrait {
     {
         $setting = Setting::where(['name' => $name])->first();
         if ($setting) {
-            $opts = json_decode($this->getSettingDisplayValues($name), true);
+            $opts = json_decode($setting->display_values, true);
             return array_has($opts, 'min') ? $opts['min'] : null;
         } else {
             return null;
@@ -70,7 +86,7 @@ trait SettingsTrait {
     {
         $setting = Setting::where(['name' => $name])->first();
         if ($setting) {
-            $opts = json_decode($this->getSettingDisplayValues($name), true);
+            $opts = json_decode($setting->display_values, true);
             return array_has($opts, 'max') ? $opts['max'] : null;
         } else {
             return null;
@@ -82,7 +98,7 @@ trait SettingsTrait {
     {
         $setting = Setting::where(['name' => $name])->first();
         if ($setting) {
-            $opts = json_decode($this->getSettingDisplayValues($name), true);
+            $opts = json_decode($setting->display_values, true);
             return array_has($opts, 'step') ? $opts['step'] : null;
         } else {
             return null;

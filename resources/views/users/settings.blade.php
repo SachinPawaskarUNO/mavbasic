@@ -52,7 +52,7 @@
                                                 </div>
                                             </td>
                                             @else
-                                            {{--default is "input"--}}
+                                            {{--default is "text"--}}
                                             <td class="table-text"><div>
                                                 {!! Form::text('usersettings['.$current->id.'][value]', $user->getSettingValue($current->name), ['class' => 'col-md-6 form-control']) !!}
                                             </div></td>

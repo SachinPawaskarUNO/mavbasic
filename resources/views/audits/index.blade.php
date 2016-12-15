@@ -39,9 +39,7 @@
 @endsection
 
 @section('footer')
-    <style>
-        .table td { border: 0px !important; }
-    </style>
+    @include ('common._footer', ['CRUD_Action' => 'List', 'includeStyle' => true, 'includeScript' => true])
 
     <script>
         $(document).ready(function() {

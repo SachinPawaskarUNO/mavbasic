@@ -38,14 +38,5 @@
 @endsection
 
 @section('footer')
-<style>
-    .table td { border: 0px !important; }
-</style>
-
-<script>
-    $(document).ready(function() {
-        var oTableApi = $('table.mav-datatable').dataTable().api();
-        oTableApi.page.len( {{ Auth::user()->getSettingValue('LinesPerPage') }} ).draw();
-    });
-</script>
+    @include ('common._footer', ['CRUD_Action' => 'List', 'includeStyle' => true, 'includeScript' => true])
 @endsection

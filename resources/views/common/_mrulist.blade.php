@@ -1,4 +1,4 @@
-@if (Auth::user()->getSettingJsonValuesCount($setting))
+@if (Auth::user()->getSettingJsonValuesCount($setting) && Auth::user()->getSettingValue($setting) != 0)
     <li class="dropdown-submenu">
         <a tabindex="-1" href="#"><i class="fa fa-btn fa-fw fa-list-ol"></i>{{$menu}}</a>
         <ul class="dropdown-menu">

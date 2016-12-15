@@ -109,14 +109,6 @@ class SettingsTableSeeder extends Seeder {
             'display_type' => 'text', 'display_values' => '',
             'help' => 'If set, the accession number will be auto-populated on New SE screen',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        Setting::create([  'name' => 'WelcomeScreen', 'description' => 'Welcome Screen', 'default_value' => 'true', 'kind' => 'bool',
-            'display_type' => 'checkbox', 'display_values' => '',
-            'help' => 'Display the Welcome screen on user login',
-            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        Setting::create([  'name' => 'MRUList_Accessions', 'description' => 'MRU Accessions', 'default_value' => '5', 'kind' => 'int',
-            'display_type' => 'number', 'display_values' => '{"min":0, "max":20, "step":1}',
-            'help' => 'Number of Most Recently Used/Accessed (MRU List) Accessions to keep track off',
-            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }
 

@@ -141,6 +141,11 @@ class BaseSettingsTableSeeder extends Seeder {
             'display_type' => 'select', 'display_values' => '{"10":10, "25":25, "50":50, "100":100}',
             'help' => 'Controls the numbers of rows of data displayed for views with tables',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        // Todo: create welcome popup
+        Setting::create([  'name' => 'WelcomeScreen', 'description' => 'Welcome Screen', 'default_value' => 'true', 'kind' => 'bool',
+            'display_type' => 'checkbox', 'display_values' => '',
+            'help' => 'Display the Welcome screen on user login',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
         Setting::create([  'name' => 'MRUList_Users', 'description' => 'MRU Users', 'default_value' => '5', 'kind' => 'int',
             'display_type' => 'number', 'display_values' => '{"min":0, "max":20, "step":1}',
             'help' => 'Number of Most Recently Used/Accessed (MRU List) Users to keep track off',

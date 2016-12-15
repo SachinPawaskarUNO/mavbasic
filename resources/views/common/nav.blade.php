@@ -11,8 +11,9 @@
             </button>
 
             <!-- Branding Image -->
-            <div class="pull-left"><img src="/images/UNO-icon-color.png" style="height: 48px;"></div>
-            <a class="navbar-brand" href="{{ url('/') }}">UNO MavBasic</a>
+            <div class="pull-left navbar-brand" style="padding: 0px;">
+                <a class="navbar-brand" style="padding: 0px;" href="{{ url('/') }}"><img src="/images/UNO-icon-color.png" style="height: 48px;"></a>
+            </div>
 
         </div>
 
@@ -20,7 +21,7 @@
             @if (Auth::check())
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav">
-                <li><a href="{{ url('/home') }}">Home</a></li>
+                <li><a href="{{ url('/home') }}"><i class="fa fa-btn fa-fw fa-lg fa-home"></i></a></li>
                 {{-- Menu for Users with Administration Role Only --}}
                 @ability('sysadmin,admin', 'manage-users,create-users,edit-users,view-users,delete-users,
                           manage-roles,create-roles,edit-roles,view-roles,delete-roles,

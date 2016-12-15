@@ -5,9 +5,9 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading welcome-title"><h5><b>Welcome to Basic Starter Application</b></h5></div>
+                <div class="panel-heading welcome-title"><div class="pull-right" style="margin-top: 5px;"><a href="https://SachinPawaskarUNO.github.io/mavbasic" target="_blank"></i><i class="fa fa-btn fa-fw fa-lg fa-question-circle-o"></i></a></div><h5><b>Welcome to Basic Starter Application</b></h5></div>
                 <div class="app-welcome welcome-image"><img src="images/UNO-Mav.png"></div>
-                <div class="panel-body welcome-message">
+                <div class="panel-body welcome-message" style="padding-top: 5px; padding-bottom: 5px;">
                     <p>
                         The original intent of this web application is to provide students in the MIS Capstone course with a basic starter web application.
                         Of course, this can also be used by students in other courses that can benefit from having a basic web application and not have to start from scratch.

@@ -16,6 +16,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -81,6 +82,7 @@ class ChangePasswordController extends Controller
                     return view('auth.passwords.change')->withErrors('Your old password does not match');
                 } else {
                     $user->password = bcrypt(Input::get('password'));
+                    $user->password_change_at = Carbon::now();
                     $user->save();
                     Session::flash('flash_message', 'Password has been changed');
                     return view('auth.passwords.change');

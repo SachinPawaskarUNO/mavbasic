@@ -43,7 +43,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'last_login_at', 'expiration_at', 'password_change_at'];
 
     /**
      * The attributes that are mass assignable.
@@ -51,7 +51,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'active', 'created_by', 'updated_by',
+        'name', 'email', 'password', 'active', 'phone', 'default_language', 'default_country', 'last_login_ip_address',
+        'last_login_device', 'number_of_logins', 'last_login_at', 'expiration_at', 'password_change_at',
+        'created_by', 'updated_by',
     ];
 
     /**
@@ -132,4 +134,20 @@ class User extends Authenticatable
             ->withPivot('user_id', 'setting_id', 'value', 'json_values', 'created_by', 'updated_by')
             ->withTimestamps();
     }
+
+    /**
+     * Get all of the eulas for this user.
+     */
+    public function eulas()
+    {
+        return $this->belongsToMany('App\Eula', 'eula_user', 'user_id', 'eula_id')
+            ->withPivot('user_id', 'eula_id', 'signature', 'accepted_at', 'created_by', 'updated_by')
+            ->withTimestamps();
+    }
+
+    public function getLatestEula()
+    {
+        return $this->eulas()->orderBy('pivot_accepted_at', 'desc')->get();
+    }
+
 }

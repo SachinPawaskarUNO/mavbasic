@@ -47,6 +47,7 @@
                         @endability
                         @ability('sysadmin,admin', 'manage-settings,create-settings,edit-settings,view-settings,delete-settings')
                         <li><a href="{{ url('/settings') }}"><i class="fa fa-btn fa-fw fa-cog"></i>Setting Management</a></li>
+                        <li><a href="{{ url('/eulas') }}"><i class="fa fa-btn fa-fw fa-gavel"></i>EULA Management</a></li>
                         @endability
                         @ability('sysadmin', '')
                         <li class="divider"></li>
@@ -83,13 +84,6 @@
                             <li class="divider"></li>
                             <li><a href="https://SachinPawaskarUNO.github.io/mavbasic" target="_blank"><i class="fa fa-btn fa-fw fa-question-circle-o"></i>Online Help</a></li>
                         </ul>
-
-                        {{--<ul class="dropdown-menu" role="menu">--}}
-                            {{--<li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-fw fa-sign-out"></i>Logout</a></li>--}}
-                            {{--<li><a href="{{ url('/change-password') }}"><i class="fa fa-btn fa-fw fa-lock"></i>Change Password</a></li>--}}
-                            {{--<li class="divider"></li>--}}
-                            {{--<li><a href="{{ url('/help') }}"><i class="fa fa-btn fa-fw fa-question-circle"></i>Help</a></li>--}}
-                        {{--</ul>--}}
                     </li>
                 @endif
             </ul>

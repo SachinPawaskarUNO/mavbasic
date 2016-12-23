@@ -44,8 +44,9 @@ Route::get('/home', 'HomeController@index');
 
 Route::resource('users', 'UsersController');
 Route::resource('roles', 'RolesController');
-
 Route::resource('settings', 'SettingsController');
+Route::resource('eulas', 'EulasController');
+
 Route::get( 'users/{user}/settings', 'UsersController@showSettings');
 Route::post('users/{user}/updateSettings', 'UsersController@updateSettings');
 

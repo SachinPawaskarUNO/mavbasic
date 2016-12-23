@@ -56,6 +56,17 @@
     <div class="col-md-6">{!! Form::select('display_type', $list_display_type, null, ['id' => 'display_type', 'class' => 'form-control roles mav-select', 'style' => 'width: 50%; margin-top: 10px;']) !!}</div>
 </div>
 
+<div class="form-group{{ $errors->has('display_values') ? ' has-error' : '' }}">
+    {!! Form::label('display_values', 'Display Values:', ['class' => 'col-md-4 control-label']) !!}
+    <div class="col-md-6">
+        {!! Form::text('display_values', null, ['id' => 'default_value', 'class' => 'col-md-6 form-control', 'required' => 'required']) !!}
+        @if ($errors->has('display_values'))
+            <span class="help-block">
+                <strong>{{ $errors->first('display_values') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
 
 @if ($CRUD_Action != 'View')
     <div class="form-group">

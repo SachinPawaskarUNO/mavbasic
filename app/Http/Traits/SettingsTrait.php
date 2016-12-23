@@ -25,7 +25,7 @@ trait SettingsTrait {
     {
         $setting = $this->settings()->where(['user_id' => $this->id, 'name' => $name])->first();
         if ($setting) {
-            return $setting->pivot->value;
+            return $this->stringToKind($setting, $setting->pivot->value);
         } else {
             return $this->getSettingDefaultValue($name);
         }
@@ -36,7 +36,7 @@ trait SettingsTrait {
     {
         $setting = Setting::where(['name' => $name])->first();
         if ($setting) {
-            return $setting->default_value;
+            return $this->stringToKind($setting, $setting->default_value);
         } else { // Should never get here unless developer is asking for a setting not defined in the System
             return null;
         }
@@ -247,4 +247,14 @@ trait SettingsTrait {
         return $this->getCache();
     }
 
+    public function stringToKind($setting, $value)
+    {
+        if ($setting->kind == 'boolean' || $setting->kind == 'bool') {
+            return ($value == 'true' || $value == '1') ? true : false;
+        } else if ($setting->kind == 'int' || $setting->kind == 'integer') {
+            return intval($value);
+        } else {
+            return $value;
+        }
+    }
 }

@@ -31,8 +31,8 @@ class SettingsController extends Controller
 
         $this->user = Auth::user();
         $this->settings = Setting::all();
-        $this->list_kind = array('string' => 'string', 'int' => 'int', 'bool' => 'bool');
-        $this->list_display_type = array('text' => 'text', 'dropdown' => 'dropdown', 'checkbox' => 'checkbox');
+        $this->list_kind = array('string' => 'string', 'int' => 'int', 'bool' => 'bool', 'object' => 'object', 'model' => 'model');
+        $this->list_display_type = array('text' => 'text', 'select' => 'select', 'checkbox' => 'checkbox', 'number' => 'number');
         $this->heading = "Settings";
 
         $this->viewData = [ 'user' => $this->user, 'settings' => $this->settings, 'list_kind' => $this->list_kind,

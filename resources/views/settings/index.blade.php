@@ -13,15 +13,15 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
-                                    <th>Name</th><th>Description</th><th>Kind</th><th>Default Value</th>
+                                    <th>Description</th><th>Kind</th><th>Default Value</th><th>Display Type</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($settings as $setting)
                                         <tr>
-                                            <td class="table-text"><div><a href="{{ url('/settings/'.$setting->id.'/') }}">{{ $setting->name }}</a></div></td>
-                                            <td class="table-text"><div>{{ $setting->description }}</div></td>
+                                            <td class="table-text"><div><a href="{{ url('/settings/'.$setting->id.'/') }}">{{ $setting->description }}</a></div></td>
                                             <td class="table-text"><div>{{ $setting->kind }}</div></td>
                                             <td class="table-text"><div>{{ $setting->default_value }}</div></td>
+                                            <td class="table-text"><div>{{ $setting->display_type }}</div></td>
                                         </tr>
                                     @endforeach
                                     </tbody>

@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="pull-right">
-                        @include ('settings._action', ['CRUD_Action' => 'View', 'id' => $setting->id, 'resource' => 'settings'])
+                        @include ('common._action', ['CRUD_Action' => 'View', 'object' => $setting, 'resource' => 'settings', 'disableMenu' => ['create', 'delete']])
                     </div>
                     <div><h4>{{ $heading }}</h4></div>
                 </div>
@@ -24,6 +24,7 @@
 @endsection
 
 @section('footer')
+@include ('common._footer', ['CRUD_Action' => 'View', 'includeStyle' => true, 'includeScript' => true])
 <script type="text/javascript">
     $(document).ready(function(){
         $('.form-control').prop("disabled", true);

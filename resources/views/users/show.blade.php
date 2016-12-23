@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="pull-right">
-                        @include ('common._action', ['CRUD_Action' => 'View', 'id' => $user->id, 'resource' => 'users'])
+                        @include ('common._action', ['CRUD_Action' => 'View', 'object' => $user, 'resource' => 'users', 'disableMenu' => []])
                     </div>
                     <div><h4>{{ $heading }}</h4></div>
                 </div>
@@ -24,11 +24,5 @@
 @endsection
 
 @section('footer')
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('select').select2();
-        $('.form-control').prop("disabled", true);
-        $('.form-control-checkbox').prop("disabled", true);
-    });
-</script>
+@include ('common._footer', ['CRUD_Action' => 'View', 'includeStyle' => true, 'includeScript' => true])
 @endsection

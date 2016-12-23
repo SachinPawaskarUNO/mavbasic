@@ -30,7 +30,47 @@
         </script>
     @endif
 @elseif($CRUD_Action == 'Create')
+    @if ($includeStyle == true)
+        <style>
+            {{-- Place some styles here --}}
+        </style>
+    @endif
+
+    @if ($includeScript == true)
+        <script>
+            $(document).ready(function($) {
+                $('select').select2();
+            });
+        </script>
+    @endif
 @elseif($CRUD_Action == 'View')
+    @if ($includeStyle == true)
+        <style>
+            {{-- Place some styles here --}}
+        </style>
+    @endif
+
+    @if ($includeScript == true)
+        <script>
+            $(document).ready(function($) {
+                $('select').select2();
+                $('.form-control').prop("disabled", true);
+                $('.form-control-checkbox').prop("disabled", true);
+            });
+        </script>
+    @endif
 @elseif($CRUD_Action == 'Update')
-@elseif($CRUD_Action == 'Delete')
+    @if ($includeStyle == true)
+        <style>
+            {{-- Place some styles here --}}
+        </style>
+    @endif
+
+    @if ($includeScript == true)
+        <script>
+            $(document).ready(function($) {
+                $('select').select2();
+            });
+        </script>
+    @endif
 @endif

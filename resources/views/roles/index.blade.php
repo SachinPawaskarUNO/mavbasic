@@ -7,7 +7,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="pull-right"> <!-- Action Button Section -->
-                            @include ('common._action', ['CRUD_Action' => 'List', 'resource' => 'roles'])
+                            @include ('common._action', ['CRUD_Action' => 'List', 'resource' => 'roles', 'disableMenu' => []])
                         </div>
                         <div><h4>{{ $heading }}</h4></div>
                     </div>

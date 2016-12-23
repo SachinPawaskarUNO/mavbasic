@@ -39,12 +39,11 @@
 @endsection
 
 @section('footer')
-    @include ('common._footer', ['CRUD_Action' => 'List', 'includeStyle' => true, 'includeScript' => true])
-
-    <script>
-        $(document).ready(function() {
-            var oTableApi = $('table.mav-datatable').dataTable().api();
-            oTableApi.order([0, 'desc']).draw();
-        } );
-    </script>
+@include ('common._footer', ['CRUD_Action' => 'List', 'includeStyle' => true, 'includeScript' => true])
+<script>
+    $(document).ready(function() {
+        var oTableApi = $('table.mav-datatable').dataTable().api();
+        oTableApi.order([0, 'desc']).draw();
+    } );
+</script>
 @endsection

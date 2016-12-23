@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="pull-right"> <!-- Action Button Section -->
-                        @include ('settings._action', ['CRUD_Action' => 'Update', 'id' => $setting->id, 'resource' => 'settings'])
+                        @include ('common._action', ['CRUD_Action' => 'Update', 'object' => $setting, 'resource' => 'settings', 'disableMenu' => ['create','delete']])
                     </div>
                     <div><h4>{{ $heading }}</h4></div>
                 </div>
@@ -27,6 +27,7 @@
 @endsection
 
 @section('footer')
+@include ('common._footer', ['CRUD_Action' => 'Update', 'includeStyle' => true, 'includeScript' => true])
 <script>
     $(document).ready(function($) {
         $('select#display_type').prop("disabled", true);

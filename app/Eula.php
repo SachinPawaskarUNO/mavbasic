@@ -67,4 +67,15 @@ class Eula extends Model
             ->withPivot('user_id', 'eula_id', 'signature', 'accepted_at', 'created_by', 'updated_by')
             ->withTimestamps();
     }
+
+    public static function getActiveSystemEula($language, $country)
+    {
+        $eula = Eula::where(['status' => 'Active', 'language' => $language, 'country' => $country])->first();
+        return $eula;
+    }
+
+    public static function getActiveSystemEulaForUser($user)
+    {
+        return self::getActiveSystemEula($user->default_language, $user->default_country);
+    }
 }

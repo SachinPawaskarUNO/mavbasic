@@ -14,12 +14,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\User;
 use App\Role;
 use App\Setting;
+use App\Eula;
 use Auth;
 use Session;
 use Illuminate\Support\Facades\Input;
@@ -133,6 +135,18 @@ class UsersController extends Controller
         return redirect('/users');
     }
 
+    /**
+     * Sync up the list of roles for the given user record.
+     *
+     * @param  User  $user
+     * @param  array  $roles (id)
+     */
+    private function syncRoles(User $user, array $roles)
+    {
+        Log::info('UsersController.syncRoles: Start: '.$user->name);
+        $user->roles()->sync($this->populateCreateFieldsForSyncWithIDs($roles, true));
+    }
+
     public function showSettings(User $user)
     {
         $object = $user;
@@ -174,16 +188,45 @@ class UsersController extends Controller
         return view('users.settings', $this->viewData);
     }
 
-
-    /**
-     * Sync up the list of roles for the given user record.
-     *
-     * @param  User  $user
-     * @param  array  $roles (id)
-     */
-    private function syncRoles(User $user, array $roles)
+    public function acceptEula(User $user, Request $request)
     {
-        Log::info('UsersController.syncRoles: Start: '.$user->name);
-        $user->roles()->sync($this->populateCreateFieldsForSyncWithIDs($roles, true));
+        $object = $user;
+        Log::info('UsersController.acceptEula: '.$object->id);
+        $accept = $request['accept'];
+        Log::info('UsersController.acceptEula: accept='.$accept);
+        if ($accept) {
+            Log::info('UsersController.acceptEula: accept=success');
+            // ToDo: add country/language and make sure that is the correct/latest system EULA.
+            $eula = Eula::where(['status' => 'Active', 'language' => $user->default_language, 'country' => $user->default_country])->first();
+            $user->eulas()->save($eula, ['accepted_at' => Carbon::now(), 'created_by' => $user->name, 'updated_by' => $user->name ]);
+            $response = array('success' => '1', 'msg' => 'EULA successfully accepted: Thank you!');
+            $user->buildWizardStartup();
+            $user->buildWizardHelp();
+            Session::put('user', $user);
+        } else {
+            $response = array('success' => '0', 'msg' => 'User setting NOT saved');
+        }
+
+        return $response;
+    }
+
+    public function updateSetting(User $user, Request $request)
+    {
+        $object = $user;
+        Log::info('UsersController.updateSetting: '.$object->id);
+        $value = $request['settingvalue'];
+        $settingname = $request['settingname'];
+        Log::info('UsersController.updateSetting: '.'['.$settingname.'='.$value.']');
+        $user->setSetting($settingname, $value);
+//        $response   = array('success' => '0', 'error' => 'User setting NOT saved');
+        $response   = array('success' => '1', 'msg' => 'User setting successfully saved');
+
+        // Special processing for certain user setting should go here.
+        if ($settingname == 'WelcomeScreenOnStartup') {
+            $user->buildWizardStartup();
+            $user->buildWizardHelp();
+            Session::put('user', $user);
+        }
+        return $response;
     }
 }

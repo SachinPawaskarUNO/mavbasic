@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Validator;
 use Hash;
 use Session;
+use Log;
+use Auth;
 
 class LoginController extends Controller
 {
@@ -53,6 +55,26 @@ class LoginController extends Controller
     {
         $request['active'] = true;
         $request['deleted_at'] = null;
+        // ToDo: need to incorporate expiration date in the future
         return $request->only($this->username(), 'password', 'active', 'deleted_at');
+    }
+
+    /**
+     * The user has been authenticated.
+     * This function is overridden from Trait AuthenticatesUsers
+     * This function is called once the user has been authenticated
+     * Do any initialization processing that needs to be done for this user here.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        Log::info('LoginController.authenticated'.$user->name);
+        $user->buildWizardStartup();
+        $user->buildWizardHelp();
+
+        Session::put('user', $user);
     }
 }

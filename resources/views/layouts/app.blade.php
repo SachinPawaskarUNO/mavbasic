@@ -46,6 +46,11 @@
         <!-- Content -->
         @yield('content')
 
+        {{--<!-- Common Wizard -->--}}
+        @if (Auth::check())
+        @include('common._wizard', ['user' => Session::get('user')])
+        @endif
+
         <!-- Scripts -->
         @yield('scripts')
 

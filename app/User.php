@@ -65,6 +65,19 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public $wizard = array('mode' => 'false', 'displaytabs' => 'false', 'modal' => 'true', 'heading' => 'Welcome to SPawaskar Wizard');
+    public $wizardHelp = array('mode' => 'false', 'displaytabs' => 'true', 'modal' => 'false', 'heading' => 'Application Help Wizard');
+    public $wizardTabs = array('Eula' => ['name' => 'Eula', 'active' => true], 'Welcome' => ['name' => 'Welcome', 'active' => false]);
+    public $wizardHelpTabs = array('Eula' => ['name' => 'Eula', 'active' => true], 'Welcome' => ['name' => 'Welcome', 'active' => false]);
+
+    // EULA related
+    public $eulaAccepted = false;
+    public static $eulaActiveSystemList = [];
+    public $userAcceptedEula = null;
+
+    public $passwordChangeRequested = false;
+    public $showStartupWizard = false;
+
     /**
      * Get a List of roles ids associated with the current user.
      *
@@ -145,9 +158,94 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    public function getLatestEula()
+    public function getActiveEula()
     {
-        return $this->eulas()->orderBy('pivot_accepted_at', 'desc')->get();
+        return $this->eulas()->orderBy('pivot_accepted_at', 'desc')->get()->first();
     }
 
+    public function checkEula()
+    {
+        $systemEula = EULA::getActiveSystemEula($this->default_language, $this->default_country);
+        $currentlyAcceptedEula = $this->getActiveEula();
+
+        if (!isset($currentlyAcceptedEula) || !isset($systemEula)) {
+//            dd(['true',$systemEula, $currentlyAcceptedEula, $this]);
+            return ($this->eulaAccepted = false);
+        } else if ($systemEula->id != $currentlyAcceptedEula->id) {
+            return ($this->eulaAccepted = false);
+        } else {
+            return ($this->eulaAccepted = true);
+        }
+    }
+
+    /**
+     * check if wizard should be displayed on startup
+     */
+    public function buildWizardStartup() {
+        $modal = 'true';
+        $this->wizardStartup = $this->wizardStartupTabs = [];
+
+        $this->checkEula();
+
+        // ToDo: implement System EULA check in the future. This will be a System/Org setting.
+        // First check to see if we need to display EULA
+        if (!$this->eulaAccepted) {
+            if (EULA::getActiveSystemEULA($this->default_language, $this->default_country) != null) {
+                $this->wizardStartupTabs = array_merge($this->wizardStartupTabs, array('Eula' => ['name' => 'Eula', 'src' => '\eula']));
+            }
+        }
+        count($this->wizardStartupTabs) ? $modal = 'true' : $modal = 'false'; // which mean we have EULA tab
+        $startTab = (count($this->wizardStartupTabs) == 1) ? 'Eula' : ''; // which mean we have EULA tab
+
+        // Second check to see if we need to display Change Password
+        if ($this->passwordChangeRequested) {
+            $this->wizardStartupTabs = array_merge($this->wizardStartupTabs,
+                array('ChangePassword' => ['name' => 'ChangePassword', 'src' => '\passwordChangeOnLogin']));
+            if (empty($startTab)) { $startTab = 'ChangePassword'; }
+        }
+
+        if ($this->getSettingValue('WelcomeScreenOnStartup'))
+        {
+            $this->wizardStartupTabs = array_merge($this->wizardStartupTabs,
+                array('Welcome' => ['name' => 'Welcome', 'src' => '\help']));
+            if (empty($startTab)) { $startTab = 'Welcome'; }
+        }
+
+        if (count($this->wizardStartupTabs)) {
+            $this->wizardStartup = array('wizardType'=>'Startup', 'mode'=>'false', 'displaytabs'=>'false',
+                'startTab'=>$startTab, 'modal'=>$modal, 'heading'=>'Startup: Welcome - '.$this->name);
+        }
+        $this->showStartupWizard = count($this->wizardStartupTabs) ? true:false;
+        Log::info('User.buildWizardStartup: wizardStartupTabs='.json_encode($this->wizardStartupTabs));
+        Log::info('User.buildWizardStartup: wizardStartup='.json_encode($this->wizardStartup));
+        return count($this->wizardStartupTabs);
+    }
+
+    /**
+     * check if wizard should be displayed on startup
+     */
+    public function buildWizardHelp() {
+        $this->wizardHelp = $this->wizardHelpTabs = [];
+
+        $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('About' => ['name' => 'About', 'src' => '\about']));
+        $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('AboutBrowser' => ['name' => 'AboutBrowser', 'src' => '\aboutbrowser']));
+
+        if ($this->getSettingValue('WelcomeScreenOnStartup'))
+        {
+            $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['name' => 'Welcome', 'src' => '\help']));
+        }
+        if ($this->eulaAccepted) {
+            if (EULA::getActiveSystemEULA($this->default_language, $this->default_country) != null) {
+                $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Eula' => ['name' => 'Eula', 'src' => '\eula']));
+            }
+        }
+
+        if (count($this->wizardHelpTabs)) {
+            $this->wizardHelp = array('wizardType'=>'Help', 'mode'=>'false', 'displaytabs'=>'true',
+                'startTab'=>'About', 'modal'=>'false', 'heading'=>config('app.name', 'MavBasic') . ' - Help');
+        }
+        Log::info('User.buildWizardHelp: wizardHelpTabs='.json_encode($this->wizardHelpTabs));
+        Log::info('User.buildWizardHelp: wizardHelp='.json_encode($this->wizardHelp));
+        return count($this->wizardHelpTabs);
+    }
 }

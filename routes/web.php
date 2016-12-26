@@ -49,6 +49,8 @@ Route::resource('eulas', 'EulasController');
 
 Route::get( 'users/{user}/settings', 'UsersController@showSettings');
 Route::post('users/{user}/updateSettings', 'UsersController@updateSettings');
+Route::post('users/{user}/updateSetting', 'UsersController@updateSetting');
+Route::post('users/{user}/acceptEula', 'UsersController@acceptEula');
 
 Route::get( 'audits', ['as' => 'audits.index', 'uses' => 'AuditsController@index']);
 Route::get( 'audits/{audit}', ['as' => 'audits.show', 'uses' => 'AuditsController@show']);

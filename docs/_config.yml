@@ -1,0 +1,29 @@
+# top level stuff you probably don't need to touch
+#highlighter: rouge
+#extensions: [smart]
+#permalink: /:title.html
+#paginate: 5
+#gems: [jekyll-paginate]
+port: 4000
+#safe: true
+
+
+# edit here to achieve your personal greatness
+url: http://SachinPawaskarUNO.github.io/mavbasic
+baseurl: /
+title: Sachin Pawaskar
+author: Sachin Pawaskar
+description: MavBasic website & blog
+avatar: profile.png
+email: spawaskar@unomaha.edu
+#github: SachinPawaskarUNO # username
+#twitter: SPaws4
+#linkedin: sachinpawaskar
+#stackoverflow: username   #e.g: users/2735833/proton1h1
+#Comment out if you don't want disqus 
+#disqus: username
+#google_analytics: UA-69391421-1
+
+
+# needed for travis-ci build
+exclude: [vendor]

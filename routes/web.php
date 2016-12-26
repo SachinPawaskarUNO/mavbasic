@@ -41,6 +41,9 @@ Route::get( 'password/change', 'Auth\ChangePasswordController@showChangePassword
 Route::post('password/change', 'Auth\ChangePasswordController@changePassword');
 
 Route::get('/home', 'HomeController@index');
+Route::get('/eula', 'HomeController@eula');
+Route::get('/about', 'HomeController@about');
+Route::get('/aboutbrowser', 'HomeController@about');
 
 Route::resource('users', 'UsersController');
 Route::resource('roles', 'RolesController');

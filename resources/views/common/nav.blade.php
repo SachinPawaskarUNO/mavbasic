@@ -83,6 +83,7 @@
                             <li><a href="{{ url('/users/'. Auth::user()->id . '/settings') }}"><i class="fa fa-btn fa-fw fa-cog"></i>Settings</a></li>
                             <li class="divider"></li>
                             <li><a href="https://SachinPawaskarUNO.github.io/mavbasic" target="_blank"><i class="fa fa-btn fa-fw fa-question-circle-o"></i>Online Help</a></li>
+                            <li><a href="#wizard" data-toggle="modal"><i class="fa fa-btn fa-fw fa-info"></i>About</a></li>
                         </ul>
                     </li>
                 @endif

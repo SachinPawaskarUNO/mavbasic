@@ -63,7 +63,7 @@ trait AuditsTrait
             return;
         }
 
-        Log::info('AuditsTrait.auditActivity: [object='.get_class($this).'][id='.$this->id.'][user='.Auth::id().']');
+        Log::info('AuditsTrait.auditActivity: [object='.get_class($this).'][event='.$event.'][id='.$this->id.'][user='.Auth::id().']');
        // dd([$event]);
 
         Audit::create([

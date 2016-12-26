@@ -21,6 +21,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 use App\Http\Traits\SettingsTrait;
 use App\Http\Traits\AuditsTrait;
+use App\Eula;
 use Log;
 
 
@@ -70,7 +71,7 @@ class User extends Authenticatable
     public $wizardTabs = array('Eula' => ['name' => 'Eula', 'active' => true], 'Welcome' => ['name' => 'Welcome', 'active' => false]);
     public $wizardHelpTabs = array('Eula' => ['name' => 'Eula', 'active' => true], 'Welcome' => ['name' => 'Welcome', 'active' => false]);
 
-    // EULA related
+    // Eula related
     public $eulaAccepted = false;
     public static $eulaActiveSystemList = [];
     public $userAcceptedEula = null;
@@ -165,7 +166,7 @@ class User extends Authenticatable
 
     public function checkEula()
     {
-        $systemEula = EULA::getActiveSystemEula($this->default_language, $this->default_country);
+        $systemEula = Eula::getActiveSystemEula($this->default_language, $this->default_country);
         $currentlyAcceptedEula = $this->getActiveEula();
 
         if (!isset($currentlyAcceptedEula) || !isset($systemEula)) {
@@ -187,15 +188,15 @@ class User extends Authenticatable
 
         $this->checkEula();
 
-        // ToDo: implement System EULA check in the future. This will be a System/Org setting.
+        // ToDo: implement System Eula check in the future. This will be a System/Org setting.
         // First check to see if we need to display EULA
         if (!$this->eulaAccepted) {
-            if (EULA::getActiveSystemEULA($this->default_language, $this->default_country) != null) {
+            if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
                 $this->wizardStartupTabs = array_merge($this->wizardStartupTabs, array('Eula' => ['name' => 'Eula', 'src' => '\eula']));
             }
         }
-        count($this->wizardStartupTabs) ? $modal = 'true' : $modal = 'false'; // which mean we have EULA tab
-        $startTab = (count($this->wizardStartupTabs) == 1) ? 'Eula' : ''; // which mean we have EULA tab
+        count($this->wizardStartupTabs) ? $modal = 'true' : $modal = 'false'; // which mean we have Eula tab
+        $startTab = (count($this->wizardStartupTabs) == 1) ? 'Eula' : ''; // which mean we have Eula tab
 
         // Second check to see if we need to display Change Password
         if ($this->passwordChangeRequested) {
@@ -235,7 +236,7 @@ class User extends Authenticatable
             $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['name' => 'Welcome', 'src' => '\help']));
         }
         if ($this->eulaAccepted) {
-            if (EULA::getActiveSystemEULA($this->default_language, $this->default_country) != null) {
+            if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
                 $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Eula' => ['name' => 'Eula', 'src' => '\eula']));
             }
         }

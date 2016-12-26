@@ -139,12 +139,12 @@ $(document).ready(function($) {
         updateWelcomeStartup();
     });
     $("input.accept, a.accept", wizard).click(function() {
-        acceptEULA();
+        acceptEula();
         (tabCount == 1) ? closeWizard() : activateTab('Welcome');
         // ToDo: implement moveTab for future more generic reusability
 //        (tabCount == 1) ? closeWizard() : moveTab('Next');
     });
-    $("input.print, a.print", wizard).click(function() { printEULA(); });
+    $("input.print, a.print", wizard).click(function() { printEula(); });
 
     $("button.continue", wizard).click(function() { $(".wizard-close", wizard).click(); });
     if (wizard.dataset.displaytabs === 'false') { $('ul.nav-tabs').hide(); }
@@ -306,7 +306,7 @@ function enabledisableWizardButtonBarButton(button, disable) {
  * This ajax function handles the inserting of the eula_user record with
  * correct acceptance date and signature/initials (to be implemented).
  */
-function acceptEULA()
+function acceptEula()
 {
     var rc = false;
     var data = { 'accept': true };
@@ -382,7 +382,7 @@ function updateWelcomeStartup()
 // ToDo: implement downloadEULA and printEULA functionality
 // This function handles the printing of the EULA.
 // This is the standard way of handling the print event
-function printEULA() {
+function printEula() {
     // open new window and set some parameters size, menubar, resizable
     var print_window = window.open("","Print","width=600,height=600");
     var html = $("iframe#Eula").contents().find("html").html(); // get the html contents of the iframe

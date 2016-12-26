@@ -82,7 +82,7 @@
                             <li><a href="{{ url('/password/change') }}"><i class="fa fa-btn fa-fw fa-lock"></i>@lang('labels.change_password')</a></li>
                             <li><a href="{{ url('/users/'. Auth::user()->id . '/settings') }}"><i class="fa fa-btn fa-fw fa-cog"></i>@lang('labels.settings')</a></li>
                             <li class="divider"></li>
-                            <li><a href="https://SachinPawaskarUNO.github.io/mavbasic" target="_blank"><i class="fa fa-btn fa-fw fa-question-circle-o"></i>@lang('labels.online_help')p</a></li>
+                            <li><a href="https://SachinPawaskarUNO.github.io/mavbasic" target="_blank"><i class="fa fa-btn fa-fw fa-question-circle-o"></i>@lang('labels.online_help')</a></li>
                             <li><a href="#wizard" data-toggle="modal"><i class="fa fa-btn fa-fw fa-info"></i>@lang('labels.about')</a></li>
                         </ul>
                     </li>

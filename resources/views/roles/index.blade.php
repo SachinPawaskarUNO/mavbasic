@@ -16,7 +16,7 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
-                                    <th>Name</th><th>Display Name</th><th>Description</th>
+                                    <th>@lang('labels.name')</th><th>@lang('labels.display_name')</th><th>@lang('labels.description')</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($roles as $role)
@@ -30,7 +30,7 @@
                                 </table>
                             </div>
                         @else
-                            <div class="panel-body"><h4>No Role Records found</h4></div>
+                            <div class="panel-body"><h4>@lang('labels.no_records_found')</h4></div>
                         @endif
                     </div>
                 </div>

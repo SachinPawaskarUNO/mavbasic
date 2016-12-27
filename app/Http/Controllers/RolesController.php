@@ -32,7 +32,7 @@ class RolesController extends Controller
 
         $this->user = Auth::user();
         $this->list_permission = Permission::pluck('display_name', 'id');
-        $this->heading = "Roles";
+        $this->heading = trans('labels.roles');
 
         $this->viewData = [ 'user' => $this->user, 'list_permission' => $this->list_permission, 'heading' => $this->heading ];
     }
@@ -42,6 +42,7 @@ class RolesController extends Controller
         Log::info('RolesController.index: ');
         $roles = Role::all()->except([1]);  // except the "sysadmin" role.
         $this->viewData['roles'] = $roles;
+        $this->viewData['heading'] = trans('labels.roles');
 
         return view('roles.index', $this->viewData);
     }
@@ -51,7 +52,7 @@ class RolesController extends Controller
         $object = $role;
         Log::info('RolesController.show: '.$object->id);
         $this->viewData['role'] = $object;
-        $this->viewData['heading'] = "View Role: ".$object->name;
+        $this->viewData['heading'] = trans('labels.view_role', ['name' => $object->name]);
 
         return view('roles.show', $this->viewData);
     }
@@ -59,7 +60,7 @@ class RolesController extends Controller
     public function create()
     {
         Log::info('RolesController.create: ');
-        $this->viewData['heading'] = "New Role";
+        $this->viewData['heading'] = trans('labels.new_role');
 
         return view('roles.create', $this->viewData);
     }
@@ -72,7 +73,7 @@ class RolesController extends Controller
 
         $object = Role::create($input);
         $this->syncPermissions($object, $request->input('permissionlist'));
-        Session::flash('flash_message', 'Role successfully added!');
+        Session::flash('flash_message', trans('messages.success_new_role'));
         Log::info('RolesController.store - End: '.$object->id);
         return redirect()->back();
     }
@@ -82,7 +83,7 @@ class RolesController extends Controller
         $object = $role;
         Log::info('RolesController.edit: '.$object->id);
         $this->viewData['role'] = $object;
-        $this->viewData['heading'] = "Edit Role: ".$object->name;
+        $this->viewData['heading'] = trans('labels.edit_role', ['name' => $object->name]);
 
         return view('roles.edit', $this->viewData);
     }
@@ -95,7 +96,7 @@ class RolesController extends Controller
 
         $object->update($request->all());
         $this->syncPermissions($object, $request->input('permissionlist'));
-        Session::flash('flash_message', 'Role successfully updated!');
+        Session::flash('flash_message', trans('messages.success_edit_role'));
         Log::info('RolesController.update - End: '.$object->id);
         return redirect('roles');
     }

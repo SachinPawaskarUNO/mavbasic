@@ -13,7 +13,7 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
-                                    <th>Description</th><th>Kind</th><th>Default Value</th><th>Display Type</th>
+                                    <th>@lang('labels.description')</th><th>@lang('labels.kind')</th><th>@lang('labels.default_value')</th><th>@lang('labels.display_type')</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($settings as $setting)
@@ -28,7 +28,7 @@
                                 </table>
                             </div>
                         @else
-                            <div class="panel-body"><h4>No User Records found</h4></div>
+                            <div class="panel-body"><h4>@lang('labels.no_records_found')</h4></div>
                         @endif
                     </div>
                 </div>

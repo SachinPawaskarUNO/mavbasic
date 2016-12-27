@@ -33,7 +33,7 @@ class SettingsController extends Controller
         $this->settings = Setting::all();
         $this->list_kind = array('string' => 'string', 'int' => 'int', 'bool' => 'bool', 'object' => 'object', 'model' => 'model');
         $this->list_display_type = array('text' => 'text', 'select' => 'select', 'checkbox' => 'checkbox', 'number' => 'number');
-        $this->heading = "Settings";
+        $this->heading = trans('labels.settings');
 
         $this->viewData = [ 'user' => $this->user, 'settings' => $this->settings, 'list_kind' => $this->list_kind,
             'list_display_type' => $this->list_display_type, 'heading' => $this->heading ];
@@ -44,6 +44,7 @@ class SettingsController extends Controller
         Log::info('SettingsController.index: ');
         $settings = Setting::all();
         $this->viewData['settings'] = $settings;
+        $this->viewData['heading'] = trans('labels.settings');
 
         return view('settings.index', $this->viewData);
     }
@@ -53,7 +54,7 @@ class SettingsController extends Controller
         $object = $setting;
         Log::info('SettingsController.show: '.$object->id);
         $this->viewData['setting'] = $object;
-        $this->viewData['heading'] = "View Setting: ".$object->name;
+        $this->viewData['heading'] = trans('labels.view_setting', ['name' => $object->name]);
 
         return view('settings.show', $this->viewData);
     }
@@ -73,7 +74,7 @@ class SettingsController extends Controller
         $this->populateCreateFields($input);
 
         $object = Setting::create($input);
-        Session::flash('flash_message', 'Setting successfully added!');
+        Session::flash('flash_message', trans('messages.success_new_setting'));
         Log::info('SettingsController.store - End: '.$object->id);
 
         return redirect()->back();
@@ -84,7 +85,7 @@ class SettingsController extends Controller
         $object = $setting;
         Log::info('SettingsController.edit: '.$object->id);
         $this->viewData['setting'] = $object;
-        $this->viewData['heading'] = "Edit Setting: ".$object->name;
+        $this->viewData['heading'] = trans('labels.edit_setting', ['name' => $object->name]);
 
         return view('settings.edit', $this->viewData);
     }
@@ -97,7 +98,7 @@ class SettingsController extends Controller
         $this->populateUpdateFields($request);
 
         $object->update($request->all());
-        Session::flash('flash_message', 'Setting successfully updated!');
+        Session::flash('flash_message', trans('messages.success_edit_setting'));
         Log::info('SettingsController.update - End: '.$object->id);
         return redirect('settings');
     }

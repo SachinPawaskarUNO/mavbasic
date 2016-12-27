@@ -59,7 +59,6 @@ class ChangePasswordController extends Controller
 
     /**
      * Changes the password for the current user.
-     * Todo: should probably implement a trait ChangePassword
      *
      * @param  void
      * @return void
@@ -79,12 +78,12 @@ class ChangePasswordController extends Controller
                 return view('auth.passwords.change')->withErrors($validator);
             } else {
                 if (!Hash::check(Input::get('old_password'), $user->password)) {
-                    return view('auth.passwords.change')->withErrors('Your old password does not match');
+                    return view('auth.passwords.change')->withErrors(trans('messages.error_old_password_mismatch'));
                 } else {
                     $user->password = bcrypt(Input::get('password'));
                     $user->password_change_at = Carbon::now();
                     $user->save();
-                    Session::flash('flash_message', 'Password has been changed');
+                    Session::flash('flash_message', trans('messages.success_password_changed'));
                     return view('auth.passwords.change');
                 }
             }

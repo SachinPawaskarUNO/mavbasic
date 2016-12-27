@@ -84,8 +84,10 @@ return [
     'kind' => 'Type',
     'language' => 'Language',
     'last' => 'Last',
+    'lines_per_page' => 'Lines per page',
     'login' => 'Login',
     'logout' => 'Logout',
+    'mru_list_users' => 'MRU Users',
     'name' => 'Name',
     'new' => 'New',
     'new_audit' => 'New Audit',
@@ -141,4 +143,5 @@ return [
     'view_setting' => 'View Setting - :name',
     'view_user' => 'View User - :name',
     'welcome' => 'Welcome',
+    'welcome_screen_on_startup' => 'Welcome Screen of Startup',
 ];

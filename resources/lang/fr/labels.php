@@ -84,8 +84,10 @@ return [
     'kind' => 'Type',
     'language' => 'Langue',
     'last' => 'Dernier',
+    'lines_per_page' => 'Lignes par page',
     'login' => 'S\'identifier',
     'logout' => 'Se déconnecter',
+    'mru_list_users' => 'Utilisateurs de MRU',
     'name' => 'Nom',
     'new' => 'Nouveau',
     'new_audit' => 'Nouvelle vérification',
@@ -141,4 +143,5 @@ return [
     'view_setting' => 'paramètre de la vue - :name',
     'view_user' => 'Voir l\'utilisateur - :name',
     'welcome' => 'Bienvenue',
+    'welcome_screen_on_startup' => 'Écran d\'accueil du démarrage',
 ];

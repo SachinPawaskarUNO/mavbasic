@@ -14,7 +14,8 @@ return [
     */
 
     'copyright' => 'Copyright &copy; 2016-:yearto Sachin Pawaskar. All Rights Reserved.',
-    'welcome' => 'Welcome, :Name',
+    'welcome' => 'Welcome, :name',
+    'welcome_to_application' => 'Welcome to :appname Application',
     'product_protection' => 'This product is protected by U.S. and international copyright laws.',
     'optimized_for_browser' => 'This product is optimized for Google Chrome browser. Functionality may be compromised if not using one of these versions. The product will work on Internet Explorer 11 & above but functionality may be compromised.',
     'popup_blocker' => 'Any "popup blockers" could potentially interfere with the use of this application. If using a popup blocker, please be sure to add this application to your blocker\'s "approved list" so that popup windows will be enabled.',

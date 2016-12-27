@@ -62,7 +62,7 @@ class SettingsController extends Controller
     public function create()
     {
         Log::info('SettingsController.create: ');
-        $this->viewData['heading'] = "New Setting";
+        $this->viewData['heading'] = trans('labels.new_setting');
 
         return view('settings.create', $this->viewData);
     }

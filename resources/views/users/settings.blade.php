@@ -18,7 +18,7 @@
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead> <!-- Table Headings -->
-                                <th>Key</th><th>Value</th><th>Default Value</th>
+                                <th>@lang('labels.name')</th><th>@lang('labels.value')</th><th>@lang('labels.default_value')e</th>
                                 </thead>
                                 <tbody> <!-- Table Body -->
                                 @foreach ($the_user_settings as $current)
@@ -67,7 +67,7 @@
 
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-5">
-                                    {!! Form::button('<i class="fa fa-btn fa-save"></i>Save', ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
+                                    {!! Form::button('<i class="fa fa-btn fa-save"></i>'.trans('labels.save'), ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
                                 </div>
                             </div>
                         </div>

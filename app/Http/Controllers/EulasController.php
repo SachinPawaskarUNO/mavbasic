@@ -32,7 +32,7 @@ class EulasController extends Controller
 
         $this->list_eula_status = array('Draft' => 'Draft', 'Active' => 'Active');
         $this->eulas = Eula::all();
-        $this->heading = "EULAs";
+        $this->heading = trans('labels.eulas');
 
         $this->viewData = [ 'eulas' => $this->eulas, 'list_eula_status' => $this->list_eula_status, 'heading' => $this->heading ];
     }
@@ -42,6 +42,7 @@ class EulasController extends Controller
         Log::info('EulasController.index: ');
         $eulas = Eula::all();
         $this->viewData['eulas'] = $eulas;
+        $this->viewData['heading'] = trans('labels.eulas');
 
         return view('eulas.index', $this->viewData);
     }
@@ -51,7 +52,7 @@ class EulasController extends Controller
         $object = $eula;
         Log::info('EulasController.show: '.$object->id);
         $this->viewData['eula'] = $object;
-        $this->viewData['heading'] = "View EULA: ".$object->version;
+        $this->viewData['heading'] = trans('labels.view_eula', ['name' => $object->version]);
 
         return view('eulas.show', $this->viewData);
     }
@@ -59,7 +60,7 @@ class EulasController extends Controller
     public function create()
     {
         Log::info('EulasController.create: ');
-        $this->viewData['heading'] = "New EULA";
+        $this->viewData['heading'] = trans('labels.new_eula');
 
         return view('eulas.create', $this->viewData);
     }
@@ -71,7 +72,7 @@ class EulasController extends Controller
         $this->populateCreateFields($input);
 
         $object = Eula::create($input);
-        Session::flash('flash_message', 'EULA successfully added!');
+        Session::flash('flash_message', trans('messages.success_new_eula'));
         Log::info('EulasController.store - End: '.$object->id);
 
         return redirect()->back();
@@ -82,7 +83,7 @@ class EulasController extends Controller
         $object = $eula;
         Log::info('EulasController.edit: '.$object->id);
         $this->viewData['eula'] = $object;
-        $this->viewData['heading'] = "Edit EULA: ".$object->version;
+        $this->viewData['heading'] = trans('labels.edit_eula', ['name' => $object->version]);
 
         return view('eulas.edit', $this->viewData);
     }
@@ -105,7 +106,7 @@ class EulasController extends Controller
         }
 
         $object->update($request->all());
-        Session::flash('flash_message', 'EULA successfully updated!');
+        Session::flash('flash_message', trans('messages.success_edit_eula'));
         Log::info('EulasController.update - End: '.$object->id);
         return redirect('eulas');
     }

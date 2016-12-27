@@ -16,7 +16,7 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
-                                    <th>Name</th><th>Status</th><th>Description</th><th>Effective Date</th><th>Country Language</th>
+                                    <th>@lang('labels.version')</th><th>@lang('labels.status')</th><th>@lang('labels.agreement')</th><th>@lang('labels.effective_date')</th><th>@lang('labels.language') @lang('labels.country')</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($eulas as $eula)
@@ -32,7 +32,7 @@
                                 </table>
                             </div>
                         @else
-                            <div class="panel-body"><h4>No User Records found</h4></div>
+                            <div class="panel-body"><h4>@lang('labels.no_records_found')</h4></div>
                         @endif
                     </div>
                 </div>

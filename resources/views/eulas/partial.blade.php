@@ -1,5 +1,5 @@
 <div class="form-group{{ $errors->has('version') ? ' has-error' : '' }}">
-    {!! Form::label('version', 'Version:', ['class' => 'col-md-4 control-label']) !!}
+    {!! Form::label('version', trans('labels.version').':', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
         {!! Form::text('version', null, ['id' => 'version', 'class' => 'col-md-6 form-control', 'required' => 'required']) !!}
         @if ($errors->has('version'))
@@ -11,7 +11,7 @@
 </div>
 
 <div class="form-group{{ $errors->has('agreement') ? ' has-error' : '' }}">
-    {!! Form::label('agreement', 'Agreement:', ['class' => 'col-md-4 control-label']) !!}
+    {!! Form::label('agreement', trans('labels.agreement').':', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
         {!! Form::textarea('agreement', null, ['id' => 'agreement', 'class' => 'col-md-6 form-control', 'required' => 'required']) !!}
         @if ($errors->has('agreement'))
@@ -24,14 +24,14 @@
 
 @if ($CRUD_Action != 'Create')
 <div class="form-group">
-    <label class="col-md-4 control-label">Status</label>
+    <label class="col-md-4 control-label">@lang('labels.status')</label>
     <div class="col-md-6">{!! Form::select('status', $list_eula_status, null, ['id' => 'status', 'class' => 'form-control roles mav-select', 'style' => 'width: 50%; margin-top: 10px;']) !!}</div>
 </div>
 
 
 @if($eula->status != 'Draft')
 <div class="form-group{{ $errors->has('effective_at') ? ' has-error' : '' }}">
-    {!! Form::label('effective_at', 'Effective Date:', ['class' => 'col-md-4 control-label']) !!}
+    {!! Form::label('effective_at', trans('labels.effective_date').':', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
         {!! Form::date('effective_at', null, ['id' => 'eula_effective_at', 'class' => 'col-md-6 form-control']) !!}
         @if ($errors->has('effective_at'))
@@ -45,7 +45,7 @@
 @if ($CRUD_Action != 'View')
     <div class="form-group">
         <div class="col-md-6 col-md-offset-4">
-            {!! Form::button('<i class="fa fa-btn fa-save"></i>Save', ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
+            {!! Form::button('<i class="fa fa-btn fa-save"></i>'.trans('labels.save'), ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
         </div>
     </div>
 @endif

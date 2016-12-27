@@ -16,21 +16,21 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
-                                    <th>User</th><th>Email</th><th>Status</th>
+                                    <th>@lang('labels.name')</th><th>@lang('labels.email')</th><th>@lang('labels.status')</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($users as $user)
                                         <tr>
                                             <td class="table-text"><div><a href="{{ url('/users/'.$user->id.'/') }}">{{ $user->name }}</a></div></td>
                                             <td class="table-text"><div>{{ $user->email }}</div></td>
-                                            @if ($user->active)<td class="table-text"><div>Active</div></td>@else<td class="table-text"><div>InActive</div></td>@endif
+                                            @if ($user->active)<td class="table-text"><div>@lang('labels.active')</div></td>@else<td class="table-text"><div>@lang('labels.inactive')</div></td>@endif
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         @else
-                            <div class="panel-body"><h4>No User Records found</h4></div>
+                            <div class="panel-body"><h4>@lang('labels.no_records_found')</h4></div>
                         @endif
                     </div>
                 </div>

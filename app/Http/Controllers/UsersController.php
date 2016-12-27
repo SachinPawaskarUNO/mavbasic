@@ -37,7 +37,7 @@ class UsersController extends Controller
         $this->user = Auth::user();
         $this->users = User::all()->except([1]);  // except the "System" User
         $this->list_role = Role::pluck('display_name', 'id');
-        $this->heading = "Users";
+        $this->heading = trans('labels.users');
 
         $this->viewData = [ 'user' => $this->user, 'users' => $this->users, 'list_role' => $this->list_role, 'heading' => $this->heading ];
     }
@@ -47,6 +47,7 @@ class UsersController extends Controller
         Log::info('UsersController.index: ');
         $users = User::all()->except([1]);  // except the "System" User
         $this->viewData['users'] = $users;
+        $this->heading = trans('labels.users');
 
         return view('users.index', $this->viewData);
     }
@@ -56,7 +57,7 @@ class UsersController extends Controller
         $object = $user;
         Log::info('UsersController.show: '.$object->id);
         $this->viewData['user'] = $object;
-        $this->viewData['heading'] = "View User: ".$object->name;
+        $this->viewData['heading'] = trans('labels.view_user', ['name' => $object->name]);
 
         Auth::user()->addSettingJsonValue('MRUList_Users', $object);
         return view('users.show', $this->viewData);
@@ -65,7 +66,7 @@ class UsersController extends Controller
     public function create()
     {
         Log::info('UsersController.create: ');
-        $this->viewData['heading'] = "New User";
+        $this->viewData['heading'] = trans('labels.new_user');
 
         return view('users.create', $this->viewData);
     }
@@ -80,7 +81,7 @@ class UsersController extends Controller
 
         $object = User::create($input);
         $this->syncRoles($object, $request->input('rolelist'));
-        Session::flash('flash_message', 'User successfully added!');
+        Session::flash('flash_message', trans('labels.success_new_user'));
         Log::info('UsersController.store - End: '.$object->id);
 
         return redirect()->back();
@@ -95,7 +96,7 @@ class UsersController extends Controller
             $this->viewData['list_role'] = Role::all()->except(1)->pluck('display_name', 'id');
         }
 
-        $this->viewData['heading'] = "Edit User: ".$object->name;
+        $this->viewData['heading'] = trans('labels.edit_user', ['name' => $object->name]);
 
         return view('users.edit', $this->viewData);
     }
@@ -110,7 +111,7 @@ class UsersController extends Controller
 
         $object->update($request->all());
         $this->syncRoles($object, $request->input('rolelist'));
-        Session::flash('flash_message', 'User successfully updated!');
+        Session::flash('flash_message', trans('labels.success_edit_user'));
         Log::info('UsersController.update - End: '.$object->id);
         return redirect('users');
     }
@@ -153,7 +154,7 @@ class UsersController extends Controller
         Log::info('UsersController.settings: '.$object->id);
         $this->viewData['user'] = $object;
         $this->viewData['the_user_settings'] = Setting::all();
-        $this->viewData['heading'] = "Edit User Settings: ".$object->name;
+        $this->viewData['heading'] = trans('labels.edit_user_settings', ['name' => $object->name]);
 
         return view('users.settings', $this->viewData);
     }
@@ -175,15 +176,15 @@ class UsersController extends Controller
                 Log::info('User setting updated: '.$name. ' with value '.$value);
             } catch(Exception $e){
                 Log::error('UsersController.updateSettings - Error: '.'Updating user setting'.$name);
-                return redirect('users.settings')->withErrors('Error: Updating user setting '.$name );
+                return redirect('users.settings')->withErrors(trans('labels.error_edit_user_setting', ['name' => $name]));
             }
         }
-        Session::flash('flash_message', 'User settings successfully updated!');
+        Session::flash('flash_message', trans('labels.success_edit_user_settings'));
         Log::info('UsersController.updateSettings - End: '.$object->id);
 
         $this->viewData['user'] = $object;
         $this->viewData['the_user_settings'] = Setting::all();
-        $this->viewData['heading'] = "Edit User Settings: ".$object->name;
+        $this->viewData['heading'] = trans('labels.edit_user_settings', ['name' => $object->name]);
 
         return view('users.settings', $this->viewData);
     }
@@ -199,12 +200,12 @@ class UsersController extends Controller
             // ToDo: add country/language and make sure that is the correct/latest system EULA.
             $eula = Eula::where(['status' => 'Active', 'language' => $user->default_language, 'country' => $user->default_country])->first();
             $user->eulas()->save($eula, ['accepted_at' => Carbon::now(), 'created_by' => $user->name, 'updated_by' => $user->name ]);
-            $response = array('success' => '1', 'msg' => 'EULA successfully accepted: Thank you!');
+            $response = array('success' => '1', 'msg' => trans('labels.success_eula_accepted').' - '.trans('labels.thank_you'));
             $user->buildWizardStartup();
             $user->buildWizardHelp();
             Session::put('user', $user);
         } else {
-            $response = array('success' => '0', 'msg' => 'User setting NOT saved');
+            $response = array('success' => '0', 'msg' => trans('labels.error_eula_accepted'));
         }
 
         return $response;
@@ -219,7 +220,7 @@ class UsersController extends Controller
         Log::info('UsersController.updateSetting: '.'['.$settingname.'='.$value.']');
         $user->setSetting($settingname, $value);
 //        $response   = array('success' => '0', 'error' => 'User setting NOT saved');
-        $response   = array('success' => '1', 'msg' => 'User setting successfully saved');
+        $response   = array('success' => '1', 'msg' => trans('labels.success_edit_user_setting'));
 
         // Special processing for certain user setting should go here.
         if ($settingname == 'WelcomeScreenOnStartup') {

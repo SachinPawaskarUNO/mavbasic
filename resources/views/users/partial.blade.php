@@ -1,5 +1,5 @@
 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-    {!! Form::label('name', 'Name:', ['class' => 'col-md-4 control-label']) !!}
+    {!! Form::label('name', trans('labels.name').':', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
         {!! Form::text('name', null, ['class' => 'col-md-6 form-control', 'required' => 'required']) !!}
         @if ($errors->has('name'))
@@ -11,7 +11,7 @@
 </div>
 
 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-    {!! Form::label('email', 'E-Mail Address:', ['class' => 'col-md-4 control-label']) !!}
+    {!! Form::label('email', trans('labels.email_address').'s:', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">
         {!! Form::text('email', null, ['class' => 'col-md-6 form-control', 'required' => 'required']) !!}
         @if ($errors->has('email'))
@@ -27,20 +27,20 @@
         <div class="checkbox">
             <label>
                 {{ Form::hidden('active', false) }}{{ Form::checkbox('active', true, old('active'),
-                ['class' => 'form-control-checkbox']) }} Active
+                ['class' => 'form-control-checkbox']) }} @lang('labels.active')
             </label>
         </div>
     </div>
 </div>
 
 <div class="form-group">
-    <label class="col-md-4 control-label">Roles</label>
+    <label class="col-md-4 control-label">@lang('labels.roles')</label>
     <div class="col-md-6">{!! Form::select('rolelist[]', $list_role, null, ['id' => 'roles', 'class' => 'form-control roles mav-select', 'multiple', 'style' => 'width: 50%; margin-top: 10px;']) !!}</div>
 </div>
 
 @if($CRUD_Action == 'Create')
     <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Password</label>
+        <label class="col-md-4 control-label">@lang('labels.password')</label>
         <div class="col-md-6">
             <input type="password" class="form-control" name="password">
             @if ($errors->has('password'))
@@ -50,7 +50,7 @@
     </div>
 
     <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-        <label class="col-md-4 control-label">Confirm Password</label>
+        <label class="col-md-4 control-label">@lang('labels.confirm_password')</label>
         <div class="col-md-6">
             <input type="password" class="form-control" name="password_confirmation">
             @if ($errors->has('password_confirmation'))
@@ -63,7 +63,7 @@
 @if ($CRUD_Action != 'View')
     <div class="form-group">
         <div class="col-md-6 col-md-offset-4">
-            {!! Form::button('<i class="fa fa-btn fa-save"></i>Save', ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
+            {!! Form::button('<i class="fa fa-btn fa-save"></i>'.trans('labels.save'), ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
         </div>
     </div>
 @endif

@@ -13,7 +13,7 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
-                                    <th>Activity Date</th><th>Activity</th><th>Activity User</th><th>After</th>
+                                    <th>@lang('labels.activity_date')</th><th>@lang('labels.activity')</th><th>@lang('labels.activity_user')</th><th>@lang('labels.after')</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($audits as $current)
@@ -29,7 +29,7 @@
                                 </table>
                             </div>
                         @else
-                            <div class="panel-body"><h4>No Audit Records found</h4></div>
+                            <div class="panel-body"><h4>@lang('labels.no_records_found')</h4></div>
                         @endif
                     </div>
                 </div>

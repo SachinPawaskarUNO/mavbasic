@@ -29,7 +29,7 @@ class AuditsController extends Controller
         $this->middleware('ability:sysadmin, manage-audit|view-audit');
 
         $this->user = Auth::user();
-        $this->heading = "Audits";
+        $this->heading = trans('labels.audits');
 
         $this->viewData = [ 'user' => $this->user, 'heading' => $this->heading ];
     }
@@ -39,7 +39,7 @@ class AuditsController extends Controller
         Log::info('AuditsController.index: ');
         $audits = Audit::orderBy('created_at', 'desc')->get();
         $this->viewData['audits'] = $audits;
-        $this->viewData['heading'] = "Audit Activities";
+        $this->viewData['heading'] = trans('labels.audit_activities');
 
         return view('audits.index', $this->viewData);
     }
@@ -49,7 +49,7 @@ class AuditsController extends Controller
         $object = $audit;
         Log::info('AuditsController.show: '.$object->id);
         $this->viewData['audit'] = $object;
-        $this->viewData['heading'] = "View Audit: ".$object->model. ' ['. $object->auditable_id. ']';
+        $this->viewData['heading'] = trans('labels.view_audit', ['name' => $object->model. ' ['. $object->auditable_id. ']']);
 
         return view('audits.show', $this->viewData);
     }

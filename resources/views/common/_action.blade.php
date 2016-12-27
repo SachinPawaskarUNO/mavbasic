@@ -23,11 +23,11 @@
 <div class='pull-right'>
     <button type="button" class="btn btn-default btn-primary dropdown-toggle"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Actions <span class="caret"></span>
+        @lang('labels.actions') <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
         @if (! in_array("list", $disableMenu))
-        <li><a href="{{ url('/' . $resource. '/create') }}"><i class="fa fa-fw fa-btn fa-file-o"></i>Create</a></li>
+        <li><a href="{{ url('/' . $resource. '/create') }}"><i class="fa fa-fw fa-btn fa-file-o"></i>@lang('labels.create')</a></li>
         @endif
     </ul>
 </div>
@@ -36,28 +36,28 @@
 <div class='pull-right'>
     <button type="button" class="btn btn-default btn-primary dropdown-toggle"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Actions <span class="caret"></span>
+        @lang('labels.actions') <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
         @if (! in_array("list", $disableMenu))
-        <li><a href="{{ url('/' . $resource) }}"><i class="fa fa-fw fa-btn fa-list-alt"></i>All</a></li>
+        <li><a href="{{ url('/' . $resource) }}"><i class="fa fa-fw fa-btn fa-list-alt"></i>@lang('labels.all')</a></li>
         @endif
         @if($CRUD_Action != 'Create')
             @if (! in_array("create", $disableMenu))
             @ability('sysadmin,admin','manage-'.$resource.',create-'.$resource)
-            <li><a href="{{ url('/' . $resource. '/create') }}"><i class="fa fa-fw fa-btn fa-file-o"></i>Create</a></li>
+            <li><a href="{{ url('/' . $resource. '/create') }}"><i class="fa fa-fw fa-btn fa-file-o"></i>@lang('labels.create')</a></li>
             @endability
             @endif
             @if($CRUD_Action == 'Update')
                 @if (! in_array("discard", $disableMenu))
                 @ability('sysadmin,admin','manage-'.$resource.',view-'.$resource)
-                <li><a href="{{ url('/' . $resource . '/' . $object->id) }}"><i class="fa fa-fw fa-btn fa-undo"></i>Discard Changes</a></li>
+                <li><a href="{{ url('/' . $resource . '/' . $object->id) }}"><i class="fa fa-fw fa-btn fa-undo"></i>@lang('labels.discard_changes')</a></li>
                 @endability
                 @endif
             @else
                 @if (! in_array("edit", $disableMenu))
                 @ability('sysadmin,admin','manage-'.$resource.',edit-'.$resource)
-                <li><a href="{{ url('/' . $resource . '/' . $object->id . '/edit') }}"><i class="fa fa-fw fa-btn fa-pencil-square-o"></i>Edit</a></li>
+                <li><a href="{{ url('/' . $resource . '/' . $object->id . '/edit') }}"><i class="fa fa-fw fa-btn fa-pencil-square-o"></i>@lang('labels.edit')</a></li>
                 @endability
                 @endif
             @endif
@@ -66,7 +66,7 @@
             <li>
                 <form class= 'delete-menu' action="{{ url('/' . $resource . '/' . $object->id) }}" method="POST" onsubmit="return deleteConfirm();">
                     {{ csrf_field() }}{{ method_field('DELETE') }}
-                    <button type="submit" id="delete" class="actionlink"><i class="fa fa-fw fa-btn fa-trash-o"></i>Delete</button>
+                    <button type="submit" id="delete" class="actionlink"><i class="fa fa-fw fa-btn fa-trash-o"></i>@lang('labels.delete')</button>
                 </form>
             </li>
             @endability

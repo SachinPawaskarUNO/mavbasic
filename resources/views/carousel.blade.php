@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading" style="text-align: center;">@lang('messages.welcome', ['name' => $user->name])</div>
+                <div class="panel-heading" style="text-align: center;">@lang('messages.welcome_user', ['name' => $user->name])</div>
 
                 <div class="panel-body">
                     <!-- Carousel

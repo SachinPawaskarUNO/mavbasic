@@ -1,7 +1,7 @@
 @extends('layouts.standard')
 
 @section('content')
-<div class="Ad-space" style="background-color: white;">
+<div class="Ad-space">
 <table style="width: 100%">
     <tr>
         <td class="pull-left"><a href="https://sachinpawaskaruno.github.io/mavbasic" class="logo" target="_blank"><img src="images/UNO-Mav.png"/></a></td>

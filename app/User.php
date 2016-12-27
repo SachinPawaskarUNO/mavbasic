@@ -192,7 +192,8 @@ class User extends Authenticatable
         // First check to see if we need to display EULA
         if (!$this->eulaAccepted) {
             if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
-                $this->wizardStartupTabs = array_merge($this->wizardStartupTabs, array('Eula' => ['name' => 'Eula', 'src' => '\eula']));
+                $this->wizardStartupTabs = array_merge($this->wizardStartupTabs,
+                    array('Eula' => ['key' => 'Eula', 'name' => trans('labels.eula'), 'src' => '\eula']));
             }
         }
         count($this->wizardStartupTabs) ? $modal = 'true' : $modal = 'false'; // which mean we have Eula tab
@@ -201,20 +202,20 @@ class User extends Authenticatable
         // Second check to see if we need to display Change Password
         if ($this->passwordChangeRequested) {
             $this->wizardStartupTabs = array_merge($this->wizardStartupTabs,
-                array('ChangePassword' => ['name' => 'ChangePassword', 'src' => '\passwordChangeOnLogin']));
+                array('ChangePassword' => ['key' => 'ChangePassword', 'name' => trans('labels.change_password'), 'src' => '\passwordChangeOnLogin']));
             if (empty($startTab)) { $startTab = 'ChangePassword'; }
         }
 
         if ($this->getSettingValue('WelcomeScreenOnStartup'))
         {
             $this->wizardStartupTabs = array_merge($this->wizardStartupTabs,
-                array('Welcome' => ['name' => 'Welcome', 'src' => '\help']));
+                array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => '\help']));
             if (empty($startTab)) { $startTab = 'Welcome'; }
         }
 
         if (count($this->wizardStartupTabs)) {
             $this->wizardStartup = array('wizardType'=>'Startup', 'mode'=>'false', 'displaytabs'=>'false',
-                'startTab'=>$startTab, 'modal'=>$modal, 'heading'=>'Startup: Welcome - '.$this->name);
+                'startTab'=>$startTab, 'modal'=>$modal, 'heading'=>trans('messages.welcome_user', ['name'=>$this->name]));
         }
         $this->showStartupWizard = count($this->wizardStartupTabs) ? true:false;
         Log::info('User.buildWizardStartup: wizardStartupTabs='.json_encode($this->wizardStartupTabs));
@@ -228,22 +229,22 @@ class User extends Authenticatable
     public function buildWizardHelp() {
         $this->wizardHelp = $this->wizardHelpTabs = [];
 
-        $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('About' => ['name' => 'About', 'src' => '\about']));
-        $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('AboutBrowser' => ['name' => 'AboutBrowser', 'src' => '\aboutbrowser']));
+        $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('About' => ['key' => 'About', 'name' => trans('labels.about'), 'src' => '\about']));
+        $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('AboutBrowser' => ['key' => 'AboutBrowser', 'name' => trans('labels.aboutbrowser'), 'src' => '\aboutbrowser']));
 
         if ($this->getSettingValue('WelcomeScreenOnStartup'))
         {
-            $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['name' => 'Welcome', 'src' => '\help']));
+            $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => '\help']));
         }
         if ($this->eulaAccepted) {
             if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
-                $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Eula' => ['name' => 'Eula', 'src' => '\eula']));
+                $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Eula' => ['key' => 'Eula', 'name' => trans('labels.eula'), 'src' => '\eula']));
             }
         }
 
         if (count($this->wizardHelpTabs)) {
             $this->wizardHelp = array('wizardType'=>'Help', 'mode'=>'false', 'displaytabs'=>'true',
-                'startTab'=>'About', 'modal'=>'false', 'heading'=>config('app.name', 'MavBasic') . ' - Help');
+                'startTab'=>'About', 'modal'=>'false', 'heading'=>config('app.name', 'MavBasic') .' - '. trans('labels.help'));
         }
         Log::info('User.buildWizardHelp: wizardHelpTabs='.json_encode($this->wizardHelpTabs));
         Log::info('User.buildWizardHelp: wizardHelp='.json_encode($this->wizardHelp));

@@ -29,8 +29,8 @@ Log::info('_wizard.blade.php: wizardTabs='.json_encode($wizardTabs));
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         @foreach($wizardTabs as $currenttab)
-                        <li data-name="{{ $currenttab['name'] }}" class="{{ $currenttab['name'] }}" role="presentation" >
-                            <a href="#{{ $currenttab['name'] }}" aria-controls="{{ $currenttab['name'] }}" role="tab" data-fetched="false"
+                        <li data-name="{{ $currenttab['key'] }}" class="{{ $currenttab['key'] }}" role="presentation" >
+                            <a href="#{{ $currenttab['key'] }}" aria-controls="{{ $currenttab['key'] }}" role="tab" data-fetched="false"
                                data-toggle="tab" data-src="{{ $currenttab['src'] }}">{{ $currenttab['name'] }}
                             </a>
                         </li>
@@ -40,32 +40,32 @@ Log::info('_wizard.blade.php: wizardTabs='.json_encode($wizardTabs));
                     <!-- Tab panes -->
                     <div class="tab-content">
                         @foreach($wizardTabs as $currenttab)
-                        <div class="tab-pane" id="{{ $currenttab['name'] }}" role="tabpanel">
-                            <div style="width: 100%; height: 400px;"><iframe id="{{ $currenttab['name'] }}" src=""></iframe></div>
-                            @if ($currenttab['name'] === 'Eula')
+                        <div class="tab-pane" id="{{ $currenttab['key'] }}" role="tabpanel">
+                            <div style="width: 100%; height: 400px;"><iframe id="{{ $currenttab['key'] }}" src=""></iframe></div>
+                            @if ($currenttab['key'] === 'Eula')
                                 <div id='wizard-welcome' class="wizard-eula modal-footer">
                                     <div class="pull-right">
-                                        <button type="submit" class="print btn btn-default"><a class="print" href="#"><i class="fa fa-btn fa-fw fa-print"></i>Print</a></button>
+                                        <button type="submit" class="print btn btn-default"><a class="print" href="#"><i class="fa fa-btn fa-fw fa-print"></i>@lang('labels.print')</a></button>
                                         @if ($wizard['wizardType'] === 'Startup')
                                         <button type="submit" class="btn btn-default">
                                             <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                <i class="fa fa-btn fa-fw fa-sign-out"></i>Decline
+                                                <i class="fa fa-btn fa-fw fa-sign-out"></i>@lang('labels.decline')
                                             </a>
                                             <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
                                         </button>
                                         <button type="submit" class="accept btn btn-default">
-                                            <a class="accept" href="#"><i class="fa fa-btn fa-fw fa-sign-in"></i>Accept</a>
+                                            <a class="accept" href="#"><i class="fa fa-btn fa-fw fa-sign-in"></i>@lang('labels.accept')</a>
                                         </button>
                                         @endif
                                     </div>
                                 </div>
-                            @elseif ($currenttab['name'] === 'Welcome')
+                            @elseif ($currenttab['key'] === 'Welcome')
                                 <div id='wizardwelcome' class="wizard-welcome modal-footer"  data-welcome="{{$user->getSettingValue("WelcomeScreenOnStartup")}}">
                                     <div class="checkbox pull-left">
-                                        <label>{{ Form::hidden('welcome', false) }}{{ Form::checkbox('welcome', true, old('welcome'),['id' => 'WelcomeOnStartupCheckbox', 'class' => 'form-control-checkbox', 'style' => 'top: -10px']) }} Display Welcome Screen at startup</label>
+                                        <label>{{ Form::hidden('welcome', false) }}{{ Form::checkbox('welcome', true, old('welcome'),['id' => 'WelcomeOnStartupCheckbox', 'class' => 'form-control-checkbox', 'style' => 'top: -10px']) }} @lang('labels.display_welcome_screen_at_start')</label>
                                     </div>
-                                    @if ($currenttab['name'] === 'Welcome' && $wizard['wizardType'] === 'Startup')
-                                    <div class="pull-right"><button type="submit" class="btn btn-default continue" id="WelcomeContinue">Continue</button></div>
+                                    @if ($currenttab['key'] === 'Welcome' && $wizard['wizardType'] === 'Startup')
+                                    <div class="pull-right"><button type="submit" class="btn btn-default continue" id="WelcomeContinue">@lang('labels.continue')</button></div>
                                     @endif
                                 </div>
                             @else
@@ -79,11 +79,11 @@ Log::info('_wizard.blade.php: wizardTabs='.json_encode($wizardTabs));
             @if($wizard['mode'] === true)
             <div class="modal-footer">
                 <ul class="pager wizard-buttonbar">
-                    <li class="wizard-button previous first"><a href="javascript:;">First</a></li>
-                    <li class="wizard-button previous"><a href="javascript:;">Previous</a></li>
-                    <li class="wizard-button next last"><a href="javascript:;">Last</a></li>
-                    <li class="wizard-button next"><a href="javascript:;">Next</a></li>
-                    <li class="wizard-button next finish" style="display:none;"><a href="javascript:;">Finish</a></li>
+                    <li class="wizard-button previous first"><a href="javascript:;">@lang('labels.first')</a></li>
+                    <li class="wizard-button previous"><a href="javascript:;">@lang('labels.previous')</a></li>
+                    <li class="wizard-button next last"><a href="javascript:;">@lang('labels.last')</a></li>
+                    <li class="wizard-button next"><a href="javascript:;">@lang('labels.next')</a></li>
+                    <li class="wizard-button next finish" style="display:none;"><a href="javascript:;">@lang('labels.finish')</a></li>
                 </ul>
             </div>
             @endif

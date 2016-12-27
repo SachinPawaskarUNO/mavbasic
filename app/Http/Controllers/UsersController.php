@@ -47,7 +47,7 @@ class UsersController extends Controller
         Log::info('UsersController.index: ');
         $users = User::all()->except([1]);  // except the "System" User
         $this->viewData['users'] = $users;
-        $this->heading = trans('labels.users');
+        $this->viewData['heading'] = trans('labels.users');
 
         return view('users.index', $this->viewData);
     }
@@ -92,11 +92,10 @@ class UsersController extends Controller
         $object = $user;
         Log::info('UsersController.edit: '.$object->id);
         $this->viewData['user'] = $object;
+        $this->viewData['heading'] = trans('labels.edit_user', ['name' => $object->name]);
         if (!Auth::user()->hasRole('sysadmin')) {
             $this->viewData['list_role'] = Role::all()->except(1)->pluck('display_name', 'id');
         }
-
-        $this->viewData['heading'] = trans('labels.edit_user', ['name' => $object->name]);
 
         return view('users.edit', $this->viewData);
     }

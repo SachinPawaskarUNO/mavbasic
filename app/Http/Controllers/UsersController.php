@@ -81,7 +81,7 @@ class UsersController extends Controller
 
         $object = User::create($input);
         $this->syncRoles($object, $request->input('rolelist'));
-        Session::flash('flash_message', trans('labels.success_new_user'));
+        Session::flash('flash_message', trans('messages.success_new_user'));
         Log::info('UsersController.store - End: '.$object->id);
 
         return redirect()->back();
@@ -111,7 +111,7 @@ class UsersController extends Controller
 
         $object->update($request->all());
         $this->syncRoles($object, $request->input('rolelist'));
-        Session::flash('flash_message', trans('labels.success_edit_user'));
+        Session::flash('flash_message', trans('messages.success_edit_user'));
         Log::info('UsersController.update - End: '.$object->id);
         return redirect('users');
     }
@@ -176,10 +176,10 @@ class UsersController extends Controller
                 Log::info('User setting updated: '.$name. ' with value '.$value);
             } catch(Exception $e){
                 Log::error('UsersController.updateSettings - Error: '.'Updating user setting'.$name);
-                return redirect('users.settings')->withErrors(trans('labels.error_edit_user_setting', ['name' => $name]));
+                return redirect('users.settings')->withErrors(trans('messages.error_edit_user_setting', ['name' => $name]));
             }
         }
-        Session::flash('flash_message', trans('labels.success_edit_user_settings'));
+        Session::flash('flash_message', trans('messages.success_edit_user_settings'));
         Log::info('UsersController.updateSettings - End: '.$object->id);
 
         $this->viewData['user'] = $object;
@@ -200,12 +200,12 @@ class UsersController extends Controller
             // ToDo: add country/language and make sure that is the correct/latest system EULA.
             $eula = Eula::where(['status' => 'Active', 'language' => $user->default_language, 'country' => $user->default_country])->first();
             $user->eulas()->save($eula, ['accepted_at' => Carbon::now(), 'created_by' => $user->name, 'updated_by' => $user->name ]);
-            $response = array('success' => '1', 'msg' => trans('labels.success_eula_accepted').' - '.trans('labels.thank_you'));
+            $response = array('success' => '1', 'msg' => trans('messages.success_eula_accepted').' - '.trans('labels.thank_you'));
             $user->buildWizardStartup();
             $user->buildWizardHelp();
             Session::put('user', $user);
         } else {
-            $response = array('success' => '0', 'msg' => trans('labels.error_eula_accepted'));
+            $response = array('success' => '0', 'msg' => trans('messages.error_eula_accepted'));
         }
 
         return $response;
@@ -220,7 +220,7 @@ class UsersController extends Controller
         Log::info('UsersController.updateSetting: '.'['.$settingname.'='.$value.']');
         $user->setSetting($settingname, $value);
 //        $response   = array('success' => '0', 'error' => 'User setting NOT saved');
-        $response   = array('success' => '1', 'msg' => trans('labels.success_edit_user_setting'));
+        $response   = array('success' => '1', 'msg' => trans('messages.success_edit_user_setting'));
 
         // Special processing for certain user setting should go here.
         if ($settingname == 'WelcomeScreenOnStartup') {

@@ -37,7 +37,7 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-5">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-btn fa-save"></i>Save</button>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-btn fa-save"></i>@lang('labels.save')</button>
                             </div>
                         </div>
 

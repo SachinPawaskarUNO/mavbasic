@@ -21,10 +21,11 @@ Log::info('_wizard.blade.php: wizardTabs='.json_encode($wizardTabs));
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close wizard-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <span class="wizard-loading pull-right" style="margin: 2px;"><i class="fa fa-spinner fa-spin fa fa-fw"></i></span>
                 <h4 class="modal-title">{{ $wizard['heading'] }}</h4>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body" style="padding-bottom: 0px;">
                 <div class="tabbable">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
@@ -60,7 +61,7 @@ Log::info('_wizard.blade.php: wizardTabs='.json_encode($wizardTabs));
                                     </div>
                                 </div>
                             @elseif ($currenttab['key'] === 'Welcome')
-                                <div id='wizardwelcome' class="wizard-welcome modal-footer"  data-welcome="{{$user->getSettingValue("WelcomeScreenOnStartup")}}">
+                                <div id='wizardwelcome' class="wizard-welcome modal-footer"  data-welcome="{{$user->getSettingValue("welcome_screen_on_startup")}}">
                                     <div class="checkbox pull-left">
                                         <label>{{ Form::hidden('welcome', false) }}{{ Form::checkbox('welcome', true, old('welcome'),['id' => 'WelcomeOnStartupCheckbox', 'class' => 'form-control-checkbox', 'style' => 'top: -10px']) }} @lang('labels.display_welcome_screen_at_start')</label>
                                     </div>
@@ -87,6 +88,12 @@ Log::info('_wizard.blade.php: wizardTabs='.json_encode($wizardTabs));
                 </ul>
             </div>
             @endif
+
+            <div class="modal-footer wizard-messagebar" style="padding: 5px;">
+                <div class="alert" role="alert" style="margin: 0px;">
+                    <span id="displaymessage" class="msg pull-left">Sachin Pawaskar</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -96,6 +103,7 @@ Log::info('_wizard.blade.php: wizardTabs='.json_encode($wizardTabs));
     iframe { width: 100%; height: 100%;}
     ul.wizard-buttonbar { margin: 0px;}
     li.wizard-button a { padding: 15px; }
+    div#wizardwelcome { padding-top: 15px; padding-bottom: 0px;}
 </style>
 <script>
 var wizardmode = false;
@@ -124,9 +132,22 @@ function initializeVariables() {
     modal = wizard.dataset.modal;
 }
 
+// Use this function for displaying information messages to the user.
+function displayMsg(message, alertClass) {
+    var msgbar = $("#displaymessage", wizard);
+    msgbar.text(message);
+    if (alertClass != "") {
+        msgbar.parent().addClass(alertClass);
+    }
+    showWizardMessageBar(true);
+}
+
+
 function startWizard() { $('div#wizard').modal('show'); }
 function closeWizard() { $(".wizard-close", wizard).click(); }
 function showcloseWizardButton(show) { (show) ? $(".wizard-close").show() : $(".wizard-close").hide(); }
+function showWizardMessageBar(show) { (show) ? $(".wizard-messagebar").show() : $(".wizard-messagebar").hide(); }
+function showWizardLoading(show) { (show) ? $(".wizard-loading").show() : $(".wizard-loading").hide(); }
 
 $(document).ready(function($) {
     initializeVariables();
@@ -134,10 +155,12 @@ $(document).ready(function($) {
     $('select').select2();
     var wizard = document.getElementById('wizard');
     var wizardwelcome = document.getElementById('wizardwelcome');
-    $("input#WelcomeOnStartupCheckbox", wizard).attr('checked', wizardwelcome.dataset.welcome);
-    $("input#WelcomeOnStartupCheckbox", wizard).click(function() {
-        updateWelcomeStartup();
-    });
+    if (wizardwelcome != null) {
+        $("input#WelcomeOnStartupCheckbox", wizard).attr('checked', wizardwelcome.dataset.welcome);
+        $("input#WelcomeOnStartupCheckbox", wizard).click(function() {
+            updateWelcomeStartup();
+        });
+    }
     $("input.accept, a.accept", wizard).click(function() {
         acceptEula();
         (tabCount == 1) ? closeWizard() : activateTab('Welcome');
@@ -151,6 +174,8 @@ $(document).ready(function($) {
     (modal === 'false') ? showcloseWizardButton(true) : showcloseWizardButton(false);
 
     $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+        showWizardLoading(false);
+        showWizardMessageBar(false);
         var target = $(e.target).attr("href"); // activated tab
         var datasource = $(e.target).attr("data-src");
         var fetched = $(e.target).attr("data-fetched");
@@ -208,10 +233,6 @@ function getWizardNumTabs() {
 function getWizardTab() {
     return currentTab;
 }
-// This function returns the height of the parent Tab container which contains the child
-function getWizardTabHeight() {
-    return 	$(".wizardtab").height();
-}
 //This function allows you to append a callback function to the close button
 function addCloseOnClick (newClickClose) {
     $("#StartWizardPopup", parent.document).find(".b-close").click(newClickClose);
@@ -250,23 +271,7 @@ function clickWizardButton(whichbutton) {
 
     $(button).click();
 }
-//This function shows/hides the loading icon based on the show boolean flag in the Wizard.
-function showhideWizardLoading(show) {
-    if (show) {
-        $("#StartWizardPopup", parent.document).find("#PopupLoading").show();
-    } else {
-        $("#StartWizardPopup", parent.document).find("#PopupLoading").hide();
-    }
-}
-//This function shows/hides the Wizard's Close Button/Icon
-//The Parameter show is a boolean (true/false).
-function showhideWizardCloseButton(show) {
-    if (show) {
-        $("#StartWizardPopup", parent.document).find(".b-close").show();
-    } else {
-        $("#StartWizardPopup", parent.document).find(".b-close").hide();
-    }
-}
+
 //This function enables/disables Wizard Button Bar Buttons
 //The Parameter buttonName is the name of the button (valid values are "next", "prev", "finish" and "all")
 //The parameter disable is a boolean (true/false)
@@ -316,36 +321,23 @@ function acceptEula()
     $.ajax({
         type: "POST", url: ajaxURL, data: data,
         beforeSend: function (jqXHR, settings) {
-//            displayMsg(NLS_Updating);
-//            $("#StartWizardPopup", parent.document).find("#PopupLoading").show();
-//            rc = true;
+            showWizardLoading(true);
+            displayMsg("Updating");
         },
         success: function(responseData, responseText) {
-            return eulaaccepted = true;
-            //Verify the ajax call was successfull
-            rc = true;
-//            if (responseText=="success") {
-//                displayMsg(NLS_EULASuccessfullyAccepted);
-//                var data=$.trim(responseData); // Get the response from the call
-//                if (data=="success") {
-//                    displayMsg("EULA successfully accepted");
-//                } else {
-//                    displayMsg("Error: " + data);
-//                }
-//            } else {
-//                rc = false;
-//            }
+            eulaaccepted = true;
+            if (responseText=="success") { //Verify the ajax call was successfull
+                var json_data = JSON.parse(responseData);
+                displayMsg(json_data.msg, (json_data.success === '1' ? "alert-success" : "alert-danger"));
+            }
         },
         complete: function (jqXHR, textStatus) {
-//            alert('complete');
-//            if (textStatus == "success") {
-//                //
-//            }
-//            $("#StartWizardPopup", parent.document).find("#PopupLoading").hide();
-//            ajaxHandler = null;
+            showWizardLoading(false);
         },
         error: function() {
             return eulaaccepted = false;
+            showWizardLoading(false);
+            displayMsg("Ajax call failed", "alert-danger");
         }
     });
 }
@@ -355,26 +347,28 @@ function acceptEula()
 function updateWelcomeStartup()
 {
     welcomestartupflag = $("#WelcomeOnStartupCheckbox").is(':checked') ? true : false;
-    var data = { 'settingname': 'WelcomeScreenOnStartup', 'settingvalue': welcomestartupflag };
+    var data = { 'settingname': 'welcome_screen_on_startup', 'settingvalue': welcomestartupflag };
     var wizard = document.getElementById('wizard');
     var ajaxURL = '/users/' + wizard.dataset.userid + '/updateSetting';
 
     $.ajax({
         type: "POST", url: ajaxURL, data: data,
         beforeSend: function (jqXHR, settings) {
-//            displayMsg(NLS_Updating);
-//            $("#StartWizardPopup", parent.document).find("#PopupLoading").show();
+            showWizardLoading(true);
+            displayMsg("Updating");
         },
         success: function(responseData, responseText) {
-            alert('success');
-            if (responseText=="success") {
-//                displayMsg(NLS_WelcomeSuccessfullyAccepted);
+            if (responseText=="success") { //Verify the ajax call was successfull
+                var json_data = JSON.parse(responseData);
+                displayMsg(json_data.msg, (json_data.success === '1' ? "alert-success" : "alert-danger"));
             }
         },
+        complete: function (jqXHR, textStatus) {
+            showWizardLoading(false);
+        },
         error: function() {
-            alert('error');
-//            $("#StartWizardPopup", parent.document).find("#PopupLoading").hide();
-//            displayMsg(NLS_AjaxCallFailed);
+            showWizardLoading(false);
+            displayMsg("Ajax call failed", "alert-danger");
         }
     });
 }

@@ -167,7 +167,7 @@ class UsersController extends Controller
             $name = $usersetting['name'];
             $value = $usersetting['value'] == '' ? $usersetting['default_value'] : $usersetting['value'];
             if ($usersetting['kind'] == 'bool' && $usersetting['value'] == '') {
-                $value = '0';
+                $value = false;
             }
 
             try{
@@ -196,15 +196,15 @@ class UsersController extends Controller
         Log::info('UsersController.acceptEula: accept='.$accept);
         if ($accept) {
             Log::info('UsersController.acceptEula: accept=success');
-            // ToDo: add country/language and make sure that is the correct/latest system EULA.
+            // Check user language/country and make sure that it matches the language/country for the latest system EULA.
             $eula = Eula::where(['status' => 'Active', 'language' => $user->default_language, 'country' => $user->default_country])->first();
             $user->eulas()->save($eula, ['accepted_at' => Carbon::now(), 'created_by' => $user->name, 'updated_by' => $user->name ]);
-            $response = array('success' => '1', 'msg' => trans('messages.success_eula_accepted').' - '.trans('labels.thank_you'));
+            $response = json_encode(array('success' => '1', 'msg' => trans('messages.success_eula_accepted').' - '.trans('labels.thank_you')));
             $user->buildWizardStartup();
             $user->buildWizardHelp();
             Session::put('user', $user);
         } else {
-            $response = array('success' => '0', 'msg' => trans('messages.error_eula_accepted'));
+            $response = json_encode(array('success' => '0', 'msg' => trans('messages.error_eula_accepted')));
         }
 
         return $response;
@@ -219,10 +219,10 @@ class UsersController extends Controller
         Log::info('UsersController.updateSetting: '.'['.$settingname.'='.$value.']');
         $user->setSetting($settingname, $value);
 //        $response   = array('success' => '0', 'error' => 'User setting NOT saved');
-        $response   = array('success' => '1', 'msg' => trans('messages.success_edit_user_setting'));
+        $response = json_encode(array('success' => '1', 'msg' => trans('messages.success_edit_user_setting')));
 
         // Special processing for certain user setting should go here.
-        if ($settingname == 'WelcomeScreenOnStartup') {
+        if ($settingname == 'welcome_screen_on_startup') {
             $user->buildWizardStartup();
             $user->buildWizardHelp();
             Session::put('user', $user);

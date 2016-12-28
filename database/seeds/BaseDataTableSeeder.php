@@ -150,16 +150,16 @@ class BaseSettingsTableSeeder extends Seeder {
     public function run()
     {
         DB::table('settings')->delete();
-        Setting::create([  'name' => 'LinesPerPage', 'description' => 'Lines per Page', 'default_value' => '10', 'kind' => 'int',
+        Setting::create([  'name' => 'lines_per_page', 'description' => 'Lines per Page', 'default_value' => '10', 'kind' => 'int',
             'display_type' => 'select', 'display_values' => '{"10":10, "25":25, "50":50, "100":100}',
             'help' => 'Controls the numbers of rows of data displayed for views with tables',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
         // Todo: create welcome popup
-        Setting::create([  'name' => 'WelcomeScreenOnStartup', 'description' => 'Welcome Screen on startup', 'default_value' => 'true', 'kind' => 'bool',
+        Setting::create([  'name' => 'welcome_screen_on_startup', 'description' => 'Welcome Screen on Startup', 'default_value' => 'true', 'kind' => 'bool',
             'display_type' => 'checkbox', 'display_values' => '',
             'help' => 'Displays the Welcome Screen on startup when the user logs into the application.',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        Setting::create([  'name' => 'MRUList_Users', 'description' => 'MRU Users', 'default_value' => '5', 'kind' => 'int',
+        Setting::create([  'name' => 'mru_list_users', 'description' => 'MRU Users', 'default_value' => '5', 'kind' => 'int',
             'display_type' => 'number', 'display_values' => '{"min":0, "max":20, "step":1}',
             'help' => 'Number of Most Recently Used/Accessed (MRU List) Users to keep track off',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);

@@ -14,24 +14,24 @@ class DatabaseSeeder extends Seeder
     {
         AuditsTrait::stopAudit("Database Seeding");
         $this->command->info('------------------------------------------------------------------------!');
-        $this->command->info('               Start: Seeding User, Roles and Permissions               !');
+        $this->command->info('            Start: Seeding Orgs, User, Roles and Permissions            !');
         $this->command->info('------------------------------------------------------------------------!');
-        // Seed the System Users/Roles/Permissions tables
+        $this->call(BaseOrgsTableSeeder::class);
         $this->call(BaseRolesTableSeeder::class);
         $this->call(BasePermissionsTableSeeder::class);
         $this->call(BaseUsersTableSeeder::class);
         $this->call(BaseRoleUserTableSeeder::class);
         $this->call(BasePermissionRoleTableSeeder::class);
         $this->command->info('------------------------------------------------------------------------!');
-        $this->command->info('                End: Seeding User, Roles and Permissions                !');
+        $this->command->info('             End: Seeding Orgs, User, Roles and Permissions             !');
         $this->command->info('------------------------------------------------------------------------!');
         $this->command->info('------------------------------------------------------------------------!');
-        $this->command->info('                        Start: Seeding Setting, Eula                    !');
+        $this->command->info('                    Start: Seeding Setting, Eula                        !');
         $this->command->info('------------------------------------------------------------------------!');
         $this->call(BaseSettingsTableSeeder::class);
         $this->call(BaseEulasTableSeeder::class);
         $this->command->info('------------------------------------------------------------------------!');
-        $this->command->info('                         End: Seeding Setting, Eula                     !');
+        $this->command->info('                     End: Seeding Setting, Eula                         !');
         $this->command->info('------------------------------------------------------------------------!');
         AuditsTrait::startAudit();
     }

@@ -48,6 +48,7 @@ Route::get('/welcome', 'HomeController@about');
 
 Route::resource('users', 'UsersController');
 Route::resource('roles', 'RolesController');
+Route::resource('orgs', 'OrgsController');
 Route::resource('settings', 'SettingsController');
 Route::resource('eulas', 'EulasController');
 

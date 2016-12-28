@@ -4,6 +4,7 @@ use App\Role;
 use App\Permission;
 use App\User;
 use App\Setting;
+use App\Org;
 
 class UsersTableSeeder extends Seeder {
 
@@ -101,6 +102,18 @@ class PermissionRoleTableSeeder extends Seeder
     }
 }
 
+class OrgsTableSeeder extends Seeder {
+
+    public function run()
+    {
+        Org::create([  'name' => 'University of Nebraska Omaha Scott Campus', 'address' => 'University of Nebraska Omaha Scott Campus, 1110 S 67th St',
+            'city' => 'Omaha', 'state' => 'NE', 'zip' => '68182',
+            'geo_lat' => '41.247469', 'geo_long' => '-96.016100', 'website' => 'https://pki.nebraska.edu', 'phone' => '402.554.3333',
+            'toll_free' => '', 'fax' => '', 'contact_name' => '', 'contact_email' => '',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+    }
+}
+
 class SettingsTableSeeder extends Seeder {
 
     public function run()
@@ -117,12 +130,12 @@ class SettingUserTableSeeder extends Seeder {
     public function run()
     {
         $user = User::where('name', '=', 'Administrator')->first()->id;
-        $setting = Setting::where('name', '=', 'LinesPerPage')->first()->id;
+        $setting = Setting::where('name', '=', 'lines_per_page')->first()->id;
         $setting_user = [ ['setting_id' => $setting, 'user_id' => $user, 'value' => '25', 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ] ];
         DB::table('setting_user')->insert($setting_user);
 
         $user = User::where('name', '=', 'George Royce')->first()->id;
-        $setting = Setting::where('name', '=', 'LinesPerPage')->first()->id;
+        $setting = Setting::where('name', '=', 'lines_per_page')->first()->id;
         $setting_user = [ ['setting_id' => $setting, 'user_id' => $user, 'value' => '25', 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ] ];
         DB::table('setting_user')->insert($setting_user);
     }

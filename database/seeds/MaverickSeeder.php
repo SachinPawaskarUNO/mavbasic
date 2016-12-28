@@ -15,9 +15,9 @@ class MaverickSeeder extends Seeder
     {
         AuditsTrait::stopAudit("Maverick Seeder");
         $this->command->info('------------------------------------------------------------------------!');
-        $this->command->info('         Start: Seeding Maverick User, Roles and Permissions            !');
+        $this->command->info('      Start: Seeding Maverick Orgs, User, Roles and Permissions         !');
         $this->command->info('------------------------------------------------------------------------!');
-        // Seed the System Users/Roles/Permissions tables
+        $this->call(OrgsTableSeeder::class);
         $this->call(RolesTableSeeder::class);
         $this->call(PermissionsTableSeeder::class);
         $this->call(UsersTableSeeder::class);
@@ -25,13 +25,12 @@ class MaverickSeeder extends Seeder
         $this->call(PermissionRoleTableSeeder::class);
         $this->command->info('User, Role and Permission tables seeded!');
         $this->command->info('------------------------------------------------------------------------!');
-        $this->command->info('           End: Seeding Maverick User, Roles and Permissions            !');
+        $this->command->info('        End: Seeding Maverick Orgs, User, Roles and Permissions         !');
         $this->command->info('------------------------------------------------------------------------!');
 
         $this->command->info('------------------------------------------------------------------------!');
         $this->command->info('                          Start: Seeding Tags                           !');
         $this->command->info('------------------------------------------------------------------------!');
-        // Seed the Tags table
         $this->call(TagsTableSeeder::class);
         $this->call(SettingsTableSeeder::class);
         $this->call(SettingUserTableSeeder::class);

@@ -51,6 +51,7 @@
                         @endability
                         @ability('sysadmin', '')
                         <li class="divider"></li>
+                        <li><a href="{{ url('/orgs') }}"><i class="fa fa-btn fa-fw fa-institution"></i>@lang('labels.org_management')</a></li>
                         <li><a href="{{ url('/audits') }}"><i class="fa fa-btn fa-fw fa-binoculars"></i>@lang('labels.audit_management')</a></li>
                         @endability
 

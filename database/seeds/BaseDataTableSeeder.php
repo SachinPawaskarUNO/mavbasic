@@ -3,6 +3,7 @@ use Illuminate\Database\Seeder;
 use App\Role;
 use App\Permission;
 use App\User;
+use App\Org;
 use App\Setting;
 use App\Eula;
 
@@ -58,6 +59,18 @@ class BasePermissionsTableSeeder extends Seeder {
         Permission::create([ 'name' => 'view-roles', 'display_name' => 'View Roles', 'description' => 'User is allowed to view other roles',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
         Permission::create([ 'name' => 'delete-roles', 'display_name' => 'Delete Roles', 'description' => 'User is allowed to delete other roles',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+
+        // Org Management Permissions
+        Permission::create([ 'name' => 'manage-orgs', 'display_name' => 'Manage Orgs', 'description' => 'User is allowed to add, edit and delete orgs',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'create-orgs', 'display_name' => 'Create Orgs', 'description' => 'User is allowed to add other orgs',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'edit-orgs', 'display_name' => 'Edit Orgs', 'description' => 'User is allowed to edit other orgs',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'view-orgs', 'display_name' => 'View Orgs', 'description' => 'User is allowed to view other orgs',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Permission::create([ 'name' => 'delete-orgs', 'display_name' => 'Delete Orgs', 'description' => 'User is allowed to delete other orgs',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
 
         // Setting Management Permissions
@@ -142,6 +155,18 @@ class BasePermissionRoleTableSeeder extends Seeder
         $adminRole = Role::where('name', '=', 'admin')->first();
         $adminRole->attachPermissions(array($manageUsers, $createUsers, $editUsers, $viewUsers, $deleteUsers));
         $adminRole->attachPermissions(array($manageRoles, $createRoles, $editRoles, $viewRoles, $deleteRoles));
+    }
+}
+
+class BaseOrgsTableSeeder extends Seeder {
+
+    public function run()
+    {
+        Org::create([  'name' => 'University of Nebraska Omaha', 'address' => 'University of Nebraska Omaha, 6001 Dodge Street',
+            'city' => 'Omaha', 'state' => 'NE', 'zip' => '68182',
+            'geo_lat' => '41.258481', 'geo_long' => '-96.010379', 'website' => 'http://www.unomaha.edu/', 'phone' => '402.554.2800',
+            'toll_free' => '', 'fax' => '', 'contact_name' => '', 'contact_email' => '',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }
 

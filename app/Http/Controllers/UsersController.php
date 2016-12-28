@@ -4,7 +4,7 @@
  * Users Controller
  *
  * @category   Users
- * @package    FA-Controllers
+ * @package    MavBasic-Controllers
  * @author     Sachin Pawaskar<spawaskar@unomaha.edu>
  * @copyright  2016-2017
  * @license    The MIT License (MIT)
@@ -59,7 +59,7 @@ class UsersController extends Controller
         $this->viewData['user'] = $object;
         $this->viewData['heading'] = trans('labels.view_user', ['name' => $object->name]);
 
-        Auth::user()->addSettingJsonValue('MRUList_Users', $object);
+        Auth::user()->addSettingJsonValue('mru_list_users', $object);
         return view('users.show', $this->viewData);
     }
 

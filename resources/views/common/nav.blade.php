@@ -41,7 +41,7 @@
                                 @ability('admin', 'manage-roles,create-roles,edit-roles,view-roles,delete-roles')
                                 <li><a href="{{ url('/roles') }}"><i class="fa fa-btn fa-fw fa-users"></i>@lang('labels.roles')</a></li>
                                 @endability
-                                @include ('common._mrulist', ['setting' => 'MRUList_Users', 'menu' => 'recent_users', 'menuicon' => 'fa-user', 'resource' => 'users'])
+                                @include ('common._mrulist', ['setting' => 'mru_list_users', 'menu' => 'recent_users', 'menuicon' => 'fa-user', 'resource' => 'users'])
                             </ul>
                         </li>
                         @endability

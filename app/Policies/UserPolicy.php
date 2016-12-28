@@ -6,7 +6,7 @@ namespace App\Policies;
  * User Policy
  *
  * @category   User
- * @package    FA-Policies
+ * @package    MavBasic-Policies
  * @author     Sachin Pawaskar<spawaskar@unomaha.edu>
  * @copyright  2016-2017
  * @license    The MIT License (MIT)

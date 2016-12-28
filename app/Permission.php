@@ -4,7 +4,7 @@
  * Permission Model
  *
  * @category   Permission
- * @package    FA-Models
+ * @package    MavBasic-Models
  * @author     Sachin Pawaskar<spawaskar@unomaha.edu>
  * @copyright  2016-2017
  * @license    The MIT License (MIT)

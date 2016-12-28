@@ -206,7 +206,7 @@ class User extends Authenticatable
             if (empty($startTab)) { $startTab = 'ChangePassword'; }
         }
 
-        if ($this->getSettingValue('WelcomeScreenOnStartup'))
+        if ($this->getSettingValue('welcome_screen_on_startup'))
         {
             $this->wizardStartupTabs = array_merge($this->wizardStartupTabs,
                 array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => '\help']));
@@ -231,11 +231,8 @@ class User extends Authenticatable
 
         $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('About' => ['key' => 'About', 'name' => trans('labels.about'), 'src' => '\about']));
         $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('AboutBrowser' => ['key' => 'AboutBrowser', 'name' => trans('labels.aboutbrowser'), 'src' => '\aboutbrowser']));
+        $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => '\help']));
 
-        if ($this->getSettingValue('WelcomeScreenOnStartup'))
-        {
-            $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => '\help']));
-        }
         if ($this->eulaAccepted) {
             if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
                 $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Eula' => ['key' => 'Eula', 'name' => trans('labels.eula'), 'src' => '\eula']));

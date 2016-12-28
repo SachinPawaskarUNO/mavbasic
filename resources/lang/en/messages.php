@@ -35,4 +35,8 @@ return [
     'welcome' => 'Welcome',
     'welcome_to_application' => 'Welcome to :appname Application',
     'welcome_user' => 'Welcome, :name',
+    'welcome_application_purpose' => 'The original intent of this web application is to provide students in the MIS Capstone course with a basic starter web application.
+                        Of course, this can also be used by students in other courses that can benefit from having a basic web application and not have to start from scratch.
+                        The UNO - MavBasic web application attempts to take the pain out of development by providing common basic functionality such as User Management (includes users, roles and permisssions), Authentication, Authorization, User Settings, etc.
+                        so that students can focus on delivering application functionality focused on meeting customer\'s business requirements.'
 ];

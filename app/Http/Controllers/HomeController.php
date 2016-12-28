@@ -63,8 +63,9 @@ class HomeController extends Controller
             $uri = $request->path();
             $about = ($uri == 'about') ? true : false;
             $aboutbrowser = ($uri == 'aboutbrowser') ? true : false;
+            $welcome = ($uri == 'welcome') ? true : false;
             $user = Auth::user();
-            return view('about', ['user' => $user, 'about' => $about, 'aboutbrowser' => $aboutbrowser]);
+            return view('about', ['user' => $user, 'about' => $about, 'aboutbrowser' => $aboutbrowser, 'welcome' => $welcome, ]);
         }
     }
 }

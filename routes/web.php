@@ -44,6 +44,7 @@ Route::get('/home', 'HomeController@index');
 Route::get('/eula', 'HomeController@eula');
 Route::get('/about', 'HomeController@about');
 Route::get('/aboutbrowser', 'HomeController@about');
+Route::get('/welcome', 'HomeController@about');
 
 Route::resource('users', 'UsersController');
 Route::resource('roles', 'RolesController');

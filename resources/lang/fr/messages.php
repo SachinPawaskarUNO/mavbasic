@@ -35,4 +35,8 @@ return [
     'welcome' => 'Bienvenue',
     'welcome_to_application' => 'Bienvenue à l\'application :appname',
     'welcome_user' => 'Bienvenue, :name',
+    'welcome_application_purpose' => 'L\'intention originale de cette application Web est de fournir aux étudiants dans le cours MIS Capstone une application Web de démarrage de base.
+                        Bien sûr, cela peut également être utilisé par les étudiants dans d\'autres cours qui peuvent bénéficier d\'avoir une application Web de base et ne pas avoir à partir de zéro.
+                        L\'application Web UNO-MavBasic tente d\'éliminer la douleur du développement en fournissant des fonctionnalités de base communes telles que la gestion des utilisateurs (y compris les utilisateurs, les rôles et les permissions), l\'authentification, l\'autorisation, les paramètres utilisateur, etc.
+                        De sorte que les étudiants peuvent se concentrer sur la prestation des fonctionnalités d\'application axée sur la satisfaction des besoins des clients.'
 ];

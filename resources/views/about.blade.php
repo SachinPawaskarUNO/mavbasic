@@ -2,14 +2,21 @@
 
 @section('content')
 <div class="Ad-space">
-<table style="width: 100%">
+<table style="width: 100%; table-layout:fixed; ">
     <tr>
         <td class="pull-left"><a href="https://sachinpawaskaruno.github.io/mavbasic" class="logo" target="_blank"><img src="images/UNO-Mav.png"/></a></td>
         <td class="pull-right"><a href="http://www.unomaha.edu" class="logo" target="_blank"><img src="images/UNO-icon-color.png" style="float: right;"/></a></td>
     </tr>
+    {{--@if ($welcome)--}}
+    {{--<tr style="height: 50px;"><td colspan="2" class="welcome-message" style="word-wrap:break-word;">@lang('messages.welcome_to_application')</td></tr>--}}
+    {{--@endif--}}
 </table>
 </div>
 @if ($about)
+    {{--<div class="container">--}}
+        {{--<div class="row">--}}
+            {{--<div class="col-md-12">--}}
+
 <div class="panel-body panel-body-about">
     <div class="table-responsive" style="margin: 0px;">
         <table class="table table-striped about">
@@ -34,6 +41,9 @@
         </table>
     </div>
 </div>
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 @endif
 @if ($aboutbrowser)
 <div class="panel-body panel-body-aboutbrowser">
@@ -62,14 +72,33 @@
     </div>
 </div>
 @endif
+@if ($welcome)
+    <div class="panel-body panel-body-welcome">
+        {{--<div class="panel-body welcome-message" style="padding-top: 15px; padding-bottom: 15px; height: 100px;">@lang('messages.welcome_application_purpose')</div>--}}
+        <div class="table-responsive" style="margin: 0px;">
+            <table class="table table-striped welcome">
+                <tbody> <!-- Table Body -->
+                <tr><td class="name welcome"><i class="fa fa-btn fa-fw fa-user-secret"></i>@lang('labels.user_management')</td><td class="value">@lang('labels.help_user_management')</td></tr>
+                <tr><td class="name welcome"><i class="fa fa-btn fa-fw fa-cog"></i>@lang('labels.setting_management')</td><td class="value">@lang('labels.help_setting_management')</td></tr>
+                <tr><td class="name welcome"><i class="fa fa-btn fa-fw fa-gavel"></i>@lang('labels.eula_management')</td><div><td class="value">@lang('labels.help_eula_management')</div></td></tr>
+                <tr><td class="name welcome"><i class="fa fa-btn fa-fw fa-binoculars"></i>@lang('labels.audit_management')</td><td class="value">@lang('labels.help_audit_management')</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endif
 @endsection
 
 @section('footer')
 <style>
     td.name { text-align: right;}
-    td.value { text-align: left; white-space: normal; }
-    div.panel-body-about, div.panel-body-aboutbrowser { padding: 0px;}
+    td.name.welcome { text-align: left;}
+    td.value { text-align: left; overflow: hidden; white-space: normal; word-wrap:break-word; text-overflow: ellipsis; }
     a.logo img { width: 100px; height: 100px; }
+    div.panel-body-about,
+    div.panel-body-aboutbrowser,
+    div.panel-body-welcome { padding: 0px;}
+    /*table.welcome, table.about, table.aboutbrowser { table-layout:auto; }*/
 </style>
 <script>
     var appGeoLocation = document.getElementById("app-geoLocation");

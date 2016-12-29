@@ -16,6 +16,9 @@
  * @params: $resource : The route resource name e.g. 'users', 'roles'
  * @params: $object : The actual instance of the model
  * @params: $disableMenu : ['list', 'create', 'update', 'delete', 'discard']
+ * @params: $pluginMenus : []
+   eg. 'pluginMenus' => [array('url' => 'users/'.$user->id.'/settings', 'menuicon' => 'fa-cog', 'menulabel' => 'labels.settings'),
+                         array('url' => 'users/'.$user->id.'/settings', 'menuicon' => 'fa-institution', 'menulabel' => 'labels.orgs')]])
 --}}
 
 @if($CRUD_Action == 'List')
@@ -71,6 +74,12 @@
             </li>
             @endability
             @endif
+        @endif
+        @if (! empty($pluginMenus))
+            <li class="divider"></li>
+            @foreach($pluginMenus as $menu)
+                <li><a href="{{ url($menu['url']) }}"><i class="fa fa-fw fa-btn {{ $menu['menuicon'] }}"></i>@lang($menu['menulabel'])</a></li>
+            @endforeach
         @endif
     </ul>
 </div>

@@ -18,13 +18,13 @@
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead> <!-- Table Headings -->
-                                <th>@lang('labels.name')</th><th>@lang('labels.value')</th><th>@lang('labels.default_value')e</th>
+                                <th>@lang('labels.name')</th><th>@lang('labels.value')</th><th>@lang('labels.default_value')</th>
                                 </thead>
                                 <tbody> <!-- Table Body -->
                                 @foreach ($the_user_settings as $current)
                                     <fieldset>
                                     <tr class="user-settings">
-                                        <td><div class="form-group">
+                                        <td style="width: 50%;"><div class="form-group">
                                             <div class="col-lg-10">
                                                 <a class="help" data-toggle="tooltip" data-html="true" data-title="<strong>Help:</strong> {{ $current->help }}"><i class="fa fa-lg fa-question-circle-o" style="padding-right: 10px;"></i></a>
                                                 {{ Form::label('usersettings['.$current->id.'][description]', $current->description, ['id'=>'description']) }}

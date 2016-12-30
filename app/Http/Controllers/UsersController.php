@@ -18,6 +18,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Scopes\OrgScope;
+use App\Events\EulaAccepted;
 use App\User;
 use App\Role;
 use App\Setting;
@@ -45,7 +47,11 @@ class UsersController extends Controller
     public function index()
     {
         Log::info('UsersController.index: ');
-        $users = User::all()->except([1]);  // except the "System" User
+        if ($this->isSystemAdmin()) {
+            $users = User::withoutGlobalScope(OrgScope::class)->get()->except([1]); // // except the "System" User
+        } else {
+            $users = User::all()->except([1]);  // except the "System" User
+        }
         $this->viewData['users'] = $users;
         $this->viewData['heading'] = trans('labels.users');
 
@@ -152,7 +158,7 @@ class UsersController extends Controller
         $object = $user;
         Log::info('UsersController.settings: '.$object->id);
         $this->viewData['user'] = $object;
-        $this->viewData['the_user_settings'] = Setting::all();
+        $this->viewData['the_user_settings'] = Setting::all()->where('type', '=', 'user');
         $this->viewData['heading'] = trans('labels.edit_user_settings', ['name' => $object->name]);
 
         return view('users.settings', $this->viewData);
@@ -180,12 +186,7 @@ class UsersController extends Controller
         }
         Session::flash('flash_message', trans('messages.success_edit_user_settings'));
         Log::info('UsersController.updateSettings - End: '.$object->id);
-
-        $this->viewData['user'] = $object;
-        $this->viewData['the_user_settings'] = Setting::all();
-        $this->viewData['heading'] = trans('labels.edit_user_settings', ['name' => $object->name]);
-
-        return view('users.settings', $this->viewData);
+        return back()->withInput();
     }
 
     public function acceptEula(User $user, Request $request)
@@ -200,9 +201,8 @@ class UsersController extends Controller
             $eula = Eula::where(['status' => 'Active', 'language' => $user->default_language, 'country' => $user->default_country])->first();
             $user->eulas()->save($eula, ['accepted_at' => Carbon::now(), 'created_by' => $user->name, 'updated_by' => $user->name ]);
             $response = json_encode(array('success' => '1', 'msg' => trans('messages.success_eula_accepted').' - '.trans('labels.thank_you')));
-            $user->buildWizardStartup();
-            $user->buildWizardHelp();
-            Session::put('user', $user);
+
+            event(new EulaAccepted($eula, $user));
         } else {
             $response = json_encode(array('success' => '0', 'msg' => trans('messages.error_eula_accepted')));
         }
@@ -220,13 +220,6 @@ class UsersController extends Controller
         $user->setSetting($settingname, $value);
 //        $response   = array('success' => '0', 'error' => 'User setting NOT saved');
         $response = json_encode(array('success' => '1', 'msg' => trans('messages.success_edit_user_setting')));
-
-        // Special processing for certain user setting should go here.
-        if ($settingname == 'welcome_screen_on_startup') {
-            $user->buildWizardStartup();
-            $user->buildWizardHelp();
-            Session::put('user', $user);
-        }
         return $response;
     }
 }

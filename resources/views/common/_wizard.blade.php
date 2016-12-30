@@ -132,6 +132,19 @@ function initializeVariables() {
     modal = wizard.dataset.modal;
 }
 
+function initializeWelcome() {
+    if (wizardwelcome != null) {
+        if (wizardwelcome.dataset.welcome === '1') {
+            $("input#WelcomeOnStartupCheckbox", wizard).attr('checked', true);
+        } else {
+            $("input#WelcomeOnStartupCheckbox", wizard).attr('checked', false);
+        }
+        $("input#WelcomeOnStartupCheckbox", wizard).click(function() {
+            updateWelcomeStartup();
+        });
+    }
+}
+
 // Use this function for displaying information messages to the user.
 function displayMsg(message, alertClass) {
     var msgbar = $("#displaymessage", wizard);
@@ -142,7 +155,6 @@ function displayMsg(message, alertClass) {
     showWizardMessageBar(true);
 }
 
-
 function startWizard() { $('div#wizard').modal('show'); }
 function closeWizard() { $(".wizard-close", wizard).click(); }
 function showcloseWizardButton(show) { (show) ? $(".wizard-close").show() : $(".wizard-close").hide(); }
@@ -150,17 +162,10 @@ function showWizardMessageBar(show) { (show) ? $(".wizard-messagebar").show() : 
 function showWizardLoading(show) { (show) ? $(".wizard-loading").show() : $(".wizard-loading").hide(); }
 
 $(document).ready(function($) {
-    initializeVariables();
-
     $('select').select2();
-    var wizard = document.getElementById('wizard');
-    var wizardwelcome = document.getElementById('wizardwelcome');
-    if (wizardwelcome != null) {
-        $("input#WelcomeOnStartupCheckbox", wizard).attr('checked', wizardwelcome.dataset.welcome);
-        $("input#WelcomeOnStartupCheckbox", wizard).click(function() {
-            updateWelcomeStartup();
-        });
-    }
+    initializeVariables();
+    initializeWelcome();
+
     $("input.accept, a.accept", wizard).click(function() {
         acceptEula();
         (tabCount == 1) ? closeWizard() : activateTab('Welcome');

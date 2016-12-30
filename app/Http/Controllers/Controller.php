@@ -4,7 +4,7 @@
  * Controller Class derived from BaseController
  *
  * @category   Controller
- * @package    FA-Controllers
+ * @package    MavBasic-Controllers
  * @author     Sachin Pawaskar<spawaskar@unomaha.edu>
  * @copyright  2016-2017
  * @license    The MIT License (MIT)
@@ -24,6 +24,13 @@ use Log;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    protected $viewData = [];
+
+    public function __construct()
+    {
+        $this->viewData = [ 'heading' => 'No Heading' ];
+    }
 
     public function populateCreateFields(&$input)
     {
@@ -123,6 +130,18 @@ class Controller extends BaseController
             $list[$count++] = $obj->id;
         }
         return $list;
+    }
+
+    public function isSystemAdmin()
+    {
+        $user = $this->getLoginUser();
+        return (isset($user)) ? $user->isSystemAdmin() : false;
+    }
+
+    public function isAdmin()
+    {
+        $user = $this->getLoginUser();
+        return (isset($user)) ? $user->isAdmin() : false;
     }
 
 }

@@ -53,7 +53,11 @@
                                         @else
                                         {{--default is "text"--}}
                                         <td class="table-text"><div>
-                                            {!! Form::text('orgsettings['.$current->id.'][value]', $org->getSettingValue($current->name), ['class' => 'col-md-6 form-control']) !!}
+                                            @if ($current->kind === 'url')
+                                                {!! Form::url('orgsettings['.$current->id.'][value]', $org->getSettingValue($current->name), ['class' => 'col-md-6 form-control']) !!}
+                                            @else
+                                                {!! Form::text('orgsettings['.$current->id.'][value]', $org->getSettingValue($current->name), ['class' => 'col-md-6 form-control']) !!}
+                                            @endif
                                         </div></td>
                                         @endif
                                         <td class="table-text"><div>

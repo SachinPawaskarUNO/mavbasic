@@ -7,14 +7,30 @@ use App\Org;
 use App\Setting;
 use App\Eula;
 
+class BaseOrgsTableSeeder extends Seeder {
+
+    public function run()
+    {
+        Org::create([ 'name' => 'University of Nebraska Omaha', 'address' => 'University of Nebraska Omaha, 6001 Dodge Street',
+            'city' => 'Omaha', 'state' => 'NE', 'zip' => '68182',
+            'geo_lat' => '41.258481', 'geo_long' => '-96.010379', 'website' => 'http://www.unomaha.edu/', 'phone' => '402.554.2800',
+            'toll_free' => '', 'fax' => '', 'contact_name' => '', 'contact_email' => '',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+    }
+}
+
 class BaseUsersTableSeeder extends Seeder {
 
     public function run()
     {
         DB::table('users')->delete();
-        User::create([  'name' => 'System', 'password' => '$2y$10$HuOeNE1zocSXywttHTK9TexEpcz7G.rKgpOGsuTeY/uIsrxylva6i', 'email' => 'system@unomaha.edu', 'active' => true,
+        $org = Org::where('name', '=', 'University of Nebraska Omaha')->first();
+
+        User::create([ 'name' => 'System', 'password' => '$2y$10$HuOeNE1zocSXywttHTK9TexEpcz7G.rKgpOGsuTeY/uIsrxylva6i', 'email' => 'system@unomaha.edu', 'active' => true,
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        User::create([  'name' => 'Sachin Pawaskar', 'password' => '$2y$10$HuOeNE1zocSXywttHTK9TexEpcz7G.rKgpOGsuTeY/uIsrxylva6i', 'email' => 'spawaskar@unomaha.edu', 'active' => true,
+        User::create([ 'org_id' => $org->id, 'name' => 'Sachin Pawaskar', 'password' => '$2y$10$HuOeNE1zocSXywttHTK9TexEpcz7G.rKgpOGsuTeY/uIsrxylva6i', 'email' => 'spawaskar@unomaha.edu', 'active' => true,
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        User::create([ 'org_id' => $org->id, 'name' => 'Sachin Pawaskar - OrgAdmin', 'password' => '$2y$10$HuOeNE1zocSXywttHTK9TexEpcz7G.rKgpOGsuTeY/uIsrxylva6i', 'email' => 'spawaskar.orgadmin@unomaha.edu', 'active' => true,
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }
@@ -26,7 +42,7 @@ class BaseRolesTableSeeder extends Seeder {
         DB::table('roles')->delete();
         Role::create([ 'name' => 'sysadmin', 'display_name' => 'System Administrator', 'description' => 'System Administrator User has all permissions',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        Role::create([ 'name' => 'admin', 'display_name' => 'Administrator', 'description' => 'User is allowed to manage and edit other users',
+        Role::create([ 'name' => 'admin', 'display_name' => 'Org Administrator', 'description' => 'User is allowed to manage and edit other users within their organization',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }
@@ -113,12 +129,23 @@ class BaseRoleUserTableSeeder extends Seeder {
     {
         DB::table('role_user')->delete();
 
-        $user = User::where('name', '=', 'Sachin Pawaskar')->first()->id;
-        $role = Role::where('name', '=', 'sysadmin')->first()->id;
-        $role_user = [ ['role_id' => $role, 'user_id' => $user, 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ] ];
+        $user = User::withoutGlobalScope(OrgScope::class)->where('name', '=', 'System')->first();
+        $user = User::where('name', '=', 'System')->first();
+        $role = Role::where('name', '=', 'sysadmin')->first();
+        $role_user = [ 'role_id' => $role->id, 'user_id' => $user->id, 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ];
         DB::table('role_user')->insert($role_user);
-        $role = Role::where('name', '=', 'admin')->first()->id;
-        $role_user = [ ['role_id' => $role, 'user_id' => $user, 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ] ];
+
+//        $user = User::withoutGlobalScope(OrgScope::class)->where('name', '=', 'Sachin Pawaskar')->first();
+//        dd($user);
+        $user = User::where('name', '=', 'Sachin Pawaskar')->first();
+        $role_user = [ 'role_id' => $role->id, 'user_id' => $user->id, 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ];
+        DB::table('role_user')->insert($role_user);
+
+        $user = User::where('name', '=', 'Sachin Pawaskar - OrgAdmin')->first();
+//        $user = User::withoutGlobalScope(OrgScope::class)->where('name', '=', 'Sachin Pawaskar - OrgAdmin')->first();
+//        dd($user);
+        $role = Role::where('name', '=', 'admin')->first();
+        $role_user = [ 'role_id' => $role->id, 'user_id' => $user->id, 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ];
         DB::table('role_user')->insert($role_user);
     }
 }
@@ -158,17 +185,22 @@ class BasePermissionRoleTableSeeder extends Seeder
     }
 }
 
-class BaseOrgsTableSeeder extends Seeder {
-
-    public function run()
-    {
-        Org::create([  'name' => 'University of Nebraska Omaha', 'address' => 'University of Nebraska Omaha, 6001 Dodge Street',
-            'city' => 'Omaha', 'state' => 'NE', 'zip' => '68182',
-            'geo_lat' => '41.258481', 'geo_long' => '-96.010379', 'website' => 'http://www.unomaha.edu/', 'phone' => '402.554.2800',
-            'toll_free' => '', 'fax' => '', 'contact_name' => '', 'contact_email' => '',
-            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-    }
-}
+//class BaseOrgUserTableSeeder extends Seeder {
+//
+//    public function run()
+//    {
+//        DB::table('org_user')->delete();
+//
+//        $user = User::where('name', '=', 'Sachin Pawaskar')->first()->id;
+//        $org = Org::where('name', '=', 'University of Nebraska Omaha')->first()->id;
+//        $org_user = [ ['org_id' => $org, 'user_id' => $user, 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ] ];
+//        DB::table('org_user')->insert($org_user);
+//
+//        $user = User::where('name', '=', 'Sachin Pawaskar - OrgAdmin')->first()->id;
+//        $org_user = [ ['org_id' => $org, 'user_id' => $user, 'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create() ] ];
+//        DB::table('org_user')->insert($org_user);
+//    }
+//}
 
 class BaseSettingsTableSeeder extends Seeder {
 
@@ -178,15 +210,22 @@ class BaseSettingsTableSeeder extends Seeder {
         Setting::create([  'name' => 'lines_per_page', 'description' => 'Lines per Page', 'default_value' => '10', 'kind' => 'int',
             'display_type' => 'select', 'display_values' => '{"10":10, "25":25, "50":50, "100":100}',
             'help' => 'Controls the numbers of rows of data displayed for views with tables',
-            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        // Todo: create welcome popup
-        Setting::create([  'name' => 'welcome_screen_on_startup', 'description' => 'Welcome Screen on Startup', 'default_value' => 'true', 'kind' => 'bool',
-            'display_type' => 'checkbox', 'display_values' => '',
-            'help' => 'Displays the Welcome Screen on startup when the user logs into the application.',
+            'type' => 'user', 'group' => 'ui', 'display_order' => 1010,
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
         Setting::create([  'name' => 'mru_list_users', 'description' => 'MRU Users', 'default_value' => '5', 'kind' => 'int',
             'display_type' => 'number', 'display_values' => '{"min":0, "max":20, "step":1}',
             'help' => 'Number of Most Recently Used/Accessed (MRU List) Users to keep track off',
+            'type' => 'user', 'group' => 'ui', 'display_order' => 1020,
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Setting::create([  'name' => 'welcome_screen_on_startup', 'description' => 'Welcome Screen on Startup', 'default_value' => 'true', 'kind' => 'bool',
+            'display_type' => 'checkbox', 'display_values' => '',
+            'help' => 'Displays the Welcome Screen on startup when the user logs into the application.',
+            'type' => 'user', 'group' => 'ui', 'display_order' => 1030,
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Setting::create([  'name' => 'welcome_screen_url', 'description' => 'Welcome Screen URL', 'default_value' => '/welcome', 'kind' => 'url',
+            'display_type' => 'text', 'display_values' => '',
+            'help' => 'Configure the URL for the welcome screen that is displayed to the user on startup when the user logs into the application.',
+            'type' => 'org', 'group' => 'ui', 'display_order' => 1040,
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }

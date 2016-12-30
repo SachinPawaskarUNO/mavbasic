@@ -21,8 +21,10 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 use App\Http\Traits\SettingsTrait;
 use App\Http\Traits\AuditsTrait;
+use App\Scopes\OrgScope;
 use App\Eula;
 use Log;
+use Session;
 
 
 /**
@@ -54,6 +56,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'active', 'phone', 'default_language', 'default_country', 'last_login_ip_address',
         'last_login_device', 'number_of_logins', 'last_login_at', 'expiration_at', 'password_change_at',
+        'org_id',
         'created_by', 'updated_by',
     ];
 
@@ -79,6 +82,17 @@ class User extends Authenticatable
     public $passwordChangeRequested = false;
     public $showStartupWizard = false;
 
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+//        static::addGlobalScope(new OrgScope);
+    }
     /**
      * Get a List of roles ids associated with the current user.
      *
@@ -142,13 +156,31 @@ class User extends Authenticatable
     /**
      * Get all of the settings for this user.
      */
+    public function org()
+    {
+        return $this->belongsTo('App\Org');
+    }
+
+    /**
+     * Get all of the settings that are assigned this user.
+     */
     public function settings()
+    {
+        return $this->morphToMany('App\Setting', 'settingable')
+            ->withPivot('settingable_id', 'settingable_type', 'setting_id', 'value', 'json_values', 'created_by', 'updated_by')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get all of the settings for this user.
+     */
+/*    public function settings()
     {
         return $this->belongsToMany('App\Setting', 'setting_user', 'user_id', 'setting_id')
             ->withPivot('user_id', 'setting_id', 'value', 'json_values', 'created_by', 'updated_by')
             ->withTimestamps();
     }
-
+*/
     /**
      * Get all of the eulas for this user.
      */
@@ -209,7 +241,7 @@ class User extends Authenticatable
         if ($this->getSettingValue('welcome_screen_on_startup'))
         {
             $this->wizardStartupTabs = array_merge($this->wizardStartupTabs,
-                array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => '\welcome']));
+                array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => $this->org->getSettingValue('welcome_screen_url')]));
             if (empty($startTab)) { $startTab = 'Welcome'; }
         }
 
@@ -231,7 +263,7 @@ class User extends Authenticatable
 
         $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('About' => ['key' => 'About', 'name' => trans('labels.about'), 'src' => '\about']));
         $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('AboutBrowser' => ['key' => 'AboutBrowser', 'name' => trans('labels.aboutbrowser'), 'src' => '\aboutbrowser']));
-        $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => '\welcome']));
+        $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => $this->org->getSettingValue('welcome_screen_url')]));
 
         if ($this->eulaAccepted) {
             if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
@@ -246,5 +278,11 @@ class User extends Authenticatable
         Log::info('User.buildWizardHelp: wizardHelpTabs='.json_encode($this->wizardHelpTabs));
         Log::info('User.buildWizardHelp: wizardHelp='.json_encode($this->wizardHelp));
         return count($this->wizardHelpTabs);
+    }
+
+    public function onSettingChange()
+    {
+        $this->buildWizardHelp();
+        Session::put('user', $this);
     }
 }

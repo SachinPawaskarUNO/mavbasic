@@ -16,9 +16,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Traits\SettingsTrait;
 
 class Org extends Model
 {
+    use SettingsTrait;
     use SoftDeletes;
 
     /**
@@ -56,8 +58,21 @@ class Org extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('App\User', 'org_user', 'org_id', 'user_id')
-            ->withPivot('user_id', 'org_id', 'created_by', 'updated_by')
+        return $this->hasMany('App\User');
+    }
+
+    /**
+     * Get all of the settings that are assigned this org.
+     */
+    public function settings()
+    {
+        return $this->morphToMany('App\Setting', 'settingable')
+            ->withPivot('settingable_id', 'settingable_type', 'setting_id', 'value', 'json_values', 'created_by', 'updated_by')
             ->withTimestamps();
+    }
+
+    public function onSettingChange()
+    {
+        // Special processing, if any
     }
 }

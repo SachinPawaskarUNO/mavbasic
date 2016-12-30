@@ -14,15 +14,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Permission;
-use App\Org;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use App\Http\Requests\OrgRequest;
 
 use App\Http\Requests;
+use App\Org;
+use App\Setting;
 use Auth;
 use Session;
 use Log;
+use DB;
+
 
 class OrgsController extends Controller
 {
@@ -31,10 +34,9 @@ class OrgsController extends Controller
         $this->middleware('ability:sysadmin|admin, manage-orgs|create-orgs|edit-orgs|view-orgs|delete-orgs');
 
         $this->user = Auth::user();
-        $this->list_permission = Permission::pluck('display_name', 'id');
         $this->heading = trans('labels.orgs');
 
-        $this->viewData = [ 'user' => $this->user, 'list_permission' => $this->list_permission, 'heading' => $this->heading ];
+        $this->viewData = [ 'user' => $this->user, 'heading' => $this->heading ];
     }
 
     public function index()
@@ -72,7 +74,6 @@ class OrgsController extends Controller
         $this->populateCreateFields($input);
 
         $object = Org::create($input);
-        $this->syncPermissions($object, $request->input('permissionlist'));
         Session::flash('flash_message', trans('messages.success_new_org'));
         Log::info('OrgsController.store - End: '.$object->id);
         return redirect()->back();
@@ -120,15 +121,39 @@ class OrgsController extends Controller
         return redirect('/orgs');
     }
 
-    /**
-     * Sync up the list of permissions for the given org record.
-     *
-     * @param  User  $org
-     * @param  array  $permissions (id)
-     */
-    private function syncPermissions(Org $org, array $permissions)
+    public function showSettings(Org $org)
     {
-        Log::info('OrgsController.syncPermissions: Start: '.$org->name);
-        $org->perms()->sync($this->populateCreateFieldsForSyncWithIDs($permissions, true));
+        $object = $org;
+        Log::info('OrgsController.settings: '.$object->id);
+        $this->viewData['org'] = $object;
+        $this->viewData['the_org_settings'] = Setting::all()->where('type', '!=', 'system');
+        $this->viewData['heading'] = trans('labels.edit_org_settings', ['name' => $object->name]);
+
+        return view('orgs.settings', $this->viewData);
+    }
+
+    public function updateSettings(Org $org, Request $request)
+    {
+        $object = $org;
+        Log::info('OrgsController.updateSettings - Start: '.$object->id);
+        foreach (Input::get('orgsettings', array()) as $orgsetting)
+        {
+            $name = $orgsetting['name'];
+            $value = $orgsetting['value'] == '' ? $orgsetting['default_value'] : $orgsetting['value'];
+            if ($orgsetting['kind'] == 'bool' && $orgsetting['value'] == '') {
+                $value = false;
+            }
+
+            try{
+                $org->setSetting($name, $value);
+                Log::info('Org setting updated: '.$name. ' with value '.$value);
+            } catch(Exception $e){
+                Log::error('OrgsController.updateSettings - Error: '.'Updating org setting'.$name);
+                return redirect('orgs.settings')->withErrors(trans('messages.error_edit_org_setting', ['name' => $name]));
+            }
+        }
+        Session::flash('flash_message', trans('messages.success_edit_org_settings'));
+        Log::info('OrgsController.updateSettings - End: '.$object->id);
+        return back()->withInput();
     }
 }

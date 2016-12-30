@@ -14,6 +14,7 @@
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
                                     <th>@lang('labels.description')</th><th>@lang('labels.kind')</th><th>@lang('labels.default_value')</th><th>@lang('labels.display_type')</th>
+                                    <th>@lang('labels.group')</th><th>@lang('labels.display_order')</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($settings as $setting)
@@ -22,6 +23,8 @@
                                             <td class="table-text"><div>{{ $setting->kind }}</div></td>
                                             <td class="table-text"><div>{{ $setting->default_value }}</div></td>
                                             <td class="table-text"><div>{{ $setting->display_type }}</div></td>
+                                            <td class="table-text"><div>{{ $setting->group }}</div></td>
+                                            <td class="table-text"><div>{{ $setting->display_order }}</div></td>
                                         </tr>
                                     @endforeach
                                     </tbody>

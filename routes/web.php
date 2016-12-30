@@ -52,6 +52,9 @@ Route::resource('orgs', 'OrgsController');
 Route::resource('settings', 'SettingsController');
 Route::resource('eulas', 'EulasController');
 
+Route::get( 'orgs/{org}/settings', 'OrgsController@showSettings');
+Route::post('orgs/{org}/updateSettings', 'OrgsController@updateSettings');
+
 Route::get( 'users/{user}/settings', 'UsersController@showSettings');
 Route::post('users/{user}/updateSettings', 'UsersController@updateSettings');
 Route::post('users/{user}/updateSetting', 'UsersController@updateSetting');

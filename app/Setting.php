@@ -34,15 +34,26 @@ class Setting extends Model
      * @var array
      */
     protected $fillable = ['name', 'description', 'help', 'default_value', 'kind', 'display_type', 'display_values',
+        'type', 'group','display_order',
         'created_by', 'updated_by',];
+
+    /**
+     * Get all of the orgs that are assigned this setting.
+     */
+    public function orgs()
+    {
+        return $this->morphedByMany('App\Org', 'settingable')
+            ->withPivot('setting_id', 'settingable_id', 'settingable_type', 'value', 'json_values', 'override', 'created_by', 'updated_by')
+            ->withTimestamps();
+    }
 
     /**
      * Get all of the users that are assigned this setting.
      */
     public function users()
     {
-        return $this->belongsToMany('App\User', 'setting_user', 'setting_id', 'user_id')
-            ->withPivot('user_id', 'setting_id', 'value', 'json_values', 'created_by', 'updated_by')
+        return $this->morphedByMany('App\User', 'settingable')
+            ->withPivot('setting_id', 'settingable_id', 'settingable_type', 'value', 'json_values', 'override', 'created_by', 'updated_by')
             ->withTimestamps();
     }
 }

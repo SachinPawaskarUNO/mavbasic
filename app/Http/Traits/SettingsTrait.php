@@ -14,7 +14,9 @@
 
 namespace App\Http\Traits;
 
+use App\Events\SettingChanged;
 use App\Setting;
+use Auth;
 use Cache;
 use Log;
 
@@ -23,7 +25,7 @@ trait SettingsTrait {
     // get setting value
     public function getSettingValue($name)
     {
-        $setting = $this->settings()->where(['user_id' => $this->id, 'name' => $name])->first();
+        $setting = $this->settings()->where(['settingable_id' => $this->id, 'settingable_type' => $this->getMorphClass(), 'name' => $name])->first();
         if ($setting) {
             return $this->stringToKind($setting, $setting->pivot->value);
         } else {
@@ -108,7 +110,7 @@ trait SettingsTrait {
     // get setting Json values
     public function getSettingJsonValues($name)
     {
-        $setting = $this->settings()->where(['user_id' => $this->id, 'name' => $name])->first();
+        $setting = $this->settings()->where(['settingable_id' => $this->id, 'settingable_type' => $this->getMorphClass(), 'name' => $name])->first();
         if ($setting) {
             return $setting->pivot->json_values;
         } else {
@@ -143,7 +145,7 @@ trait SettingsTrait {
     // get setting
     public function getSetting($name)
     {
-        return $this->settings()->where(['user_id' => $this->id, 'name' => $name])->first();
+        return $this->settings()->where(['settingable_id' => $this->id, 'settingable_type' => $this->getMorphClass(), 'name' => $name])->first();
 //        $settings = $this->getCache();
 //        $value = array_get($settings, $name);
 //        return ($value !== '') ? $value : NULL;
@@ -170,7 +172,7 @@ trait SettingsTrait {
     {
         Log::info('SettingsTrait.storeSettings: Start '.$this->name);
 
-        $record = $this->settings()->where(['user_id' => $this->id, 'name' => $name])->first();
+        $record = $this->settings()->where(['settingable_id' => $this->id, 'settingable_type' => $this->getMorphClass(), 'name' => $name])->first();
         if($record)
         {
 //            dd($record, $name, $value);
@@ -179,8 +181,10 @@ trait SettingsTrait {
         } else {
             $setting = Setting::where(['name' => $name])->first();
             Log::info('SettingsTrait.storeSettings: Save New: '.$setting->name. ' = ' .$value);
-            $this->settings()->save($setting, ['value' => $value, 'created_by' => $this->name, 'updated_by' => $this->name ]);
+            $this->settings()->save($setting, ['value' => $value, 'created_by' => Auth::user()->name, 'updated_by' => Auth::user()->name ]);
+            $record = $setting;
         }
+        event(new SettingChanged($record, $this));
     }
 
     // create-update setting
@@ -193,7 +197,7 @@ trait SettingsTrait {
     {
         Log::info('SettingsTrait.storeSettingJsonValue: Start '.$this->name);
 
-        $record = $this->settings()->where(['user_id' => $this->id, 'name' => $name])->first();
+        $record = $this->settings()->where(['settingable_id' => $this->id, 'settingable_type' => $this->getMorphClass(), 'name' => $name])->first();
         if($record)
         {
             Log::info('SettingsTrait.storeSettingJsonValue: Update Existing Pivot: '.$record->name. ' = ' .$object->id);
@@ -204,7 +208,7 @@ trait SettingsTrait {
             $setting = Setting::where(['name' => $name])->first();
             $json_values = $this->buildSettingJson(null, $object);
             Log::info('SettingsTrait.storeSettingJsonValue: Save New: '.$setting->name. ' = ' .$object->id);
-            $this->settings()->save($setting, ['value' => $setting->default_value, 'json_values' => serialize($json_values), 'created_by' => $this->name, 'updated_by' => $this->name ]);
+            $this->settings()->save($setting, ['value' => $setting->default_value, 'json_values' => serialize($json_values), 'created_by' => Auth::user()->name, 'updated_by' => Auth::user()->name ]);
         }
     }
 
@@ -249,11 +253,12 @@ trait SettingsTrait {
 
     public function stringToKind($setting, $value)
     {
-        if ($setting->kind == 'boolean' || $setting->kind == 'bool') {
-            return ($value == 'true' || $value == '1') ? true : false;
-        } else if ($setting->kind == 'int' || $setting->kind == 'integer') {
+        if ($setting->kind === 'boolean' || $setting->kind === 'bool') {
+            return ($value === 'true' || $value === '1') ? true : false;
+        } else if ($setting->kind === 'int' || $setting->kind === 'integer') {
             return intval($value);
         } else {
+//            Log::info('SettingsTrait.stringToKind: name=' . $setting->name . ' kind=' . $setting->kind . ' value=' . $value);
             return $value;
         }
     }

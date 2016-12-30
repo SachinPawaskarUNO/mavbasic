@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(BaseRolesTableSeeder::class);
         $this->call(BasePermissionsTableSeeder::class);
         $this->call(BaseUsersTableSeeder::class);
+//        $this->call(BaseOrgUserTableSeeder::class);
         $this->call(BaseRoleUserTableSeeder::class);
         $this->call(BasePermissionRoleTableSeeder::class);
         $this->command->info('------------------------------------------------------------------------!');

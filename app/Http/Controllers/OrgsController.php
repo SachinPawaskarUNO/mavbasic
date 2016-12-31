@@ -71,13 +71,17 @@ class OrgsController extends Controller
     public function store(OrgRequest $request)
     {
         Log::info('OrgsController.store - Start: ');
-        $input = $request->all();
-        $this->populateCreateFields($input);
+        if ($this->authorize('create', Org::class)) {
+            Log::info('Authorization successful');
 
-        $object = Org::create($input);
-        Session::flash('flash_message', trans('messages.success_new_org'));
-        Log::info('OrgsController.store - End: '.$object->id);
-        return redirect()->back();
+            $input = $request->all();
+            $this->populateCreateFields($input);
+
+            $object = Org::create($input);
+            Session::flash('flash_message', trans('messages.success_new_org'));
+            Log::info('OrgsController.store - End: ' . $object->id);
+            return redirect()->back();
+        }
     }
 
     public function edit(Org $org)
@@ -94,12 +98,15 @@ class OrgsController extends Controller
     {
         $object = $org;
         Log::info('OrgsController.update - Start: '.$object->id);
-        $this->populateUpdateFields($request);
+        if ($this->authorize('update', $object)) {
+            Log::info('Authorization successful');
 
-        $object->update($request->all());
-        Session::flash('flash_message', trans('messages.success_edit_org'));
-        Log::info('OrgsController.update - End: '.$object->id);
-        return redirect('orgs');
+            $this->populateUpdateFields($request);
+            $object->update($request->all());
+            Session::flash('flash_message', trans('messages.success_edit_org'));
+            Log::info('OrgsController.update - End: ' . $object->id);
+            return redirect('orgs');
+        }
     }
 
     /**
@@ -117,9 +124,9 @@ class OrgsController extends Controller
         {
             Log::info('Authorization successful');
             $object->delete();
+            Log::info('OrgsController.destroy: End: ');
+            return redirect('/orgs');
         }
-        Log::info('OrgsController.destroy: End: ');
-        return redirect('/orgs');
     }
 
     public function showSettings(Org $org)
@@ -137,29 +144,34 @@ class OrgsController extends Controller
     {
         $object = $org;
         Log::info('OrgsController.updateSettings - Start: '.$object->id);
-        $org->setFireSettingChanged(false);
-        $fireSettingsChanged = false;
-        foreach (Input::get('orgsettings', array()) as $orgsetting)
+        if ($this->authorize('updateSettings', $object))
         {
-            $name = $orgsetting['name'];
-            $value = $orgsetting['value'] == '' ? $orgsetting['default_value'] : $orgsetting['value'];
-            if ($orgsetting['kind'] == 'bool' && $orgsetting['value'] == '') {
-                $value = false;
-            }
+            Log::info('Authorization successful');
 
-            try{
-                $org->setSetting($name, $value);
-                $fireSettingsChanged = true;
-                Log::info('Org setting updated: '.$name. ' with value '.$value);
-            } catch(Exception $e){
-                Log::error('OrgsController.updateSettings - Error: '.'Updating org setting'.$name);
-                return redirect('orgs.settings')->withErrors(trans('messages.error_edit_org_setting', ['name' => $name]));
+            $org->setFireSettingChanged(false);
+            $fireSettingsChanged = false;
+            foreach (Input::get('orgsettings', array()) as $orgsetting)
+            {
+                $name = $orgsetting['name'];
+                $value = $orgsetting['value'] == '' ? $orgsetting['default_value'] : $orgsetting['value'];
+                if ($orgsetting['kind'] == 'bool' && $orgsetting['value'] == '') {
+                    $value = false;
+                }
+
+                try{
+                    $org->setSetting($name, $value);
+                    $fireSettingsChanged = true;
+                    Log::info('Org setting updated: '.$name. ' with value '.$value);
+                } catch(Exception $e){
+                    Log::error('OrgsController.updateSettings - Error: '.'Updating org setting'.$name);
+                    return redirect('orgs.settings')->withErrors(trans('messages.error_edit_org_setting', ['name' => $name]));
+                }
             }
+            $org->setFireSettingChanged(true);
+            Session::flash('flash_message', trans('messages.success_edit_org_settings'));
+            Log::info('OrgsController.updateSettings - End: '.$object->id);
+            if ($fireSettingsChanged) { event(new SettingsChanged($org)); }
+            return back()->withInput();
         }
-        $org->setFireSettingChanged(true);
-        Session::flash('flash_message', trans('messages.success_edit_org_settings'));
-        Log::info('OrgsController.updateSettings - End: '.$object->id);
-        if ($fireSettingsChanged) { event(new SettingsChanged($org)); }
-        return back()->withInput();
     }
 }

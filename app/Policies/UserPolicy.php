@@ -107,7 +107,7 @@ class UserPolicy
      * @param  \App\User  $userRecord
      * @return mixed
      */
-    public function delete(User $user, User $userRecord)
+    public function destroy(User $user, User $userRecord)
     {
         if ($user->ability('admin', 'manage-users,delete-users')) {
             if($user->org->id === $userRecord->org->id) {

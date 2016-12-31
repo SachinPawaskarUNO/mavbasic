@@ -104,7 +104,7 @@ class OrgPolicy
      * @param  \App\Org  $org
      * @return mixed
      */
-    public function delete(User $user, Org $org)
+    public function destroy(User $user, Org $org)
     {
         return $user->isSystemAdmin();
     }

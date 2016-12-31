@@ -108,7 +108,7 @@ class EulaPolicy
      * @param  \App\Org  $org
      * @return mixed
      */
-    public function delete(User $user, Org $eula)
+    public function destroy(User $user, Org $eula)
     {
         if ($user->ability('admin', 'manage-eulas,delete-eulas')) {
             if($user->org->id === $eula->org->id) {

@@ -90,7 +90,7 @@ class RolePolicy
      * @param  \App\Role $role
      * @return mixed
      */
-    public function update(User $user, User $role)
+    public function update(User $user, Role $role)
     {
         if ($user->ability('admin', 'manage-roles,edit-roles')) {
 //            if($user->org->id === $role->org->id) {
@@ -108,7 +108,7 @@ class RolePolicy
      * @param  \App\Role $role
      * @return mixed
      */
-    public function delete(User $user, User $role)
+    public function destroy(User $user, Role $role)
     {
         if ($user->ability('admin', 'manage-roles,delete-roles')) {
 //            if($user->org->id === $role->org->id) {

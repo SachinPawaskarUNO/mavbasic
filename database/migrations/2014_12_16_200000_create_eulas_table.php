@@ -15,6 +15,7 @@ class CreateEulasTable extends Migration
     {
         Schema::create('eulas', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('org_id')->unsigned();
             $table->string('version')->unique();
             $table->text('agreement');
             $table->string('language')->default('en');
@@ -26,6 +27,9 @@ class CreateEulasTable extends Migration
             $table->timestamp('effective_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('org_id')->references('id')->on('orgs')
+                ->onUpdate('cascade')->onDelete('cascade');
         });
 
         // Create table for associating eulas to users (Many-to-Many)

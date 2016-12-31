@@ -243,7 +243,9 @@ class BaseEulasTableSeeder extends Seeder {
     public function run()
     {
         DB::table('eulas')->delete();
-        Eula::create([ 'version' => '1.0', 'country' => 'US', 'language' => 'en', 'status' => 'Active',
+        $org = Org::where('name', '=', 'University of Nebraska Omaha')->first();
+
+        Eula::create([ 'org_id' => $org->id, 'version' => '1.0', 'country' => 'US', 'language' => 'en', 'status' => 'Active',
             'agreement' => 'End-User License Agreement for MavBasic
                             This End-User License Agreement (EULA) is a legal agreement between you (either an individual or a single entity) and the mentioned author (MavBasic) of this Software for the software product identified above, which includes computer software and may include associated media, printed materials, and “online” or electronic documentation (“SOFTWARE PRODUCT”).
 

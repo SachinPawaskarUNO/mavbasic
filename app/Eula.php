@@ -59,6 +59,14 @@ class Eula extends Model
     }
 
     /**
+     * Get all of the settings for this user.
+     */
+    public function org()
+    {
+        return $this->belongsTo('App\Org');
+    }
+
+    /**
      * Get all of the users that are assigned this eula.
      */
     public function users()
@@ -68,14 +76,15 @@ class Eula extends Model
             ->withTimestamps();
     }
 
-    public static function getActiveSystemEula($language, $country)
+    public static function getActiveOrgEula($org_id, $language, $country)
     {
-        $eula = Eula::where(['status' => 'Active', 'language' => $language, 'country' => $country])->first();
+        $eula = Eula::where(['org_id' => $org_id, 'status' => 'Active',
+                             'language' => $language, 'country' => $country])->first();
         return $eula;
     }
 
-    public static function getActiveSystemEulaForUser($user)
+    public static function getActiveOrgEulaForUser($user)
     {
-        return self::getActiveSystemEula($user->default_language, $user->default_country);
+        return self::getActiveOrgEula($user->org->id, $user->default_language, $user->default_country);
     }
 }

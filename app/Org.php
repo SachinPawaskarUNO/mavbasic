@@ -62,6 +62,14 @@ class Org extends Model
     }
 
     /**
+     * Get all of the eulas that are assigned this org.
+     */
+    public function eulas()
+    {
+        return $this->hasMany('App\Eula');
+    }
+
+    /**
      * Get all of the settings that are assigned this org.
      */
     public function settings()
@@ -69,6 +77,17 @@ class Org extends Model
         return $this->morphToMany('App\Setting', 'settingable')
             ->withPivot('settingable_id', 'settingable_type', 'setting_id', 'value', 'json_values', 'created_by', 'updated_by')
             ->withTimestamps();
+    }
+
+    public function getActiveEula($language, $country)
+    {
+        $eula = $this->eulas()->where(['status' => 'Active', 'language' => $language, 'country' => $country])->first();
+        return $eula;
+    }
+
+    public function getActiveEulaForUser($user)
+    {
+        return $this->getActiveEula($user->default_language, $user->default_country);
     }
 
     public function onSettingChange()

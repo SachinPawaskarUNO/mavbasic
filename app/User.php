@@ -201,13 +201,13 @@ class User extends Authenticatable
     {
         if ($this->org->getSettingValue('eula_processing')) {
             $this->eulaProcessing = true;
-            $systemEula = Eula::getActiveSystemEula($this->default_language, $this->default_country);
+            $orgEula = $this->org->getActiveEulaForUser($this);
             $currentlyAcceptedEula = $this->getActiveEula();
 
-            if (!isset($currentlyAcceptedEula) || !isset($systemEula)) {
-    //            dd(['true',$systemEula, $currentlyAcceptedEula, $this]);
+            if (!isset($currentlyAcceptedEula) || !isset($orgEula)) {
+    //            dd(['true',$orgEula, $currentlyAcceptedEula, $this]);
                 return ($this->eulaAccepted = false);
-            } else if ($systemEula->id != $currentlyAcceptedEula->id) {
+            } else if ($orgEula->id != $currentlyAcceptedEula->id) {
                 return ($this->eulaAccepted = false);
             } else {
                 return ($this->eulaAccepted = true);
@@ -228,7 +228,7 @@ class User extends Authenticatable
 
         // First check to see if we need to display EULA
         if ($this->eulaProcessing && !$this->eulaAccepted) {
-            if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
+            if ($this->org->getActiveEulaForUser($this) != null) {
                 $this->wizardStartupTabs = array_merge($this->wizardStartupTabs,
                     array('Eula' => ['key' => 'Eula', 'name' => trans('labels.eula'), 'src' => '\eula']));
             }
@@ -271,7 +271,7 @@ class User extends Authenticatable
         $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => $this->org->getSettingValue('welcome_screen_url')]));
 
         if ($this->eulaProcessing && $this->eulaAccepted) {
-            if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
+            if ($this->org->getActiveEulaForUser($this) != null) {
                 $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Eula' => ['key' => 'Eula', 'name' => trans('labels.eula'), 'src' => '\eula']));
             }
         }

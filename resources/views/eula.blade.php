@@ -7,7 +7,11 @@
             <div class="panel-heading">@lang('labels.eula_long')</div>
 
             <div class="panel-body">
-                {{ App\Eula::getActiveSystemEulaForUser($user)->agreement }}
+                @if ($user->eulaAccepted)
+                    {{ $user->getActiveEula()->agreement }}
+                @else
+                    {{ $user->org->getActiveEulaForUser($user)->agreement }}
+                @endif
             </div>
         </div>
     </div>

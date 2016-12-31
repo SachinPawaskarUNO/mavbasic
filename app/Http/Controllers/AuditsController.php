@@ -67,12 +67,12 @@ class AuditsController extends Controller
         Log::info('AuditsController.restore: Start: '.$object->id);
         if ($this->authorize('restore', $object))
         {
+            Log::info('Authorization successful');
             $namespacedModel = $object->auditable_type;
-            Log::info('Authorization successful: Restoring Model='. $namespacedModel .' ['.$object->auditable_id.']');
+            Log::info('Restoring Model='. $namespacedModel .' ['.$object->auditable_id.']');
             $namespacedModel::withTrashed()->where('id', $object->auditable_id)->restore();
+            Log::info('AuditsController.restore: End: ');
+            return redirect('/audits');
         }
-        Log::info('AuditsController.restore: End: ');
-        return redirect('/audits');
     }
-
 }

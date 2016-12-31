@@ -33,6 +33,24 @@ class AuditPolicy
     }
 
     /**
+     * If you may wish to authorize all actions within a given policy for certain users.
+     * The before method will be executed before any other methods on the policy,
+     * giving you an opportunity to authorize the action before the intended
+     * policy method is actually called. This feature is most commonly used
+     * for authorizing application administrators to perform any action.
+     *
+     * @param $user
+     * @param $ability
+     * @return bool
+     */
+    public function before($user, $ability)
+    {
+        if ($user->isSystemAdmin()) {
+            return true;
+        }
+    }
+
+    /**
      * Determine if the given user can restore the given audit record/model.
      *
      * @param  User  $user

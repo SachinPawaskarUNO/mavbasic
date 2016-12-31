@@ -68,14 +68,18 @@ class RolesController extends Controller
     public function store(RoleRequest $request)
     {
         Log::info('RolesController.store - Start: ');
-        $input = $request->all();
-        $this->populateCreateFields($input);
+        if ($this->authorize('create', Role::class)) {
+            Log::info('Authorization successful');
 
-        $object = Role::create($input);
-        $this->syncPermissions($object, $request->input('permissionlist'));
-        Session::flash('flash_message', trans('messages.success_new_role'));
-        Log::info('RolesController.store - End: '.$object->id);
-        return redirect()->back();
+            $input = $request->all();
+            $this->populateCreateFields($input);
+
+            $object = Role::create($input);
+            $this->syncPermissions($object, $request->input('permissionlist'));
+            Session::flash('flash_message', trans('messages.success_new_role'));
+            Log::info('RolesController.store - End: ' . $object->id);
+            return redirect()->back();
+        }
     }
 
     public function edit(Role $role)
@@ -92,13 +96,17 @@ class RolesController extends Controller
     {
         $object = $role;
         Log::info('RolesController.update - Start: '.$object->id);
-        $this->populateUpdateFields($request);
+        if ($this->authorize('update', $object)) {
+            Log::info('Authorization successful');
 
-        $object->update($request->all());
-        $this->syncPermissions($object, $request->input('permissionlist'));
-        Session::flash('flash_message', trans('messages.success_edit_role'));
-        Log::info('RolesController.update - End: '.$object->id);
-        return redirect('roles');
+            $this->populateUpdateFields($request);
+
+            $object->update($request->all());
+            $this->syncPermissions($object, $request->input('permissionlist'));
+            Session::flash('flash_message', trans('messages.success_edit_role'));
+            Log::info('RolesController.update - End: ' . $object->id);
+            return redirect('roles');
+        }
     }
 
     /**
@@ -116,9 +124,9 @@ class RolesController extends Controller
         {
             Log::info('Authorization successful');
             $object->delete();
+            Log::info('RolesController.destroy: End: ');
+            return redirect('/roles');
         }
-        Log::info('RolesController.destroy: End: ');
-        return redirect('/roles');
     }
 
     /**

@@ -81,17 +81,21 @@ class UsersController extends Controller
     public function store(UserRequest $request)
     {
         Log::info('UsersController.store - Start: ');
-        $input = $request->all();
-        $this->populateCreateFields($input);
-        $input['password'] = bcrypt($request['password']);
-        $input['active'] = $request['active'] == '' ? false : true;
+        if ($this->authorize('create', User::class)) {
+            Log::info('Authorization successful');
 
-        $object = User::create($input);
-        $this->syncRoles($object, $request->input('rolelist'));
-        Session::flash('flash_message', trans('messages.success_new_user'));
-        Log::info('UsersController.store - End: '.$object->id);
+            $input = $request->all();
+            $this->populateCreateFields($input);
+            $input['password'] = bcrypt($request['password']);
+            $input['active'] = $request['active'] == '' ? false : true;
 
-        return redirect()->back();
+            $object = User::create($input);
+            $this->syncRoles($object, $request->input('rolelist'));
+            Session::flash('flash_message', trans('messages.success_new_user'));
+            Log::info('UsersController.store - End: ' . $object->id);
+
+            return redirect()->back();
+        }
     }
 
     public function edit(User $user)
@@ -111,15 +115,18 @@ class UsersController extends Controller
     {
         $object = $user;
         Log::info('UsersController.update - Start: '.$object->id);
-//        $this->authorize($object);
-        $this->populateUpdateFields($request);
-        $request['active'] = $request['active'] == '' ? false : true;
+        if ($this->authorize('update', $object)) {
+            Log::info('Authorization successful');
 
-        $object->update($request->all());
-        $this->syncRoles($object, $request->input('rolelist'));
-        Session::flash('flash_message', trans('messages.success_edit_user'));
-        Log::info('UsersController.update - End: '.$object->id);
-        return redirect('users');
+            $this->populateUpdateFields($request);
+            $request['active'] = $request['active'] == '' ? false : true;
+
+            $object->update($request->all());
+            $this->syncRoles($object, $request->input('rolelist'));
+            Session::flash('flash_message', trans('messages.success_edit_user'));
+            Log::info('UsersController.update - End: ' . $object->id);
+            return redirect('users');
+        }
     }
 
     /**
@@ -137,9 +144,9 @@ class UsersController extends Controller
         {
             Log::info('Authorization successful');
             $object->delete();
+            Log::info('UsersController.destroy: End: ');
+            return redirect('/users');
         }
-        Log::info('UsersController.destroy: End: ');
-        return redirect('/users');
     }
 
     /**
@@ -169,63 +176,76 @@ class UsersController extends Controller
     {
         $object = $user;
         Log::info('UsersController.updateSettings - Start: '.$object->id);
-        $user->setFireSettingChanged(false);
-        $fireSettingsChanged = false;
-        foreach (Input::get('usersettings', array()) as $usersetting)
-        {
-            $name = $usersetting['name'];
-            $value = $usersetting['value'] == '' ? $usersetting['default_value'] : $usersetting['value'];
-            if ($usersetting['kind'] == 'bool' && $usersetting['value'] == '') {
-                $value = false;
-            }
+        if ($this->authorize('updateSettings', $object)) {
+            Log::info('Authorization successful');
 
-            try{
-                $user->setSetting($name, $value);
-                $fireSettingsChanged = true;
-                Log::info('User setting updated: '.$name. ' with value '.$value);
-            } catch(Exception $e){
-                Log::error('UsersController.updateSettings - Error: '.'Updating user setting'.$name);
-                return redirect('users.settings')->withErrors(trans('messages.error_edit_user_setting', ['name' => $name]));
+            $user->setFireSettingChanged(false);
+            $fireSettingsChanged = false;
+            foreach (Input::get('usersettings', array()) as $usersetting) {
+                $name = $usersetting['name'];
+                $value = $usersetting['value'] == '' ? $usersetting['default_value'] : $usersetting['value'];
+                if ($usersetting['kind'] == 'bool' && $usersetting['value'] == '') {
+                    $value = false;
+                }
+
+                try {
+                    $user->setSetting($name, $value);
+                    $fireSettingsChanged = true;
+                    Log::info('User setting updated: ' . $name . ' with value ' . $value);
+                } catch (Exception $e) {
+                    Log::error('UsersController.updateSettings - Error: ' . 'Updating user setting' . $name);
+                    return redirect('users.settings')->withErrors(trans('messages.error_edit_user_setting', ['name' => $name]));
+                }
             }
+            $user->setFireSettingChanged(true);
+            Session::flash('flash_message', trans('messages.success_edit_user_settings'));
+            Log::info('UsersController.updateSettings - End: ' . $object->id);
+            if ($fireSettingsChanged) {
+                event(new SettingsChanged($user));
+            }
+            return back()->withInput();
         }
-        $user->setFireSettingChanged(true);
-        Session::flash('flash_message', trans('messages.success_edit_user_settings'));
-        Log::info('UsersController.updateSettings - End: '.$object->id);
-        if ($fireSettingsChanged) { event(new SettingsChanged($user)); }
-        return back()->withInput();
     }
 
     public function acceptEula(User $user, Request $request)
     {
         $object = $user;
         Log::info('UsersController.acceptEula: '.$object->id);
-        $accept = $request['accept'];
-        Log::info('UsersController.acceptEula: accept='.$accept);
-        if ($accept) {
-            Log::info('UsersController.acceptEula: accept=success');
-            // Check user language/country and make sure that it matches the language/country for the latest system EULA.
-            $eula = Eula::where(['status' => 'Active', 'language' => $user->default_language, 'country' => $user->default_country])->first();
-            $user->eulas()->save($eula, ['accepted_at' => Carbon::now(), 'created_by' => $user->name, 'updated_by' => $user->name ]);
-            $response = json_encode(array('success' => '1', 'msg' => trans('messages.success_eula_accepted').' - '.trans('labels.thank_you')));
+        if ($this->authorize('acceptEula', $object)) {
+            Log::info('Authorization successful');
 
-            event(new EulaAccepted($eula, $user));
-        } else {
-            $response = json_encode(array('success' => '0', 'msg' => trans('messages.error_eula_accepted')));
+            $accept = $request['accept'];
+            Log::info('UsersController.acceptEula: accept=' . $accept);
+            if ($accept) {
+                Log::info('UsersController.acceptEula: accept=success');
+                // Check user language/country and make sure that it matches the language/country for the latest system EULA.
+                $eula = Eula::where(['status' => 'Active', 'language' => $user->default_language, 'country' => $user->default_country])->first();
+                $user->eulas()->save($eula, ['accepted_at' => Carbon::now(), 'created_by' => $user->name, 'updated_by' => $user->name]);
+                $response = json_encode(array('success' => '1', 'msg' => trans('messages.success_eula_accepted') . ' - ' . trans('labels.thank_you')));
+
+                event(new EulaAccepted($eula, $user));
+            } else {
+                $response = json_encode(array('success' => '0', 'msg' => trans('messages.error_eula_accepted')));
+            }
+
+            return $response;
         }
-
-        return $response;
     }
 
     public function updateSetting(User $user, Request $request)
     {
         $object = $user;
         Log::info('UsersController.updateSetting: '.$object->id);
-        $value = $request['settingvalue'];
-        $settingname = $request['settingname'];
-        Log::info('UsersController.updateSetting: '.'['.$settingname.'='.$value.']');
-        $user->setSetting($settingname, $value);
-//        $response   = array('success' => '0', 'error' => 'User setting NOT saved');
-        $response = json_encode(array('success' => '1', 'msg' => trans('messages.success_edit_user_setting')));
-        return $response;
+        if ($this->authorize('updateSetting', $object)) {
+            Log::info('Authorization successful');
+
+            $value = $request['settingvalue'];
+            $settingname = $request['settingname'];
+            Log::info('UsersController.updateSetting: ' . '[' . $settingname . '=' . $value . ']');
+            $user->setSetting($settingname, $value);
+            //        $response   = array('success' => '0', 'error' => 'User setting NOT saved');
+            $response = json_encode(array('success' => '1', 'msg' => trans('messages.success_edit_user_setting')));
+            return $response;
+        }
     }
 }

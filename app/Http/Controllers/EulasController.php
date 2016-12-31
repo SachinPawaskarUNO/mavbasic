@@ -68,14 +68,16 @@ class EulasController extends Controller
     public function store(Request $request)
     {
         Log::info('EulasController.store - Start: ');
-        $input = $request->all();
-        $this->populateCreateFields($input);
+        if ($this->authorize('create', Eula::class)) {
+            Log::info('Authorization successful');
+            $input = $request->all();
+            $this->populateCreateFields($input);
 
-        $object = Eula::create($input);
-        Session::flash('flash_message', trans('messages.success_new_eula'));
-        Log::info('EulasController.store - End: '.$object->id);
-
-        return redirect()->back();
+            $object = Eula::create($input);
+            Session::flash('flash_message', trans('messages.success_new_eula'));
+            Log::info('EulasController.store - End: ' . $object->id);
+            return redirect()->back();
+        }
     }
 
     public function edit(Eula $eula)
@@ -92,23 +94,26 @@ class EulasController extends Controller
     {
         $object = $eula;
         Log::info('EulasController.update - Start: '.$object->id);
-//        $this->authorize($object);
-        $this->populateUpdateFields($request);
-        if ($request['status'] === 'Active') {
-            // If a new eula is made active then make previous Active EULA inactive.
-            $eulas = Eula::all();
-            $previous_eula = $eulas->where('status', '=', 'Active')->first();
-            $previous_eula->status = 'InActive';
-            $previous_eula->save();
+        if ($this->authorize('update', $object)) {
+            Log::info('Authorization successful');
 
-            // update the effective date for eula which being updated to Active
-            $request['effective_at'] = Carbon::now();
+            $this->populateUpdateFields($request);
+            if ($request['status'] === 'Active') {
+                // If a new eula is made active then make previous Active EULA inactive.
+                $eulas = Eula::all();
+                $previous_eula = $eulas->where('status', '=', 'Active')->first();
+                $previous_eula->status = 'InActive';
+                $previous_eula->save();
+
+                // update the effective date for eula which being updated to Active
+                $request['effective_at'] = Carbon::now();
+            }
+
+            $object->update($request->all());
+            Session::flash('flash_message', trans('messages.success_edit_eula'));
+            Log::info('EulasController.update - End: ' . $object->id);
+            return redirect('eulas');
         }
-
-        $object->update($request->all());
-        Session::flash('flash_message', trans('messages.success_edit_eula'));
-        Log::info('EulasController.update - End: '.$object->id);
-        return redirect('eulas');
     }
 
     /**
@@ -126,8 +131,8 @@ class EulasController extends Controller
         {
             Log::info('Authorization successful');
             $object->delete();
+            Log::info('EulasController.destroy: End: ');
+            return redirect('/eulas');
         }
-        Log::info('EulasController.destroy: End: ');
-        return redirect('/eulas');
     }
 }

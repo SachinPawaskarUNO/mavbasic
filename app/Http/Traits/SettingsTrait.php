@@ -22,6 +22,8 @@ use Log;
 
 trait SettingsTrait {
 
+    public $fireSettingChanged = true;
+
     // get setting value
     public function getSettingValue($name)
     {
@@ -184,7 +186,9 @@ trait SettingsTrait {
             $this->settings()->save($setting, ['value' => $value, 'created_by' => Auth::user()->name, 'updated_by' => Auth::user()->name ]);
             $record = $setting;
         }
-        event(new SettingChanged($record, $this));
+        if ($this->fireSettingChanged) {
+            event(new SettingChanged($record, $this));
+        }
     }
 
     // create-update setting
@@ -261,5 +265,9 @@ trait SettingsTrait {
 //            Log::info('SettingsTrait.stringToKind: name=' . $setting->name . ' kind=' . $setting->kind . ' value=' . $value);
             return $value;
         }
+    }
+
+    public function setFireSettingChanged($flag) {
+        $this->fireSettingChanged = $flag;
     }
 }

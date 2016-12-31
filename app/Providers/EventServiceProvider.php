@@ -13,8 +13,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\EulaAccepted' => ['App\Listeners\UserEulaAccepted',],
-        'App\Events\SettingChanged' => ['App\Listeners\UserRefresh',],
+        'App\Events\EulaAccepted'       => ['App\Listeners\UserEulaAccepted',],
     ];
 
     /**

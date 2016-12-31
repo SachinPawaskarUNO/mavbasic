@@ -19,6 +19,11 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+use App\Events\SettingChanged;
+use App\Events\SettingsChanged;
+use App\User;
+use Log;
+
 /**
  * Class UserEventSubscriber
  * @package App\Listeners
@@ -61,14 +66,59 @@ class UserEventSubscriber
     }
 
     /**
+     * Handle the setting change events.
+     * This is for single settings.
+     *
+     * @param  SettingChanged  $event
+     * @return void
+     */
+    public function onSettingChange(SettingChanged $event)
+    {
+        // Special processing for certain user setting should go here.
+        if ($event->setting->name === 'welcome_screen_on_startup') {
+            $setting = $event->setting;
+            $model = $event->model;
+
+            if ($model->getMorphClass() === 'App\User') {
+                Log::info('UserEventSubscriber.onSettingChange: Setting-Name='.$setting->name. ' User Id=' .$model->id);
+                $this->onSettingChangeForUser($model);
+            }
+        }
+    }
+
+    public function onSettingChangeForUser(User $user) {
+        $user->onSettingChange();
+    }
+
+    /**
+     * Handle the setting change events.
+     * This is for multiple settings. Typically on user of org settings save.
+     *
+     * @param  SettingChanged  $event
+     * @return void
+     */
+    public function onSettingsChange(SettingsChanged $event)
+    {
+        // Special processing for certain user setting should go here.
+        $model = $event->model;
+
+        if ($model->getMorphClass() === 'App\User') {
+            Log::info('UserEventSubscriber.onSettingsChange (Multiple): User Id=' .$model->id);
+            $this->onSettingChangeForUser($model);
+        }
+    }
+
+    /**
      * Register the listeners for the subscriber.
      *
-     * @param  Illuminate\Events\Dispatcher  $events
+     * @param - Illuminate\Events\Dispatcher  $events
      */
     public function subscribe($events)
     {
         $events->listen('Illuminate\Auth\Events\Login', 'App\Listeners\UserEventSubscriber@onUserLogin');
         $events->listen('Illuminate\Auth\Events\Logout', 'App\Listeners\UserEventSubscriber@onUserLogout');
+        $events->listen('App\Events\SettingChanged', 'App\Listeners\UserEventSubscriber@onSettingChange');
+        $events->listen('App\Events\SettingsChanged', 'App\Listeners\UserEventSubscriber@onSettingsChange');
     }
 
 }

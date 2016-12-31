@@ -70,14 +70,17 @@ class SettingsController extends Controller
     public function store(Request $request)
     {
         Log::info('SettingsController.store - Start: ');
-        $input = $request->all();
-        $this->populateCreateFields($input);
+        if ($this->authorize('create', Setting::class)) {
+            Log::info('Authorization successful');
 
-        $object = Setting::create($input);
-        Session::flash('flash_message', trans('messages.success_new_setting'));
-        Log::info('SettingsController.store - End: '.$object->id);
+            $input = $request->all();
+            $this->populateCreateFields($input);
 
-        return redirect()->back();
+            $object = Setting::create($input);
+            Session::flash('flash_message', trans('messages.success_new_setting'));
+            Log::info('SettingsController.store - End: ' . $object->id);
+            return redirect()->back();
+        }
     }
 
     public function edit(Setting $setting)
@@ -94,13 +97,16 @@ class SettingsController extends Controller
     {
         $object = $setting;
         Log::info('SettingsController.update - Start: '.$object->id);
-//        $this->authorize($object);
-        $this->populateUpdateFields($request);
+        if ($this->authorize('update', $object)) {
+            Log::info('Authorization successful');
 
-        $object->update($request->all());
-        Session::flash('flash_message', trans('messages.success_edit_setting'));
-        Log::info('SettingsController.update - End: '.$object->id);
-        return redirect('settings');
+            $this->populateUpdateFields($request);
+
+            $object->update($request->all());
+            Session::flash('flash_message', trans('messages.success_edit_setting'));
+            Log::info('SettingsController.update - End: ' . $object->id);
+            return redirect('settings');
+        }
     }
 
     /**
@@ -118,8 +124,8 @@ class SettingsController extends Controller
         {
             Log::info('Authorization successful');
             $object->delete();
+            Log::info('SettingsController.destroy: End: ');
+            return redirect('/settings');
         }
-        Log::info('SettingsController.destroy: End: ');
-        return redirect('/settings');
     }
 }

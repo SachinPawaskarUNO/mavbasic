@@ -14,6 +14,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SettingsChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests\OrgRequest;
@@ -136,6 +137,8 @@ class OrgsController extends Controller
     {
         $object = $org;
         Log::info('OrgsController.updateSettings - Start: '.$object->id);
+        $org->setFireSettingChanged(false);
+        $fireSettingsChanged = false;
         foreach (Input::get('orgsettings', array()) as $orgsetting)
         {
             $name = $orgsetting['name'];
@@ -146,14 +149,17 @@ class OrgsController extends Controller
 
             try{
                 $org->setSetting($name, $value);
+                $fireSettingsChanged = true;
                 Log::info('Org setting updated: '.$name. ' with value '.$value);
             } catch(Exception $e){
                 Log::error('OrgsController.updateSettings - Error: '.'Updating org setting'.$name);
                 return redirect('orgs.settings')->withErrors(trans('messages.error_edit_org_setting', ['name' => $name]));
             }
         }
+        $org->setFireSettingChanged(true);
         Session::flash('flash_message', trans('messages.success_edit_org_settings'));
         Log::info('OrgsController.updateSettings - End: '.$object->id);
+        if ($fireSettingsChanged) { event(new SettingsChanged($org)); }
         return back()->withInput();
     }
 }

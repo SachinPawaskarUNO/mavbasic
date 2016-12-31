@@ -14,6 +14,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SettingsChanged;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -156,7 +157,7 @@ class UsersController extends Controller
     public function showSettings(User $user)
     {
         $object = $user;
-        Log::info('UsersController.settings: '.$object->id);
+        Log::info('UsersController.showSettings: '.$object->id);
         $this->viewData['user'] = $object;
         $this->viewData['the_user_settings'] = Setting::all()->where('type', '=', 'user');
         $this->viewData['heading'] = trans('labels.edit_user_settings', ['name' => $object->name]);
@@ -168,6 +169,8 @@ class UsersController extends Controller
     {
         $object = $user;
         Log::info('UsersController.updateSettings - Start: '.$object->id);
+        $user->setFireSettingChanged(false);
+        $fireSettingsChanged = false;
         foreach (Input::get('usersettings', array()) as $usersetting)
         {
             $name = $usersetting['name'];
@@ -178,14 +181,17 @@ class UsersController extends Controller
 
             try{
                 $user->setSetting($name, $value);
+                $fireSettingsChanged = true;
                 Log::info('User setting updated: '.$name. ' with value '.$value);
             } catch(Exception $e){
                 Log::error('UsersController.updateSettings - Error: '.'Updating user setting'.$name);
                 return redirect('users.settings')->withErrors(trans('messages.error_edit_user_setting', ['name' => $name]));
             }
         }
+        $user->setFireSettingChanged(true);
         Session::flash('flash_message', trans('messages.success_edit_user_settings'));
         Log::info('UsersController.updateSettings - End: '.$object->id);
+        if ($fireSettingsChanged) { event(new SettingsChanged($user)); }
         return back()->withInput();
     }
 

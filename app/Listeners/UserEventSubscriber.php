@@ -94,7 +94,7 @@ class UserEventSubscriber
      * Handle the setting change events.
      * This is for multiple settings. Typically on user of org settings save.
      *
-     * @param  SettingChanged  $event
+     * @param  SettingsChanged  $event
      * @return void
      */
     public function onSettingsChange(SettingsChanged $event)

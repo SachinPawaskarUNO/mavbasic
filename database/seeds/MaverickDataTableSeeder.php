@@ -43,15 +43,22 @@ class RolesTableSeeder extends Seeder {
 
     public function run()
     {
-        Role::create([ 'name' => 'faculty', 'display_name' => 'Faculty', 'description' => 'Faculty is allowed to manage ...',
+        $org = Org::where('name', '=', 'University of Nebraska Omaha')->first();
+        Role::create([ 'org_id' => $org->id, 'name' => 'faculty', 'display_name' => 'Faculty', 'description' => 'Faculty is allowed to manage ...',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        Role::create([ 'name' => 'advisor', 'display_name' => 'Advisor', 'description' => 'Advisor is allowed to manage ...',
+        Role::create([ 'org_id' => $org->id, 'name' => 'advisor', 'display_name' => 'Advisor', 'description' => 'Advisor is allowed to manage ...',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        Role::create([ 'name' => 'staff', 'display_name' => 'Staff', 'description' => 'Staff is allowed to manage ...',
+        Role::create([ 'org_id' => $org->id, 'name' => 'staff', 'display_name' => 'Staff', 'description' => 'Staff is allowed to manage ...',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        Role::create([ 'name' => 'student', 'display_name' => 'Student', 'description' => 'Student is allowed to manage ...',
+        Role::create([ 'org_id' => $org->id, 'name' => 'student', 'display_name' => 'Student', 'description' => 'Student is allowed to manage ...',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        Role::create([ 'name' => 'readonly', 'display_name' => 'ReadOnly', 'description' => 'ReadOnly is allowed Read access to ...',
+        Role::create([ 'org_id' => $org->id, 'name' => 'readonly', 'display_name' => 'ReadOnly', 'description' => 'ReadOnly is allowed Read access to ...',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+
+        $org = Org::where('name', '=', 'University of Nebraska Omaha Scott Campus')->first();
+        Role::create([ 'org_id' => $org->id, 'name' => 'faculty', 'display_name' => 'Faculty', 'description' => 'Faculty is allowed to manage ...',
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+        Role::create([ 'org_id' => $org->id, 'name' => 'student', 'display_name' => 'Student', 'description' => 'Student is allowed to manage ...',
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }

@@ -40,24 +40,13 @@ class CreateOrgsTable extends Migration
             $table->foreign('org_id')->references('id')->on('orgs');
         });
 
-        // Create table for associating roles to users (Many-to-Many)
-//        Schema::create('org_user', function (Blueprint $table) {
-//            $table->integer('org_id')->unsigned();
-//            $table->integer('user_id')->unsigned();
-//            $table->string('created_by')->default('System');
-//            $table->string('updated_by')->default('System');
-//            $table->timestamps();
-//            $table->softDeletes();
-//
-//            $table->foreign('org_id')->references('id')->on('orgs')
-//                ->onUpdate('cascade')->onDelete('cascade');
-//            $table->foreign('user_id')->references('id')->on('users')
-//                ->onUpdate('cascade')->onDelete('cascade');
-//
-//            $table->primary(['org_id', 'user_id']);
-//        });
-
-
+        Schema::table('roles', function(Blueprint $table)
+        {
+            $table->integer('org_id')->unsigned()->nullable();
+            $table->foreign('org_id')->references('id')->on('orgs');
+            $table->dropUnique('roles_name_unique');
+            $table->unique(['org_id', 'name']);
+        });
     }
 
     /**
@@ -67,13 +56,18 @@ class CreateOrgsTable extends Migration
      */
     public function down()
     {
-//        Schema::drop('org_user');
         Schema::table('users', function(Blueprint $table)
         {
             $table->dropForeign('users_org_id_foreign');
             $table->dropColumn('org_id');
-
         });
+
+        Schema::table('roles', function(Blueprint $table)
+        {
+            $table->dropForeign('roles_org_id_foreign');
+            $table->dropColumn('org_id');
+        });
+        
         Schema::drop('orgs');
     }
 }

@@ -75,6 +75,7 @@ class User extends Authenticatable
     public $wizardHelpTabs = array('Eula' => ['name' => 'Eula', 'active' => true], 'Welcome' => ['name' => 'Welcome', 'active' => false]);
 
     // Eula related
+    public $eulaProcessing = false;
     public $eulaAccepted = false;
     public static $eulaActiveSystemList = [];
     public $userAcceptedEula = null;
@@ -198,16 +199,21 @@ class User extends Authenticatable
 
     public function checkEula()
     {
-        $systemEula = Eula::getActiveSystemEula($this->default_language, $this->default_country);
-        $currentlyAcceptedEula = $this->getActiveEula();
+        if ($this->org->getSettingValue('eula_processing')) {
+            $this->eulaProcessing = true;
+            $systemEula = Eula::getActiveSystemEula($this->default_language, $this->default_country);
+            $currentlyAcceptedEula = $this->getActiveEula();
 
-        if (!isset($currentlyAcceptedEula) || !isset($systemEula)) {
-//            dd(['true',$systemEula, $currentlyAcceptedEula, $this]);
-            return ($this->eulaAccepted = false);
-        } else if ($systemEula->id != $currentlyAcceptedEula->id) {
-            return ($this->eulaAccepted = false);
+            if (!isset($currentlyAcceptedEula) || !isset($systemEula)) {
+    //            dd(['true',$systemEula, $currentlyAcceptedEula, $this]);
+                return ($this->eulaAccepted = false);
+            } else if ($systemEula->id != $currentlyAcceptedEula->id) {
+                return ($this->eulaAccepted = false);
+            } else {
+                return ($this->eulaAccepted = true);
+            }
         } else {
-            return ($this->eulaAccepted = true);
+            $this->eulaProcessing = false;
         }
     }
 
@@ -218,11 +224,10 @@ class User extends Authenticatable
         $modal = 'true';
         $this->wizardStartup = $this->wizardStartupTabs = [];
 
-        $this->checkEula();
+        $this->checkEula(); // sets the eulaProcessing && eulaAccepted flags
 
-        // ToDo: implement System Eula check in the future. This will be a System/Org setting.
         // First check to see if we need to display EULA
-        if (!$this->eulaAccepted) {
+        if ($this->eulaProcessing && !$this->eulaAccepted) {
             if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
                 $this->wizardStartupTabs = array_merge($this->wizardStartupTabs,
                     array('Eula' => ['key' => 'Eula', 'name' => trans('labels.eula'), 'src' => '\eula']));
@@ -265,7 +270,7 @@ class User extends Authenticatable
         $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('AboutBrowser' => ['key' => 'AboutBrowser', 'name' => trans('labels.aboutbrowser'), 'src' => '\aboutbrowser']));
         $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Welcome' => ['key' => 'Welcome', 'name' => trans('labels.welcome'), 'src' => $this->org->getSettingValue('welcome_screen_url')]));
 
-        if ($this->eulaAccepted) {
+        if ($this->eulaProcessing && $this->eulaAccepted) {
             if (Eula::getActiveSystemEula($this->default_language, $this->default_country) != null) {
                 $this->wizardHelpTabs = array_merge($this->wizardHelpTabs, array('Eula' => ['key' => 'Eula', 'name' => trans('labels.eula'), 'src' => '\eula']));
             }

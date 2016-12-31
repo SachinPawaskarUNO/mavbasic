@@ -33,18 +33,6 @@ class EulaPolicy
     }
 
     /**
-     * Determine if the given user can delete the given eula.
-     *
-     * @param  User  $user
-     * @param  Eula  $eula
-     * @return bool
-     */
-    public function destroy(User $user, Eula $eula)
-    {
-        return $user->isSystemAdmin();
-    }
-
-    /**
      * If you may wish to authorize all actions within a given policy for certain users.
      * The before method will be executed before any other methods on the policy,
      * giving you an opportunity to authorize the action before the intended

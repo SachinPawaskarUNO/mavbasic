@@ -35,6 +35,7 @@ class UserEulaAccepted
 
         Log::info('Listener-UserEulaAccepted.handle: User='.$user->name. ' Org=' .$user->org->name. ' Eula Id=' .$eula->id);
         $user->buildWizardStartup();
+        $user->buildWizardHelp();
         Session::put('user', $user);
     }
 }

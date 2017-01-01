@@ -54,9 +54,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'org_id', 'name', 'email', 'password', 'active', 'phone', 'default_language', 'default_country',
-        'last_login_ip_address', 'last_login_device', 'number_of_logins',
-        'last_login_at', 'expiration_at', 'password_change_at', 'created_by', 'updated_by',
+        'org_id','name', 'email', 'password', 'active', 'phone', 'default_language', 'default_country', 'last_login_ip_address',
+        'last_login_device', 'number_of_logins', 'last_login_at', 'expiration_at', 'password_change_at',
+
+        'created_by', 'updated_by',
     ];
 
     /**
@@ -154,7 +155,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Scope a query to only include roles of a given org.
+     * Scope a query to only include users of a given org.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param mixed $org

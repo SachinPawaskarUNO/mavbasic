@@ -207,6 +207,21 @@ class BaseSettingsTableSeeder extends Seeder {
     public function run()
     {
         DB::table('settings')->delete();
+
+        // System settings
+        Setting::create([  'name' => 'eula_processing', 'description' => 'Eula Processing', 'default_value' => 'false', 'kind' => 'bool',
+            'display_type' => 'checkbox', 'display_values' => '',
+            'help' => 'Displays the Eula Acceptance Screen on startup when the user logs into the application for the first time',
+            'type' => 'system', 'group' => 'ui', 'display_order' => 1040,
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+
+        // Org settings
+        Setting::create([  'name' => 'welcome_screen_url', 'description' => 'Welcome Screen URL', 'default_value' => '\welcome', 'kind' => 'url',
+            'display_type' => 'text', 'display_values' => '',
+            'help' => 'Configure the URL for the welcome screen that is displayed to the user on startup when the user logs into the application.',
+            'type' => 'org', 'group' => 'ui', 'display_order' => 1050,
+            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
+
         // User settings
         Setting::create([  'name' => 'lines_per_page', 'description' => 'Lines per Page', 'default_value' => '10', 'kind' => 'int',
             'display_type' => 'select', 'display_values' => '{"10":10, "25":25, "50":50, "100":100}',
@@ -222,18 +237,6 @@ class BaseSettingsTableSeeder extends Seeder {
             'display_type' => 'checkbox', 'display_values' => '',
             'help' => 'Displays the Welcome Screen on startup when the user logs into the application.',
             'type' => 'user', 'group' => 'ui', 'display_order' => 1030,
-            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-
-        // Org settings
-        Setting::create([  'name' => 'eula_processing', 'description' => 'Eula Processing', 'default_value' => 'false', 'kind' => 'bool',
-            'display_type' => 'checkbox', 'display_values' => '',
-            'help' => 'Displays the Eula Acceptance Screen on startup when the user logs into the application for the first time',
-            'type' => 'org', 'group' => 'ui', 'display_order' => 1040,
-            'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
-        Setting::create([  'name' => 'welcome_screen_url', 'description' => 'Welcome Screen URL', 'default_value' => '\welcome', 'kind' => 'url',
-            'display_type' => 'text', 'display_values' => '',
-            'help' => 'Configure the URL for the welcome screen that is displayed to the user on startup when the user logs into the application.',
-            'type' => 'org', 'group' => 'ui', 'display_order' => 1050,
             'created_by' => 'System', 'updated_by' => 'System', 'created_at' => date_create(), 'updated_at' => date_create()]);
     }
 }

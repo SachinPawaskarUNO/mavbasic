@@ -130,7 +130,12 @@ class OrgsController extends Controller
         $object = $org;
         Log::info('OrgsController.settings: '.$object->id);
         $this->viewData['org'] = $object;
-        $this->viewData['the_org_settings'] = Setting::all()->where('type', '!=', 'system');
+        if ($this->isSystemAdmin()) {
+            $this->viewData['the_org_settings'] = Setting::all();
+        } else {
+            $this->viewData['the_org_settings'] = Setting::all()->where('type', '!=', 'system');
+        }
+
         $this->viewData['heading'] = trans('labels.edit_org_settings', ['name' => $object->name]);
 
         return view('orgs.settings', $this->viewData);

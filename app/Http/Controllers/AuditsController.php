@@ -26,12 +26,8 @@ class AuditsController extends Controller
 {
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('ability:sysadmin, manage-audit|view-audit');
-
-        $this->user = Auth::user();
-        $this->heading = trans('labels.audits');
-
-        $this->viewData = [ 'user' => $this->user, 'heading' => $this->heading ];
     }
 
     public function index()

@@ -26,15 +26,15 @@ use Log;
 
 class RolesController extends Controller
 {
+    protected $list_permission;
+
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('ability:sysadmin|admin, manage-roles|create-roles|edit-roles|view-roles|delete-roles');
 
-        $this->user = Auth::user();
         $this->list_permission = Permission::pluck('display_name', 'id');
-        $this->heading = trans('labels.roles');
-
-        $this->viewData = [ 'user' => $this->user, 'list_permission' => $this->list_permission, 'heading' => $this->heading ];
+        $this->viewData = [ 'list_permission' => $this->list_permission ];
     }
 
     public function index()

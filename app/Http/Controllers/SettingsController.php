@@ -27,16 +27,12 @@ class SettingsController extends Controller
 {
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('ability:sysadmin|admin, manage-settings|create-settings|edit-settings|view-settings|delete-settings');
 
-        $this->user = Auth::user();
-        $this->settings = Setting::all();
         $this->list_kind = array('string' => 'string', 'int' => 'int', 'bool' => 'bool', 'object' => 'object', 'model' => 'model');
         $this->list_display_type = array('text' => 'text', 'select' => 'select', 'checkbox' => 'checkbox', 'number' => 'number');
-        $this->heading = trans('labels.settings');
-
-        $this->viewData = [ 'user' => $this->user, 'settings' => $this->settings, 'list_kind' => $this->list_kind,
-            'list_display_type' => $this->list_display_type, 'heading' => $this->heading ];
+        $this->viewData = [ 'list_kind' => $this->list_kind, 'list_display_type' => $this->list_display_type ];
     }
 
     public function index()

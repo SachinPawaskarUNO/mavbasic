@@ -32,12 +32,8 @@ class OrgsController extends Controller
 {
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('ability:sysadmin|admin, manage-orgs|create-orgs|edit-orgs|view-orgs|delete-orgs');
-
-        $this->user = Auth::user();
-        $this->heading = trans('labels.orgs');
-
-        $this->viewData = [ 'user' => $this->user, 'heading' => $this->heading ];
     }
 
     public function index()

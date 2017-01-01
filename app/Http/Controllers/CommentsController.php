@@ -29,15 +29,11 @@ class CommentsController extends Controller
 {
     public function __construct()
     {
-//        $this->middleware('advisor');
+        parent::__construct();
+        $this->middleware('ability:sysadmin|admin, manage-comments|create-comments|edit-comments|view-comments|delete-comments');
 
-        $this->commentfor = "SkeletalElement";
-        $this->skeletalelement = null;
-        $this->user = Auth::user();
-        $this->commentData = ['user' => $this->user, 'commentfor' => $this->commentfor, 
-            'skeletalelement' => $this->skeletalelement
-        ];
-        
+        $this->commentfor = "User";
+        $this->viewData = [ 'commentfor' => $this->commentfor ];
     }
 
     public function index()

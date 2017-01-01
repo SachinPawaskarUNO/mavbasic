@@ -26,10 +26,38 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $viewData = [];
+    protected $theUser = null;
+    protected $theOrg = null;
+    protected $heading = null;
 
     public function __construct()
     {
         $this->viewData = [ 'heading' => 'No Heading' ];
+        $this->middleware(function ($request, $next) {
+            $this->populateViewDataWithOrgAndUser(Auth::user());
+
+            return $next($request);
+        });
+    }
+
+    public function populateViewDataWithOrgAndUser($user = null)
+    {
+        if (isset($user)) {
+            $this->viewData['theUser'] = $this->theUser = $user;
+            $this->viewData['theOrg'] = $this->theOrg = $user->org;
+        } else {
+            if (Auth::check())
+            {
+                $user = Auth::user();
+                $this->viewData['theUser'] = $this->theUser = $user;
+                $this->viewData['theOrg'] = $this->theOrg = $user->org;
+            }
+        }
+    }
+
+    public function populateViewData($field, $value)
+    {
+        $this->viewData[$field] = $value;
     }
 
     public function populateCreateFields(&$input)

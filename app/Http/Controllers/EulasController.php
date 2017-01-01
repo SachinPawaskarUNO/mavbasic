@@ -28,13 +28,11 @@ class EulasController extends Controller
 {
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('ability:sysadmin|admin, manage-eulas|create-eulas|edit-eulas|view-eulas|delete-eulas');
 
         $this->list_eula_status = array('Draft' => 'Draft', 'Active' => 'Active');
-        $this->eulas = Eula::all();
-        $this->heading = trans('labels.eulas');
-
-        $this->viewData = [ 'eulas' => $this->eulas, 'list_eula_status' => $this->list_eula_status, 'heading' => $this->heading ];
+        $this->viewData = [ 'list_eula_status' => $this->list_eula_status ];
     }
 
     public function index()

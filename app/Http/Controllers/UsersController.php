@@ -35,14 +35,11 @@ class UsersController extends Controller
 {
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('ability:sysadmin|admin, manage-users|create-users|edit-users|view-users|delete-users');
 
-        $this->user = Auth::user();
-        $this->users = User::all()->except([1]);  // except the "System" User
         $this->list_role = Role::pluck('display_name', 'id');
-        $this->heading = trans('labels.users');
-
-        $this->viewData = [ 'user' => $this->user, 'users' => $this->users, 'list_role' => $this->list_role, 'heading' => $this->heading ];
+        $this->viewData = [ 'list_role' => $this->list_role];
     }
 
     public function index()

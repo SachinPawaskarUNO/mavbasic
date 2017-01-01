@@ -49,9 +49,9 @@ class UsersController extends Controller
     {
         Log::info('UsersController.index: ');
         if ($this->isSystemAdmin()) {
-            $users = User::withoutGlobalScope(OrgScope::class)->get()->except([1]); // // except the "System" User
+            $users = User::withoutGlobalScope(OrgScope::class)->get()->except([1]); // except the "System" User
         } else {
-            $users = User::all()->except([1]);  // except the "System" User
+            $users = User::ofOrg($this->getLoginUser()->org)->get();
         }
         $this->viewData['users'] = $users;
         $this->viewData['heading'] = trans('labels.users');
@@ -85,7 +85,7 @@ class UsersController extends Controller
             Log::info('Authorization successful');
 
             $input = $request->all();
-            $this->populateCreateFields($input);
+            $this->populateCreateFieldsWithOrgID($input);
             $input['password'] = bcrypt($request['password']);
             $input['active'] = $request['active'] == '' ? false : true;
 
@@ -219,7 +219,7 @@ class UsersController extends Controller
             if ($accept) {
                 Log::info('UsersController.acceptEula: accept=success');
                 // Check user language/country and make sure that it matches the language/country for the latest system EULA.
-                $eula = Eula::where(['status' => 'Active', 'language' => $user->default_language, 'country' => $user->default_country])->first();
+                $eula = $user->org->getActiveEulaForUser($user);
                 $user->eulas()->save($eula, ['accepted_at' => Carbon::now(), 'created_by' => $user->name, 'updated_by' => $user->name]);
                 $response = json_encode(array('success' => '1', 'msg' => trans('messages.success_eula_accepted') . ' - ' . trans('labels.thank_you')));
 

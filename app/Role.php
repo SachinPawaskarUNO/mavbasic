@@ -34,7 +34,7 @@ class Role extends EntrustRole
      * @var array
      */
     protected $fillable = [
-        'name', 'display_name', 'description', 'created_by', 'updated_by'
+        'org_id', 'name', 'display_name', 'description', 'created_by', 'updated_by'
     ];
 
     /**
@@ -47,4 +47,23 @@ class Role extends EntrustRole
         return $this->perms->pluck('id')->all();
     }
 
+    /**
+     * Get the org that this role belongs to.
+     */
+    public function org()
+    {
+        return $this->belongsTo('App\Org');
+    }
+
+    /**
+     * Scope a query to only include users of a given org.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed $org
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfOrg($query, $org)
+    {
+        return $query->where('org_id', $org->id);
+    }
 }

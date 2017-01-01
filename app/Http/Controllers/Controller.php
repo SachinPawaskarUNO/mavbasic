@@ -41,6 +41,17 @@ class Controller extends BaseController
         }
     }
 
+    public function populateCreateFieldsWithOrgID(&$input)
+    {
+        if (Auth::check() && $input != null)
+        {
+            $user = Auth::user();
+            $input['created_by'] = $user->name;
+            $input['updated_by'] = $user->name;
+            $input['org_id'] = $user->org->id;
+        }
+    }
+
     public function populateUpdateFields(&$input)
     {
         if (Auth::check() && $input != null)

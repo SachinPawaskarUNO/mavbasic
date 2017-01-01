@@ -34,8 +34,8 @@ class Eula extends Model
      *
      * @var array
      */
-    protected $fillable = ['version', 'agreement', 'country', 'language', 'status', 'file_type', 'effective_at',
-        'created_by', 'updated_by',];
+    protected $fillable = ['org_id', 'version', 'agreement', 'country', 'language',
+        'status', 'file_type', 'effective_at', 'created_by', 'updated_by',];
 
     /**
      * @return mixed|string
@@ -86,5 +86,17 @@ class Eula extends Model
     public static function getActiveOrgEulaForUser($user)
     {
         return self::getActiveOrgEula($user->org->id, $user->default_language, $user->default_country);
+    }
+
+    /**
+     * Scope a query to only include eulas of a given org.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed $org
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfOrg($query, $org)
+    {
+        return $query->where('org_id', $org->id);
     }
 }

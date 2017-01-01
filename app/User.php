@@ -54,10 +54,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'active', 'phone', 'default_language', 'default_country', 'last_login_ip_address',
-        'last_login_device', 'number_of_logins', 'last_login_at', 'expiration_at', 'password_change_at',
-        'org_id',
-        'created_by', 'updated_by',
+        'org_id', 'name', 'email', 'password', 'active', 'phone', 'default_language', 'default_country',
+        'last_login_ip_address', 'last_login_device', 'number_of_logins',
+        'last_login_at', 'expiration_at', 'password_change_at', 'created_by', 'updated_by',
     ];
 
     /**
@@ -155,7 +154,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all of the settings for this user.
+     * Scope a query to only include roles of a given org.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed $org
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfOrg($query, $org)
+    {
+        return $query->where('org_id', $org->id);
+    }
+
+    /**
+     * Get the org that this user belongs to.
      */
     public function org()
     {
@@ -163,7 +174,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all of the settings that are assigned this user.
+     * Get all of the settings that belong to this user.
      */
     public function settings()
     {
@@ -172,16 +183,6 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    /**
-     * Get all of the settings for this user.
-     */
-/*    public function settings()
-    {
-        return $this->belongsToMany('App\Setting', 'setting_user', 'user_id', 'setting_id')
-            ->withPivot('user_id', 'setting_id', 'value', 'json_values', 'created_by', 'updated_by')
-            ->withTimestamps();
-    }
-*/
     /**
      * Get all of the eulas for this user.
      */
@@ -192,11 +193,20 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    /**
+     * Get the latest accepted eula for this user.
+     */
     public function getActiveEula()
     {
         return $this->eulas()->orderBy('pivot_accepted_at', 'desc')->get()->first();
     }
 
+    /**
+     * The checkEula function sets the eulaProcessing and eulaAccepted flags for this user.
+     * This function is called to check if Eula processing is required for this user
+     * once the user logs into the system.
+     * @return bool
+     */
     public function checkEula()
     {
         if ($this->org->getSettingValue('eula_processing')) {

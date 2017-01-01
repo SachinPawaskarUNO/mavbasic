@@ -40,7 +40,11 @@ class EulasController extends Controller
     public function index()
     {
         Log::info('EulasController.index: ');
-        $eulas = Eula::all();
+        if ($this->isSystemAdmin()) {
+            $eulas = Eula::all();
+        } else {
+            $eulas = Eula::ofOrg($this->getLoginUser()->org)->get();
+        }
         $this->viewData['eulas'] = $eulas;
         $this->viewData['heading'] = trans('labels.eulas');
 
@@ -71,7 +75,7 @@ class EulasController extends Controller
         if ($this->authorize('create', Eula::class)) {
             Log::info('Authorization successful');
             $input = $request->all();
-            $this->populateCreateFields($input);
+            $this->populateCreateFieldsWithOrgID($input);
 
             $object = Eula::create($input);
             Session::flash('flash_message', trans('messages.success_new_eula'));
@@ -99,11 +103,13 @@ class EulasController extends Controller
 
             $this->populateUpdateFields($request);
             if ($request['status'] === 'Active') {
-                // If a new eula is made active then make previous Active EULA inactive.
-                $eulas = Eula::all();
+                // If a new eula is made active then make previous Active EULA inactive (in that Org).
+                $eulas = Eula::ofOrg($this->getLoginUser()->org)->get();
                 $previous_eula = $eulas->where('status', '=', 'Active')->first();
-                $previous_eula->status = 'InActive';
-                $previous_eula->save();
+                if ($previous_eula != null) {
+                    $previous_eula->status = 'InActive';
+                    $previous_eula->save();
+                }
 
                 // update the effective date for eula which being updated to Active
                 $request['effective_at'] = Carbon::now();

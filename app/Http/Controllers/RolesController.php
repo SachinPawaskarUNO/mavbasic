@@ -40,7 +40,11 @@ class RolesController extends Controller
     public function index()
     {
         Log::info('RolesController.index: ');
-        $roles = Role::all()->except([1]);  // except the "sysadmin" role.
+        if ($this->isSystemAdmin()) {
+            $roles = Role::all()->except([1, 2]); // except the "System" User
+        } else {
+            $roles = Role::ofOrg($this->getLoginUser()->org)->get();
+        }
         $this->viewData['roles'] = $roles;
         $this->viewData['heading'] = trans('labels.roles');
 
@@ -72,7 +76,7 @@ class RolesController extends Controller
             Log::info('Authorization successful');
 
             $input = $request->all();
-            $this->populateCreateFields($input);
+            $this->populateCreateFieldsWithOrgID($input);
 
             $object = Role::create($input);
             $this->syncPermissions($object, $request->input('permissionlist'));

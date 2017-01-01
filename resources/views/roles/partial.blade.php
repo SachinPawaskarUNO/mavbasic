@@ -1,3 +1,15 @@
+@if ($CRUD_Action != 'Create')
+<div class="form-group{{ $errors->has('org_name') ? ' has-error' : '' }}">
+    {!! Form::label('org_name', trans('labels.org').':', ['class' => 'col-md-4 control-label']) !!}
+    <div class="col-md-6">
+        {!! Form::text('org_name', $role->org->name, ['id' => 'org_name', 'class' => 'col-md-6 form-control', 'required' => 'required']) !!}
+        @if ($errors->has('org_name'))
+            <span class="help-block"><strong>{{ $errors->first('org_name') }}</strong></span>
+        @endif
+    </div>
+</div>
+@endif
+
 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
     {!! Form::label('name', trans('labels.name').':', ['class' => 'col-md-4 control-label']) !!}
     <div class="col-md-6">

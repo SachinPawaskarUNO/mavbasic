@@ -16,11 +16,15 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
+                                    @if (Auth::user()->isSystemAdmin())<th>@lang('labels.org')</th>@endif
                                     <th>@lang('labels.version')</th><th>@lang('labels.status')</th><th>@lang('labels.agreement')</th><th>@lang('labels.effective_date')</th><th>@lang('labels.language') @lang('labels.country')</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($eulas as $eula)
                                         <tr>
+                                            @if (Auth::user()->isSystemAdmin())
+                                                <td class="table-text"><div>{{ $eula->org->name }}</div></td>
+                                            @endif
                                             <td class="table-text"><div><a href="{{ url('/eulas/'.$eula->id.'/') }}">{{ $eula->version }}</a></div></td>
                                             <td class="table-text"><div>{{ $eula->status }}</div></td>
                                             <td class="table-text"><div>{{ substr($eula->agreement, 0, 128) }}</div></td>

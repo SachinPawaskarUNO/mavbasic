@@ -16,11 +16,15 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
+                                    @if (Auth::user()->isSystemAdmin())<th>@lang('labels.org')</th>@endif
                                     <th>@lang('labels.name')</th><th>@lang('labels.email')</th><th>@lang('labels.status')</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($users as $user)
                                         <tr>
+                                            @if (Auth::user()->isSystemAdmin())
+                                            <td class="table-text"><div>{{ $user->org->name }}</div></td>
+                                            @endif
                                             <td class="table-text"><div><a href="{{ url('/users/'.$user->id.'/') }}">{{ $user->name }}</a></div></td>
                                             <td class="table-text"><div>{{ $user->email }}</div></td>
                                             @if ($user->active)<td class="table-text"><div>@lang('labels.active')</div></td>@else<td class="table-text"><div>@lang('labels.inactive')</div></td>@endif

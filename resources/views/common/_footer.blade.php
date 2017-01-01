@@ -59,7 +59,7 @@
             });
         </script>
     @endif
-@elseif($CRUD_Action == 'Update')
+@elseif($CRUD_Action == 'Update' || $CRUD_Action == 'Edit')
     @if ($includeStyle == true)
         <style>
             {{-- Place some styles here --}}
@@ -70,6 +70,7 @@
         <script>
             $(document).ready(function($) {
                 $('select').select2();
+                $('input#org_name').prop("disabled", true);
             });
         </script>
     @endif

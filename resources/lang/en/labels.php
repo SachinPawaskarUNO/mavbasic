@@ -124,6 +124,7 @@ return [
     'org' => 'Organization',
     'orgs' => 'Organizations',
     'org_management' => 'Organization Management',
+    'org_settings' => 'Organization Settings',
     'password' => 'Password',
     'permissions' => 'Permissions',
     'phone' => 'Phone',

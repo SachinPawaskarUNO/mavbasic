@@ -125,6 +125,7 @@ return [
     'org' => 'Organisation',
     'orgs' => 'Organisations',
     'org_management' => 'Gestion de l\'organisation',
+    'org_settings' => 'Paramètres de l\'organisation',
     'password' => 'Mot de passe',
     'permissions' => 'Autorisations',
     'phone' => 'Téléphone',

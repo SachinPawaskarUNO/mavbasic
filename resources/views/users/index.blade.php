@@ -16,13 +16,13 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mav-datatable">
                                     <thead> <!-- Table Headings -->
-                                    @if (Auth::user()->isSystemAdmin())<th>@lang('labels.org')</th>@endif
+                                    @if ($theUser->isSystemAdmin())<th>@lang('labels.org')</th>@endif
                                     <th>@lang('labels.name')</th><th>@lang('labels.email')</th><th>@lang('labels.status')</th>
                                     </thead>
                                     <tbody> <!-- Table Body -->
                                     @foreach ($users as $user)
                                         <tr>
-                                            @if (Auth::user()->isSystemAdmin())
+                                            @if ($theUser->isSystemAdmin())
                                             <td class="table-text"><div>{{ $user->org->name }}</div></td>
                                             @endif
                                             <td class="table-text"><div><a href="{{ url('/users/'.$user->id.'/') }}">{{ $user->name }}</a></div></td>

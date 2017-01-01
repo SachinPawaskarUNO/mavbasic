@@ -57,7 +57,7 @@ class EulaPolicy
      * @param  \App\Org  $org
      * @return mixed
      */
-    public function view(User $user, Org $eula)
+    public function view(User $user, Eula $eula)
     {
         if ($user->ability('admin', 'manage-eulas,view-eulas')) {
             if($user->org->id === $eula->org->id) {
@@ -90,7 +90,7 @@ class EulaPolicy
      * @param  \App\Org  $org
      * @return mixed
      */
-    public function update(User $user, Org $eula)
+    public function update(User $user, Eula $eula)
     {
         if ($user->ability('admin', 'manage-eulas,edit-eulas')) {
             if($user->org->id === $eula->org->id) {
@@ -108,7 +108,7 @@ class EulaPolicy
      * @param  \App\Org  $org
      * @return mixed
      */
-    public function destroy(User $user, Org $eula)
+    public function destroy(User $user, Eula $eula)
     {
         if ($user->ability('admin', 'manage-eulas,delete-eulas')) {
             if($user->org->id === $eula->org->id) {
